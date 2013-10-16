@@ -18482,6 +18482,7 @@ GameObject:
   - 114: {fileID: 1030711918}
   - 143: {fileID: 1030711919}
   - 114: {fileID: 1030711917}
+  - 114: {fileID: 1030711920}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -18605,6 +18606,17 @@ CharacterController:
   m_SkinWidth: .0799999982
   m_MinMoveDistance: 0
   m_Center: {x: 2, y: 2, z: 0}
+--- !u!114 &1030711920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1030711911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c859481eb66266f4e8fdd8998bf10974, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1031693063
 Prefab:
   m_ObjectHideFlags: 0
