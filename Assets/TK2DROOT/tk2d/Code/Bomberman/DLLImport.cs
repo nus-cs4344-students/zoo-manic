@@ -11,7 +11,11 @@ public class DLLImport : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		//connectToNodeJS();
+	}
+	
+	private void connectToNodeJS()
+	{
 		string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com:5000";
     	Debug.Log("socket url: " + socketUrl);
 		
