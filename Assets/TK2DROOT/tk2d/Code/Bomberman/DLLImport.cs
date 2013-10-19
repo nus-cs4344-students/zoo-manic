@@ -7,51 +7,43 @@ using SimpleJson;
 using System;
 
 public class DLLImport : MonoBehaviour {
-	private Client client;
+	private Client socket;
 
 	// Use this for initialization
 	void Start () {
 		//connectToNodeJS();
 	}
 	
-	private void connectToNodeJS()
+	/*private void connectToNodeJS()
 	{
-		string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/zoo";
+		//string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/zoo";
 		//string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com/zoo";
-		//string socketUrl = "localhost:4344/pong";
+		//string socketUrl = "https://localhost:4344/pong";
+		string socketUrl = "http://localhost:4344/pong/";
 		//http://127.0.0.1:50122
     	Debug.Log("socket url: " + socketUrl);
 		
-		client = new Client(socketUrl);
+		socket = new Client(socketUrl);
 		
-		//client.Opened += SocketOpened;
-		//client.Message += SocketMessage;
-		//client.SocketConnectionClosed += SocketConnectionClosed;
-		//client.Error += SocketMessage;
-		
-		this.client.Opened += this.SocketOpened;
-        this.client.Message += this.SocketMessage;
-        this.client.SocketConnectionClosed += this.SocketConnectionClosed;
-        this.client.Error += this.SocketError;
-		
-		//Debug.Log ("Client is connected?: "+client.);
-		
-		/*this.client.On("message", (data) => {
+
+		this.socket.Opened += this.SocketOpened;
+        this.socket.Message += this.SocketMessage;
+        this.socket.SocketConnectionClosed += this.SocketConnectionClosed;
+        this.socket.Error += this.SocketError;
+
+		this.socket.On("message", (data) => {
         	Debug.Log("message: " + data);
     	});
-		*/		
-		client.Connect();
+				
+		socket.Connect();
 		
-		Debug.Log ("Client is connected?: "+client.IsConnected);
-
-		//string message = "HELLO WORLD";
-		//client.Send(message);
-	}
+		Debug.Log ("Client is connected?: "+socket.IsConnected);
+	}*/
 	
 	private void SocketOpened(object sender, EventArgs  e) {
     	 Debug.Log(e);
    		 Debug.Log("socket opened");
-   		 this.client.Emit("hello", "");
+   		 //this.socket.Emit("hello", "");
 	}
 	
 	private void SocketError(object sender, ErrorEventArgs e) {
