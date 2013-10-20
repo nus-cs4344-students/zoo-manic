@@ -58,14 +58,242 @@ MonoBehaviour:
     normals: []
     tangents: []
     uvs:
-    - {x: .00781640597, y: .00781640597}
-    - {x: .566402316, y: .00781640597}
-    - {x: .00781640597, y: .710933566}
-    - {x: .566402316, y: .710933566}
+    - {x: .00390820298, y: .361330092}
+    - {x: .283201158, y: .361330092}
+    - {x: .00390820298, y: .712888658}
+    - {x: .283201158, y: .712888658}
     indices: 000000000300000001000000020000000300000000000000
     material: {fileID: 2100000, guid: 0bcc52ea92d1837468013e75f4cf9259, type: 2}
     materialId: 0
     sourceTextureGUID: 3a7534cf2a296c34ca9f46e40dc26206
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 0
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: Power-up-Trick
+    boundsData:
+    - {x: 4.56666708, y: 3.9333334, z: 0}
+    - {x: 9.13333416, y: 7.73333359, z: 0}
+    untrimmedBoundsData:
+    - {x: 4.56666708, y: 3.9000001, z: 0}
+    - {x: 9.13333416, y: 7.80000019, z: 0}
+    texelSize: {x: .0666666701, y: .0666666701}
+    positions:
+    - {x: 0, y: .0666666701, z: 0}
+    - {x: 9.13333416, y: .0666666701, z: 0}
+    - {x: 0, y: 7.80000019, z: 0}
+    - {x: 9.13333416, y: 7.80000019, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .00390820298, y: .720705092}
+    - {x: .00390820298, y: .988279283}
+    - {x: .230466798, y: .720705092}
+    - {x: .230466798, y: .988279283}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: 0bcc52ea92d1837468013e75f4cf9259, type: 2}
+    materialId: 0
+    sourceTextureGUID: 0785717283a42b04bb482c6c95c83388
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 1
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: Power-up-Shake
+    boundsData:
+    - {x: .0333333015, y: 0, z: 0}
+    - {x: 6.20000029, y: 8.66666698, z: 0}
+    untrimmedBoundsData:
+    - {x: .0333333015, y: 0, z: 0}
+    - {x: 6.20000029, y: 8.66666698, z: 0}
+    texelSize: {x: .0666666701, y: .0666666701}
+    positions:
+    - {x: -3.06666684, y: -4.33333349, z: 0}
+    - {x: 3.13333344, y: -4.33333349, z: 0}
+    - {x: -3.06666684, y: 4.33333349, z: 0}
+    - {x: 3.13333344, y: 4.33333349, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .238283202, y: .720705092}
+    - {x: .419919908, y: .720705092}
+    - {x: .238283202, y: .974607408}
+    - {x: .419919908, y: .974607408}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: 0bcc52ea92d1837468013e75f4cf9259, type: 2}
+    materialId: 0
+    sourceTextureGUID: 3be2d54235b78e54b89a78a04f1c4fb5
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 0
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: Power-up-Range
+    boundsData:
+    - {x: 0, y: -.0333333015, z: 0}
+    - {x: 7.33333349, y: 7.26666689, z: 0}
+    untrimmedBoundsData:
+    - {x: 0, y: -.0333333015, z: 0}
+    - {x: 7.33333349, y: 7.26666689, z: 0}
+    texelSize: {x: .0666666701, y: .0666666701}
+    positions:
+    - {x: -3.66666675, y: -3.66666675, z: 0}
+    - {x: 3.66666675, y: -3.66666675, z: 0}
+    - {x: -3.66666675, y: 3.60000014, z: 0}
+    - {x: 3.66666675, y: 3.60000014, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .291017592, y: .361330092}
+    - {x: .291017592, y: .576169908}
+    - {x: .503904283, y: .361330092}
+    - {x: .503904283, y: .576169908}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: 0bcc52ea92d1837468013e75f4cf9259, type: 2}
+    materialId: 0
+    sourceTextureGUID: a6d4daadd65d0c64e9267ebc03097fe4
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 1
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: Power-up-Invulnerability
+    boundsData:
+    - {x: .0333333015, y: 0, z: 0}
+    - {x: 4.73333359, y: 8, z: 0}
+    untrimmedBoundsData:
+    - {x: 0, y: 0, z: 0}
+    - {x: 4.80000019, y: 8, z: 0}
+    texelSize: {x: .0666666701, y: .0666666701}
+    positions:
+    - {x: -2.33333349, y: -4, z: 0}
+    - {x: 2.4000001, y: -4, z: 0}
+    - {x: -2.33333349, y: 4, z: 0}
+    - {x: 2.4000001, y: 4, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .427736342, y: .804689467}
+    - {x: .427736342, y: .943357408}
+    - {x: .662107408, y: .804689467}
+    - {x: .662107408, y: .943357408}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: 0bcc52ea92d1837468013e75f4cf9259, type: 2}
+    materialId: 0
+    sourceTextureGUID: a833669fb5a22df4dae0619c455d9641
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 1
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: 'Power-up-Speed '
+    boundsData:
+    - {x: 0, y: -.0333333015, z: 0}
+    - {x: 5.86666679, y: 7.26666689, z: 0}
+    untrimmedBoundsData:
+    - {x: 0, y: -.0333333015, z: 0}
+    - {x: 5.86666679, y: 7.26666689, z: 0}
+    texelSize: {x: .0666666701, y: .0666666701}
+    positions:
+    - {x: -2.9333334, y: -3.66666675, z: 0}
+    - {x: 2.9333334, y: -3.66666675, z: 0}
+    - {x: -2.9333334, y: 3.60000014, z: 0}
+    - {x: 2.9333334, y: 3.60000014, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .427736342, y: .583986342}
+    - {x: .599607408, y: .583986342}
+    - {x: .427736342, y: .796873033}
+    - {x: .599607408, y: .796873033}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: 0bcc52ea92d1837468013e75f4cf9259, type: 2}
+    materialId: 0
+    sourceTextureGUID: f60f182e1c8cdab4ea06ca9b148ba177
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 0
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: Rhino-Bomb
+    boundsData:
+    - {x: 5.30000019, y: 5.96666718, z: 0}
+    - {x: 10.6000004, y: 11.9333344, z: 0}
+    untrimmedBoundsData:
+    - {x: 5.33333349, y: 6.00000048, z: 0}
+    - {x: 10.666667, y: 12.000001, z: 0}
+    texelSize: {x: .0666666701, y: .0666666701}
+    positions:
+    - {x: 0, y: 0, z: 0}
+    - {x: 10.6000004, y: 0, z: 0}
+    - {x: 0, y: 11.9333344, z: 0}
+    - {x: 10.6000004, y: 11.9333344, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .00390820298, y: .00390820298}
+    - {x: .314451158, y: .00390820298}
+    - {x: .00390820298, y: .353513658}
+    - {x: .314451158, y: .353513658}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: 0bcc52ea92d1837468013e75f4cf9259, type: 2}
+    materialId: 0
+    sourceTextureGUID: 8ab7f1bcdd31d8448ac3253f64451311
     extractRegion: 0
     regionX: 0
     regionY: 0
@@ -93,7 +321,7 @@ MonoBehaviour:
   loadable: 0
   invOrthoSize: 2
   halfTargetHeight: 7.5
-  buildKey: 182183132
+  buildKey: 657928021
   dataGuid: ac3d8f17a4643034cbf78a5c2e64e7a7
   managedSpriteCollection: 0
   hasPlatformData: 0

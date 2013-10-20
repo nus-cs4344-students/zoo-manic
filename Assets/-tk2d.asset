@@ -1385,18 +1385,33 @@ MonoBehaviour:
     - Zebra-Back
     - Zebra-Front
     - Zebra-Bomb
+    - Rhino-Left
+    - Rhino-Back
+    - Rhino-Bomb
+    - Rhino-Front
+    - Rhino-Right
     spriteTextureGUIDs:
     - bfae2742fd4a6344f9456f64e9b7b50d
     - d5a02d92df1a4e246843f970a556fc44
     - df71cac47f93585458904c7c3ed92d75
     - a65a91b6a5d94724989d18790848617b
     - 3a7534cf2a296c34ca9f46e40dc26206
+    - 16e454bfefc249542b206c7c50081eae
+    - 62b288c8608b3c44591fcd0e28e0190f
+    - 8ab7f1bcdd31d8448ac3253f64451311
+    - da923c6b8cf20fd41be076676df3683d
+    - eeea020c0cb41004085e6d204370dd94
     spriteTextureTimeStamps:
     - 1381958217.55792
     - 1381958207.14733
     - 1381958174.71947
     - 1381958188.59126
     - 1381959229.30079
+    - 1382306053.23938
+    - 1382306070.83939
+    - 1382306130.4818
+    - 1382306062.41291
+    - 1382306041.90574
     managedSpriteCollection: 0
     loadable: 0
     assetName: 
@@ -1406,10 +1421,28 @@ MonoBehaviour:
     spriteCollectionDataGUID: ac3d8f17a4643034cbf78a5c2e64e7a7
     spriteNames:
     - Zebra-Bomb
+    - Power-up-Trick
+    - Power-up-Shake
+    - Power-up-Range
+    - Power-up-Invulnerability
+    - 'Power-up-Speed '
+    - Rhino-Bomb
     spriteTextureGUIDs:
     - 3a7534cf2a296c34ca9f46e40dc26206
+    - 0785717283a42b04bb482c6c95c83388
+    - 3be2d54235b78e54b89a78a04f1c4fb5
+    - a6d4daadd65d0c64e9267ebc03097fe4
+    - a833669fb5a22df4dae0619c455d9641
+    - f60f182e1c8cdab4ea06ca9b148ba177
+    - 8ab7f1bcdd31d8448ac3253f64451311
     spriteTextureTimeStamps:
     - 1381959229.30079
+    - 1382202625
+    - 1382200044
+    - 1382200010
+    - 1382197808
+    - 1382199982
+    - 1382306130.4818
     managedSpriteCollection: 0
     loadable: 0
     assetName: 
