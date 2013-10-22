@@ -20,3 +20,13 @@ Assets/TK2DROOT/tk2d/Code/Bomberman/SuperSocket.ClientEngine.Protocol.dll.meta
 Assets/TK2DROOT/tk2d/Code/Bomberman/SuperSocket.ClientEngine.Proxy.dll.meta
 Assets/TK2DROOT/tk2d/Code/Bomberman/WebSocket4Net.dll.meta
 Assets/TK2DROOT/tk2dUI_demo/Assets/3D.meta
+.gitignore.orig
+Assets/TK2DROOT/tk2d/Editor/tk2dExternal.dll
+Assets/TK2DROOT/tk2d/Editor/tk2dSkin.dll
+build/debug/native-ios/index.html
+build/debug/native-ios/native-ios.js
+build/debug/native-ios/native-ios.manifest
+build/debug/native-ios/spritesheets/cache.txt
+build/debug/native-ios/spritesheets/map.json
+build/debug/native-ios/spritesheets/spritesheetSizeMap.json
+sdk
