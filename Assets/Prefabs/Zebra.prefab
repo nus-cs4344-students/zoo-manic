@@ -128,7 +128,7 @@ GameObject:
   - 114: {fileID: 11400016}
   m_Layer: 0
   m_Name: Zebra
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -615,6 +615,8 @@ MonoBehaviour:
   bombGO: {fileID: 100000, guid: b24fb640000335c42b92ae6a67ba0424, type: 2}
   m_bombLimit: 3
   characterType: 0
+  clientSocketScript: {fileID: 11400002, guid: 29dc06ed51c39024fb87693657ceaa99, type: 2}
+  playerScript: {fileID: 11400004, guid: 29dc06ed51c39024fb87693657ceaa99, type: 2}
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1

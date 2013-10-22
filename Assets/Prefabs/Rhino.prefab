@@ -145,7 +145,7 @@ GameObject:
   - 114: {fileID: 11400018}
   m_Layer: 0
   m_Name: Rhino
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -629,6 +629,8 @@ MonoBehaviour:
   bombGO: {fileID: 100000, guid: 6dd43d825738d824fb30d85846c4abc2, type: 2}
   m_bombLimit: 3
   characterType: 1
+  clientSocketScript: {fileID: 11400002, guid: 29dc06ed51c39024fb87693657ceaa99, type: 2}
+  playerScript: {fileID: 11400004, guid: 29dc06ed51c39024fb87693657ceaa99, type: 2}
 --- !u!114 &11400020
 MonoBehaviour:
   m_ObjectHideFlags: 1

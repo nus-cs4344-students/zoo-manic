@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum CharacterType {Zebra, Rhino, Tiger}
+
 public class Player : MonoBehaviour {
 	
 	/*
@@ -19,6 +21,12 @@ bomb_left		-	how many bomb left to plant
 	[SerializeField] GameObject m_zebraCharacter;	
 	[SerializeField] GameObject m_tigerCharacter;	
 	[SerializeField] GameObject m_rhinoCharacter;	
+	
+	[SerializeField] int avatarId;			// 1 - Zebra, 2 - Rhino, 3 - Tiger
+	[SerializeField] string playerName;		// Playername
+	
+	private GameObject playerCharacter;
+	
 	// Powerup Status
 	private bool isHasteActivated = false;
 	private bool isInvulnerable = false;
@@ -26,8 +34,39 @@ bomb_left		-	how many bomb left to plant
 	private bool isSpeed = false;
 	private bool isShake = false;
 	
+	// Speed and Avatar
+	private int speed = 15;
+	
+	
 	// Alive Status
 	private bool isAlive = true;
+	
+	// If it is player himself or it is other player (opponent)
+	[SerializeField] bool isSelf = false;
+	
+	public string PlayerName
+	{
+        get { return playerName; }
+        set { playerName = value; }
+    }
+	
+	public int AvatarId
+	{
+        get { return avatarId; }
+        set { avatarId = value; }
+    }
+	
+	public int Speed 
+	{
+        get { return speed; }
+        set { speed = value; }
+    }
+	
+	public bool IsMyself 
+	{
+        get { return isSelf; }
+        set { isSelf = value; }
+    }
 	
 	public bool HastePowerup 
 	{
@@ -66,13 +105,50 @@ bomb_left		-	how many bomb left to plant
     }
 	
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 	
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	public void UpdatePosition(float cellX, float cellY)
+	{
+		// Update position of other player but not yourself
+		if(playerCharacter)
+		{
+			gameObject.transform.position = playerCharacter.gameObject.transform.position;
+			//playerCharacter.transform.position = new Vector3(ZooMap.GetHorizontalPos(cellX),ZooMap.GetVerticalPos(cellY), 0);
+			//Debug.Log ("Updating position to x: "+ZooMap.GetHorizontalPos(cellX)+" y: "+ZooMap.GetVerticalPos(cellY));
+		}
+	}
 	
+	void UpdateSpeed(int speedVal)
+	{
+		
+	}
+	
+	public void InitZebraCharacter()
+	{
+		playerCharacter = Instantiate(m_zebraCharacter, transform.position, transform.rotation) as GameObject;
+		var animationScript = playerCharacter.GetComponent<CharacterAnimController>();
+		animationScript.EnemyPlayer = !isSelf;
+		Debug.Log ("Zebra is created");
+	}
+	
+	public void InitRhinoCharacter()
+	{
+		playerCharacter = Instantiate(m_rhinoCharacter, transform.position, transform.rotation) as GameObject;
+		var animationScript = playerCharacter.GetComponent<CharacterAnimController>();
+		animationScript.EnemyPlayer = !isSelf;
+		Debug.Log ("Rhino is created");
+	}
+
+	// Update is called once per frame
+	void Update () 
+	{
+		if(playerCharacter)
+		{
+			gameObject.transform.localPosition = playerCharacter.gameObject.transform.position;
+		}
 	}
 }
 

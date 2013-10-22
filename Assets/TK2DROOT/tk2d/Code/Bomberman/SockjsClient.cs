@@ -89,7 +89,6 @@ public class SockjsClient : MonoBehaviour {
 			else
 			{
 				var response = m_wwwPolling.text;
-
 				if (!Connected)
 				{
 					if (response.Length > 0 && response[0] == 'o')
