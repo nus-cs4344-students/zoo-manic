@@ -23,7 +23,7 @@ public class Bomb : MonoBehaviour {
     	if (timeLeftToExplode <= 0.0f)
     	{
 			GameObject explosionInstance = Instantiate(explosionPrefab, transform.position, transform.rotation) as GameObject;
-        	
+			
 			// Update the bomb limit of player
 			GameObject playerGO = GameObject.FindWithTag("Player");
 			
@@ -31,7 +31,10 @@ public class Bomb : MonoBehaviour {
 			if(playerGO != null)
 			{
 				var characterScript = playerGO.GetComponent<CharacterAnimController>();
-				characterScript.BombLimit++;
+				
+				// make sure does not exceed 3
+				if(characterScript.BombLimit < 3)
+					characterScript.BombLimit++;
 			}
 
 			// See whether it exceeds the countdown

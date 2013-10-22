@@ -79,6 +79,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8338fe6cbdb5c6f478169f38ad94a111, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_InvulnerablePowerup: {fileID: 100000, guid: 7052ede568ad5e549b0cae9fd6beaadb,
+    type: 2}
+  m_RangePowerup: {fileID: 100000, guid: c7ee064115727c24ca4641e7fe3fafe5, type: 2}
+  m_ShakePowerup: {fileID: 100000, guid: b80f26e0a5ee752448ffb3890a2255f6, type: 2}
+  m_SpeedPowerup: {fileID: 100000, guid: e772bc1830c5fe44295dd8e985f9c885, type: 2}
+  m_TrickPowerup: {fileID: 100000, guid: 4ea1413310296324691502e64fadd81e, type: 2}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

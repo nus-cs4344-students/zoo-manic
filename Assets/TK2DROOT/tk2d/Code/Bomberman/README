@@ -1,0 +1,14 @@
+Usage:
+	- Put these files somewhere in your Unity3D project
+	- Set host and port of socket in "Example.cs"
+	- Append Example.cs to a GameObject in Unity editor
+	- Connects to the socket.io socket just as any other
+	  socket.io client. Uses the WebSocket transport.
+
+Disclaimer:
+	- Does not support secure connections. Also the handshake doesn't
+	  work yet.
+
+Roadmap:
+	- Use events instead of interface implementation
+	- Fix handshakes
