@@ -11,3 +11,12 @@ Obj
 Temp/CaseSensitiveTest
 Temp/UnityLockfile
 Temp/__EditModeScene
+Assets/TK2DROOT/tk2d/Editor/tk2dExternal.dll
+Assets/TK2DROOT/tk2d/Editor/tk2dSkin.dll
+build/debug/native-ios/index.html
+build/debug/native-ios/native-ios.js
+build/debug/native-ios/native-ios.manifest
+build/debug/native-ios/spritesheets/cache.txt
+build/debug/native-ios/spritesheets/map.json
+build/debug/native-ios/spritesheets/spritesheetSizeMap.json
+sdk
