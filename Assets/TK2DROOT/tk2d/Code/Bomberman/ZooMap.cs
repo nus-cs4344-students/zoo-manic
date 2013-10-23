@@ -23,10 +23,11 @@ public class ZooMap : MonoBehaviour {
 	
 	//horizontalCellNum, verticalCellNum, type, item
 	
+
 	// Store the cells info in a dictionary for efficiency
 	// cellNum, object{type, item,x, y}
 	// the game object here refers to the powerup, or the brick etc
-	private Dictionary<int, Cell> zooMapInfoDict = new Dictionary<int, Cell>();
+	private static Dictionary<int, Cell> zooMapInfoDict = new Dictionary<int, Cell>();		// Static so it won't disappear when scene change
 	//private Dictionary<int, List<GameObject>> zooMapItemObjectDict = new Dictionary<int, List<GameObject>>();
 	
 	public static float GetHorizontalCell(float horizontalPos)
@@ -52,10 +53,19 @@ public class ZooMap : MonoBehaviour {
 	}
 	
 	// Use this for initialization
-	void Start () 
+	void Awake()
 	{
 		InitZooMap();
-		Debug.Log ("Zoo Map Created!");
+		Debug.Log ("Zoo Map Created! Map Size: "+zooMapInfoDict.Count);
+		
+		// Make this game object and all its transform children
+		// survive when loading a new scene.
+		DontDestroyOnLoad (transform.gameObject);
+	}
+	
+	void Start () 
+	{
+		
 	}
 	
 	private void InitZooMap()
@@ -64,18 +74,7 @@ public class ZooMap : MonoBehaviour {
 		// item  no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs, 5 - shakable
 		for(int index=0; index< (int) ZooMap.horizontalCell * ZooMap.verticalCell; index++)
 		{
-			/*List list = new List();
-			int[] arr = new int[2]; // New array with 2 elements
-			arr[0] = 0;
-			arr[1] = 0;
-			list.Add(arr);*/
-			//List<int> itemInfoList = CreateList(0, 0);
-			//List<int> itemInfoList = new List<int>() { 0,0 };
-			//List<GameObject> cellObjList = new List<GameObject>();
-			
 			zooMapInfoDict.Add (index, new Cell());
-			
-			//zooMapItemObjectDict.Add(index, cellObjList);
 		}
 	}
 	
@@ -89,9 +88,13 @@ public class ZooMap : MonoBehaviour {
 	// item  no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs, 5 - shakable
 	public void UpdateZooMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, int cellNum)
 	{
-		//List<int> cellInfoList = (List<int>) zooMapInfoDict[cellNum];
-		//int myCellType = cellInfoList[0];
-		//int myCellItem = cellInfoList[1];
+		
+		if(zooMapInfoDict == null || zooMapInfoDict.Count == 0)
+		{
+			Debug.Log ("Map has not been INITIALISED");
+			return;
+		}
+		
 		Cell currCell = (Cell) zooMapInfoDict[cellNum];
 		
 		// If server says add wooden crate, but your side has no crate

@@ -25,7 +25,7 @@ bomb_left		-	how many bomb left to plant
 	[SerializeField] int avatarId;			// 1 - Zebra, 2 - Rhino, 3 - Tiger
 	[SerializeField] string playerName;		// Playername
 	
-	private GameObject playerCharacter;
+	private GameObject character;
 	
 	// Powerup Status
 	private bool isHasteActivated = false;
@@ -113,9 +113,9 @@ bomb_left		-	how many bomb left to plant
 	public void UpdatePosition(float cellX, float cellY)
 	{
 		// Update position of other player but not yourself
-		if(playerCharacter)
+		if(character)
 		{
-			gameObject.transform.position = playerCharacter.gameObject.transform.position;
+			gameObject.transform.position = character.gameObject.transform.position;
 			//playerCharacter.transform.position = new Vector3(ZooMap.GetHorizontalPos(cellX),ZooMap.GetVerticalPos(cellY), 0);
 			//Debug.Log ("Updating position to x: "+ZooMap.GetHorizontalPos(cellX)+" y: "+ZooMap.GetVerticalPos(cellY));
 		}
@@ -128,26 +128,44 @@ bomb_left		-	how many bomb left to plant
 	
 	public void InitZebraCharacter()
 	{
-		playerCharacter = Instantiate(m_zebraCharacter, transform.position, transform.rotation) as GameObject;
-		var animationScript = playerCharacter.GetComponent<CharacterAnimController>();
+		character = Instantiate(m_zebraCharacter, transform.position, transform.rotation) as GameObject;
+		var animationScript = character.GetComponent<CharacterAnimController>();
 		animationScript.EnemyPlayer = !isSelf;
+		
+		// If is player himself
+		if(isSelf)
+		{
+			// Set the Zebra to tagged as Player
+			character.gameObject.tag = "Player";
+		}
+		
 		Debug.Log ("Zebra is created");
 	}
 	
 	public void InitRhinoCharacter()
 	{
-		playerCharacter = Instantiate(m_rhinoCharacter, transform.position, transform.rotation) as GameObject;
-		var animationScript = playerCharacter.GetComponent<CharacterAnimController>();
+		character = Instantiate(m_rhinoCharacter, transform.position, transform.rotation) as GameObject;
+		var animationScript = character.GetComponent<CharacterAnimController>();
 		animationScript.EnemyPlayer = !isSelf;
+		
+		// If is player himself
+		if(isSelf)
+		{
+			// Set the rhino to tagged as Player
+			character.gameObject.tag = "Player";
+		}
+		
 		Debug.Log ("Rhino is created");
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
+		GameObject playerCharacter = GameObject.FindGameObjectWithTag("Player");
+		// Update player position so the camera will follow
 		if(playerCharacter)
 		{
-			gameObject.transform.localPosition = playerCharacter.gameObject.transform.position;
+			gameObject.transform.localPosition = playerCharacter.transform.position;
 		}
 	}
 }

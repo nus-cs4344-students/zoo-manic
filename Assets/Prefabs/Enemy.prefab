@@ -8,12 +8,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  - 114: {fileID: 11400004}
-  - 114: {fileID: 11400002}
   - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25,7 +23,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24.2760563, y: 6.05430984, z: 0}
+  m_LocalPosition: {x: .0567350388, y: 1.02703476, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,36 +41,9 @@ MonoBehaviour:
   m_zebraCharacter: {fileID: 100014, guid: c206c09708c55014d8fe32265761467e, type: 2}
   m_tigerCharacter: {fileID: 0}
   m_rhinoCharacter: {fileID: 100016, guid: 7f075c140025e1f43a6823a23681132b, type: 2}
-  avatarId: 0
-  playerName: RhinoPlayer
+  avatarId: 1
+  playerName: ZebraPlayer
   isSelf: 0
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdf061c220c892c4881e9861c2626c37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sockjs: {fileID: 11400004}
-  playerScript: {fileID: 11400000}
-  characterType: 1
-  zooMapScript: {fileID: 0}
-  enemyPlayer: {fileID: 100000}
---- !u!114 &11400004
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13f48f5f1dfa8d348b312b708f613c59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

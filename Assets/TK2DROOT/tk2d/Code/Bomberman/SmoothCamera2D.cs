@@ -15,7 +15,12 @@ public class SmoothCamera2D : MonoBehaviour {
     // Update is called once per frame
     void Update () 
     {
-       if (target)
+		UpdateCameraPosition();
+    }
+	
+	void UpdateCameraPosition()
+	{
+		if (target)
        {
 			// get position but must first convert camera to world coordinates
         	Vector3 point = camera.WorldToViewportPoint(target.position);
@@ -36,6 +41,5 @@ public class SmoothCamera2D : MonoBehaviour {
 			
         	transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
        }
- 
-    }
+	}
 }

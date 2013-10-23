@@ -8,33 +8,38 @@ public class ClientSocket : MonoBehaviour {
 
     public SockjsClient sockjs;
 
-	[SerializeField] Player playerScript;	
-	[SerializeField] CharacterType characterType;	
-	[SerializeField] ZooMap zooMapScript;
+	//[SerializeField] Player playerScript;	
+	//[SerializeField] CharacterType characterType;	
+	//[SerializeField] ZooMap zooMapScript;
 	
-	[SerializeField] GameObject enemyPlayer;
+	//[SerializeField] GameObject enemyPlayer;
 	
-	static int sessionId = 100000;
-	static long playerId;
+	[SerializeField] GameManager gameManager;
+	
+	//static int sessionId = 100000;
+	//static long playerId;
 	
 	ArrayList messageTypeList = new ArrayList();
 	ArrayList contentList = new ArrayList();
+	
+	// Make this game object and all its transform children
+	// survive when loading a new scene.
+	void Awake () 
+	{
+		DontDestroyOnLoad (transform.gameObject);
+	}
 
     public void Start()
     {
-		if(playerScript.IsMyself)
-		{
-			sockjs.OnMessage += OnMessage;
-       		sockjs.OnConnect += OnConnect;
+		sockjs.OnMessage += OnMessage;
+   		sockjs.OnConnect += OnConnect;
 
-        	// connect to wherever your server is running
-			// string url = "http://localhost:9999/echo/";
-		
-			string url = "http://localhost:5000/zoo/";
-		
-        	sockjs.Connect(url);
-		}
-        
+    	// connect to wherever your server is running
+		// string url = "http://localhost:9999/echo/";
+	
+		string url = "http://localhost:5000/zoo/";
+	
+    	sockjs.Connect(url);
     }
 
     private void OnMessage(string serverMsg)
@@ -50,24 +55,38 @@ public class ClientSocket : MonoBehaviour {
 		{
 			case "message":
 			messageContent = (string) dict["content"];
-			Debug.Log ("content: "+messageContent);
+			HandleMessage(messageContent);
 			break;
 			
 			case "session":
-			Debug.Log("RECEIVE SESSION MSG: "+serverMsg);
+			//Debug.Log("RECEIVE SESSION MSG: "+serverMsg);
 			StoreSessionID(serverMsg);
 			break;
 			
 			case "getPlayerId":
-			playerId = (long) dict["content"];
-			Debug.Log ("Player ID IS: "+playerId);
+			//playerId = (long) dict["content"];
+			GameManager.PlayerID = (long) dict["content"];
+			Debug.Log ("Player ID IS: "+GameManager.PlayerID);
 			break;
 			
 			case "update":
-			//HandleUpdate(serverMsg);
+			HandleUpdate(serverMsg);
 			break;
 		}
     }
+	
+	private void HandleMessage(string content)
+	{
+		Debug.Log ("Server message content is: "+content);
+		
+		// Game room is full
+		if(content != null && content.ToLower ().Equals ("the room is full.") )
+		{
+			SceneManager sceneScript = GameObject.Find ("SceneObject").GetComponent<SceneManager>();
+			sceneScript.RoomFull = true;
+			Debug.Log ("ROOM IS FULL");
+		}
+	}
 	
 	private void StoreSessionID(string dataFromServer)
 	{
@@ -103,7 +122,7 @@ public class ClientSocket : MonoBehaviour {
 		
 	}
 	
-	private void SendSetPropertyMessage()
+	public void SendSetPropertyMessage(string playerName, int avatarID)
 	{
 		ClearList();
 		
@@ -113,8 +132,11 @@ public class ClientSocket : MonoBehaviour {
 		messageTypeList.Add("properties");
 		Dictionary<string, object> propertiesList = new Dictionary<string, object>();
 		//BY RIGHT
-		propertiesList.Add("name", playerScript.PlayerName);	
-		propertiesList.Add("avatarId", playerScript.AvatarId);
+		//propertiesList.Add("name", playerScript.PlayerName);	
+		//propertiesList.Add("avatarId", playerScript.AvatarId);
+		
+		propertiesList.Add("name", playerName);	
+		propertiesList.Add("avatarId", avatarID);
 
 		contentList.Add(propertiesList);
 		
@@ -133,18 +155,16 @@ public class ClientSocket : MonoBehaviour {
 			long avatarId = (long) playerDict["avatarId"];
 			
 			// I am this player
-			if(playerId == serverPlayerId)
+			if(GameManager.PlayerID == serverPlayerId)
 			{
-				InitPlayerCharacter();
-				Debug.Log ("Create my own Character!!");
+				gameManager.InitPlayerCharacter();
 			}
 			else
 			{
-				InitEnemyCharacter((int) avatarId);
-				Debug.Log ("Creating Enemy Character!!");
+				gameManager.InitEnemyCharacter((int) avatarId);
 			}
 			
-			Debug.Log ("Playerid: "+playerId);
+			Debug.Log ("Playerid: "+serverPlayerId);
 			Debug.Log ("Playername: "+playerName);
 			Debug.Log ("AvatarId: "+avatarId);
 		}
@@ -152,6 +172,14 @@ public class ClientSocket : MonoBehaviour {
 	
 	private void HandleUpdate(string dataFromServer)
 	{
+		// Server should not send update even if i have not start the game
+		// Game is not started (ZooMap instance is null)
+		if(GameManager.CurrentScene != SceneType.Game)
+		{
+			return;
+		}
+		
+		
 		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		
 		Dictionary<string, object> bombDict = (Dictionary<string, object>) dict["bombs"];
@@ -165,12 +193,14 @@ public class ClientSocket : MonoBehaviour {
 		List<object> activeList = (List<object>) bombDict["active"];
 		
 		//"players":{"1382421891543":{}}
-		Dictionary<string, object> playersInfoDict = (Dictionary<string, object>) playersDict[""+playerId];
+		Dictionary<string, object> playersInfoDict = (Dictionary<string, object>) playersDict[""+GameManager.PlayerID];
 		
 		//long bombLeft = (long) playersInfoDict["bombLeft"];
 		//Debug.Log ("bombleft: "+bombLeft);
 		//long x = (long) playersInfoDict["x"];
 		//long y = (long) playersInfoDict["y"];
+		
+		//Debug.Log ("Server DATA: "+ dataFromServer);
 		
 		// iterate through each cells, and get the cell status
 		for(int index=0; index< (int) ZooMap.horizontalCell * ZooMap.verticalCell; index++)
@@ -181,8 +211,8 @@ public class ClientSocket : MonoBehaviour {
 			long horizontalCellNum = (long) zooMapInfoDict["x"];
 			long verticalCellNum = (long) zooMapInfoDict["y"];
 			
-			zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
-			//Debug.Log ("Cell num is: "+horizontalCellNum+""+verticalCellNum);
+			//zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
+			gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
 		}
 		
 		//playerScript.UpdatePosition(x, y);
@@ -237,7 +267,7 @@ public class ClientSocket : MonoBehaviour {
 		SendMessageToServer(messageTypeList, contentList);
 	}
 	
-	private void SendReadyMessage()
+	public void SendReadyMessage()
 	{
 		ClearList();
 		
@@ -247,7 +277,7 @@ public class ClientSocket : MonoBehaviour {
 		SendMessageToServer(messageTypeList, contentList);
 	}
 	
-	private void SendStartMessage()
+	public void SendStartMessage()
 	{
 		ClearList();
 		
@@ -257,29 +287,29 @@ public class ClientSocket : MonoBehaviour {
 		SendMessageToServer(messageTypeList, contentList);
 	}
 	
-	private void ConnectToLobby()
+	public void ConnectToLobby()
 	{
 		// Connect to lobby
-		ClearList();
+		//ClearList();
 		
 		// Player 1 joins a room
-		SendJoinARoomMessage();
+		//SendJoinARoomMessage();
 		// After selecting avatar, send player's your avatar
-		SendSetPropertyMessage();
+		//SendSetPropertyMessage();
 		
 		// Get the current player ID
-		SendReadyMessage();
-		SendStartMessage();
+		//SendReadyMessage();
+		//SendStartMessage();
 		
 		// get a list of player in that room, must call after join a room message
-		SendGetSessionMessage();
+		//SendGetSessionMessage();
 		
 		//InitCharacter();
 		
 		//StartCoroutine (WaitOneSecond ());
 	}
 	
-	private void SendGetSessionMessage()
+	public void SendGetSessionMessage()
 	{
 		ClearList(); 
 		
@@ -289,7 +319,7 @@ public class ClientSocket : MonoBehaviour {
 		SendMessageToServer(messageTypeList, contentList);
 	}
 	
-	private void SendJoinARoomMessage()
+	public void SendJoinARoomMessage(int sessionID)
 	{
 		ClearList();
 		
@@ -297,7 +327,8 @@ public class ClientSocket : MonoBehaviour {
 		contentList.Add("selectSession");
 		
 		messageTypeList.Add("sessionId");
-		contentList.Add (sessionId);
+		contentList.Add (sessionID);
+		//contentList.Add (sessionId);
 		
 		SendMessageToServer(messageTypeList, contentList);
 	}
@@ -307,42 +338,6 @@ public class ClientSocket : MonoBehaviour {
     {
    		yield return new WaitForSeconds(3.0f);
     }
-
-	
-	private void InitPlayerCharacter()
-	{
-		switch(characterType)
-		{
-			case CharacterType.Rhino:
-			playerScript.InitRhinoCharacter();
-			break;
-			
-			case CharacterType.Zebra:
-			playerScript.InitZebraCharacter();
-			break;
-		}
-	}
-	
-	private void InitEnemyCharacter(int avatarID)
-	{
-		// rhino
-		if(avatarID == 0)
-		{
-			//playerScript.InitRhinoCharacter();
-			var enemyGameObj = Instantiate(enemyPlayer, transform.position, transform.rotation) as GameObject;
-			var enemyScript = enemyGameObj.GetComponent<Player>();
-			enemyScript.InitRhinoCharacter();
-		}
-		// zebra
-		else if(avatarID == 1)
-		{
-			//playerScript.InitZebraCharacter();
-			var enemyGameObj = Instantiate(enemyPlayer, transform.position, transform.rotation) as GameObject;
-			var enemyScript = enemyGameObj.GetComponent<Player>();
-			enemyScript.InitZebraCharacter();
-		}
-		
-	}
 	
 	private void SendMessageToServer(ArrayList typeList, ArrayList dataList)
 	{

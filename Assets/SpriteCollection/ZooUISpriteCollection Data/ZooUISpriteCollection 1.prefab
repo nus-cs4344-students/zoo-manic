@@ -1,0 +1,227 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400000}
+  - 114: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: ZooUISpriteCollection 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400000
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d546f34a90531a14eaba82a43b05b86b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  materialIdsValid: 1
+  needMaterialInstance: 0
+  spriteDefinitions:
+  - name: Zoo Manic Title
+    boundsData:
+    - {x: 9.02500057, y: 5, z: 0}
+    - {x: 18.0500011, y: 10, z: 0}
+    untrimmedBoundsData:
+    - {x: 9.02500057, y: 5, z: 0}
+    - {x: 18.0500011, y: 10, z: 0}
+    texelSize: {x: .0500000007, y: .0500000007}
+    positions:
+    - {x: 0, y: 0, z: 0}
+    - {x: 18.0500011, y: 0, z: 0}
+    - {x: 0, y: 10, z: 0}
+    - {x: 18.0500011, y: 10, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .00781640597, y: .00390820298}
+    - {x: .00781640597, y: .708982408}
+    - {x: .789058566, y: .00390820298}
+    - {x: .789058566, y: .708982408}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: d4c5ebdcc0d31cb48882c40ccf223f2b, type: 2}
+    materialId: 0
+    sourceTextureGUID: 16a0461977fae984b8a0dbbe76125850
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 1
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: Zebra-Profile
+    boundsData:
+    - {x: 1.67500007, y: 2.70000005, z: 0}
+    - {x: 3.35000014, y: 5.4000001, z: 0}
+    untrimmedBoundsData:
+    - {x: 1.67500007, y: 2.70000005, z: 0}
+    - {x: 3.35000014, y: 5.4000001, z: 0}
+    texelSize: {x: .0500000007, y: .0500000007}
+    positions:
+    - {x: 0, y: 0, z: 0}
+    - {x: 3.35000014, y: 0, z: 0}
+    - {x: 0, y: 5.4000001, z: 0}
+    - {x: 3.35000014, y: 5.4000001, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .359378904, y: .716798842}
+    - {x: .621089816, y: .716798842}
+    - {x: .359378904, y: .927732408}
+    - {x: .621089816, y: .927732408}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: d4c5ebdcc0d31cb48882c40ccf223f2b, type: 2}
+    materialId: 0
+    sourceTextureGUID: bf9c75cdce20c6a4c9a183e2d6bd0d94
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 0
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: Tiger-Profile
+    boundsData:
+    - {x: 3.04999995, y: 2.20000005, z: 0}
+    - {x: 6.0999999, y: 4.29999971, z: 0}
+    untrimmedBoundsData:
+    - {x: 3.04999995, y: 2.17499995, z: 0}
+    - {x: 6.0999999, y: 4.3499999, z: 0}
+    texelSize: {x: .0500000007, y: .0500000007}
+    positions:
+    - {x: 0, y: .049999997, z: 0}
+    - {x: 6.0999999, y: .049999997, z: 0}
+    - {x: 0, y: 4.3499999, z: 0}
+    - {x: 6.0999999, y: 4.3499999, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .00781640597, y: .716798842}
+    - {x: .00781640597, y: .955076158}
+    - {x: .343746096, y: .716798842}
+    - {x: .343746096, y: .955076158}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: d4c5ebdcc0d31cb48882c40ccf223f2b, type: 2}
+    materialId: 0
+    sourceTextureGUID: e0bed9e761aee824f991033edb2f396a
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 1
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  - name: Rhino-Profile
+    boundsData:
+    - {x: 1.67500007, y: 2.6500001, z: 0}
+    - {x: 3.35000014, y: 5.19999981, z: 0}
+    untrimmedBoundsData:
+    - {x: 1.67500007, y: 2.625, z: 0}
+    - {x: 3.35000014, y: 5.25, z: 0}
+    texelSize: {x: .0500000007, y: .0500000007}
+    positions:
+    - {x: 0, y: .0500000007, z: 0}
+    - {x: 3.35000014, y: .0500000007, z: 0}
+    - {x: 0, y: 5.25, z: 0}
+    - {x: 3.35000014, y: 5.25, z: 0}
+    normals: []
+    tangents: []
+    uvs:
+    - {x: .636722684, y: .716798842}
+    - {x: .898433566, y: .716798842}
+    - {x: .636722684, y: .919919908}
+    - {x: .898433566, y: .919919908}
+    indices: 000000000300000001000000020000000300000000000000
+    material: {fileID: 2100000, guid: d4c5ebdcc0d31cb48882c40ccf223f2b, type: 2}
+    materialId: 0
+    sourceTextureGUID: 13e67c05da4484e4589ce777374316eb
+    extractRegion: 0
+    regionX: 0
+    regionY: 0
+    regionW: 0
+    regionH: 0
+    flipped: 0
+    complexGeometry: 0
+    colliderType: 0
+    colliderVertices: []
+    colliderIndicesFwd: 
+    colliderIndicesBack: 
+    colliderConvex: 0
+    colliderSmoothSphereCollisions: 0
+    attachPoints: []
+  premultipliedAlpha: 0
+  material: {fileID: 0}
+  materials:
+  - {fileID: 2100000, guid: d4c5ebdcc0d31cb48882c40ccf223f2b, type: 2}
+  textures:
+  - {fileID: 2800000, guid: aa27e652be0823d4b808d20f783d6132, type: 3}
+  allowMultipleAtlases: 0
+  spriteCollectionGUID: 2917e29a4101a264d86c4f5b0f18877e
+  spriteCollectionName: ZooUISpriteCollection
+  assetName: 
+  loadable: 0
+  invOrthoSize: 2
+  halfTargetHeight: 10
+  buildKey: 1826552744
+  dataGuid: c42e47845d3975d46ac4cb0bd53d22a2
+  managedSpriteCollection: 0
+  hasPlatformData: 0
+  spriteCollectionPlatforms: []
+  spriteCollectionPlatformGUIDs: []
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 100000}
+  m_IsPrefabParent: 1
+  m_IsExploded: 1
