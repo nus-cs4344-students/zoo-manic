@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 	
 	// Player Information
 	public static string PlayerName;
-	public static int AvatarID;
+	public static long AvatarID;
 	public static int SessionID;		// roomID
 	
 	public static long PlayerID;
+	
+	private List<Player> playerList = new List<Player>();
 	
 	public static SceneType CurrentScene;
 	
@@ -25,10 +28,67 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-	
 	}
 	
-	public void InitPlayerCharacter()
+	public void UpdatePosition(long serverPlayerID, float cellX, float cellY)
+	{
+		// If it is other player, then update the position
+		if(serverPlayerID != PlayerID)
+		{
+			GameObject characterObject = GameObject.Find(""+serverPlayerID);
+			float positionX = ZooMap.GetHorizontalPos(cellX);
+			float positionY = ZooMap.GetVerticalPos(cellY);
+			
+			characterObject.GetComponent<CharacterAnimController>().UpdatePosition(positionX, positionY);
+		}
+	}
+	
+	public void InitCharacter(long playerID, int avatarID)
+	{
+		// If it is the player
+		if(playerID == GameManager.PlayerID)
+		{
+			switch(avatarID)
+			{
+				// rhino
+				case 0:
+				playerScript.InitRhinoCharacter(playerID);
+				break;
+				
+				// zebra
+				case 1:
+				playerScript.InitZebraCharacter(playerID);
+				break;
+			}
+		}
+		// It is the enemy
+		else
+		{
+			var enemyGameObj = Instantiate(enemyGameObject, transform.position, transform.rotation) as GameObject;
+			var enemyScript = enemyGameObj.GetComponent<Player>();
+			switch(avatarID)
+			{
+				// rhino
+				case 0:
+				enemyScript.InitRhinoCharacter(playerID);
+				break;
+			
+				// zebra
+				case 1:
+				enemyScript.InitZebraCharacter(playerID);
+				break;
+			}
+		}
+		
+		playerList.Add (new Player(playerID, avatarID) );
+	}
+	
+	public List<Player> GetPlayerList()
+	{
+		return playerList;
+	}
+	
+	/*public void InitPlayerCharacter()
 	{
 		switch(AvatarID)
 		{
@@ -44,7 +104,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 	
-	public void InitEnemyCharacter(int avatarID)
+	public void InitEnemyCharacter(int avatarID, int playerID)
 	{
 		
 		var enemyGameObj = Instantiate(enemyGameObject, transform.position, transform.rotation) as GameObject;
@@ -62,7 +122,7 @@ public class GameManager : MonoBehaviour {
 			enemyScript.InitZebraCharacter();
 			break;
 		}
-	}
+	}*/
 	
 	public void UpdateMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, int cellNum)
 	{

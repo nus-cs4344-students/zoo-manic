@@ -616,7 +616,7 @@ MonoBehaviour:
   m_bombLimit: 3
   characterType: 0
   clientSocketScript: {fileID: 11400002, guid: 29dc06ed51c39024fb87693657ceaa99, type: 2}
-  playerScript: {fileID: 11400004, guid: 29dc06ed51c39024fb87693657ceaa99, type: 2}
+  playerScript: {fileID: 11400004, guid: fed03b5af8d28de4da89c444b69e2485, type: 2}
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1

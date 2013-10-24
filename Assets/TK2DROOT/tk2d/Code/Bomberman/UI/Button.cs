@@ -68,7 +68,6 @@ public class Button : MonoBehaviour {
 			
 			case ButtonType.GameRoom_Start:
 			StartGame();
-			GameManager.LoadGameScene();
 			break;
 		}
 	}
@@ -86,6 +85,8 @@ public class Button : MonoBehaviour {
 	void StartGame()
 	{
 		sceneManager.StartGame();
+		// Wait for game to start, the server replies a "start" message, then everybody change the scene
+		//StartCoroutine( WaitForGame(3.0f) );
 	}
 	
 	void ConnectToRoom()

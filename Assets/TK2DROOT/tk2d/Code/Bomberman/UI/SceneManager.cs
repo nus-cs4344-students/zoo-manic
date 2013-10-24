@@ -72,11 +72,8 @@ public class SceneManager : MonoBehaviour {
 	{
 	}
 	
-	// Ready
-	public void Ready()
+	void InitPlayer1()
 	{
-		//serverConnection.EnterGame();
-		
 		// Player chooses avatar
 		string playerName = "ZebraPlayer";
 		
@@ -86,9 +83,32 @@ public class SceneManager : MonoBehaviour {
 		GameManager.UpdateAvatarID(avatarID);
 		
 		serverConnection.SendSetPropertyMessage(playerName, avatarID);
+	}
+	
+	void InitPlayer2()
+	{
+		// Player chooses avatar
+		string playerName = "RhinoPlayer";
+		
+		// 0 - Rhino, 1 - Zebra, 2 - Tiger
+		int avatarID = 0;
+		
+		GameManager.UpdateAvatarID(avatarID);
+		
+		serverConnection.SendSetPropertyMessage(playerName, avatarID);
+	}
+	
+	// Ready
+	public void Ready()
+	{
+		//serverConnection.EnterGame();
+	
+		InitPlayer1();
+		
+		//InitPlayer2();
 		
 		// Player's is READY
-		serverConnection.SendReadyMessage();
+		serverConnection.SendReadyMessage( (int) GameManager.AvatarID);
 		
 		m_readyButton.text = "Start Game";
 	}
@@ -98,8 +118,9 @@ public class SceneManager : MonoBehaviour {
 		// Host presses START
 		serverConnection.SendStartMessage();
 		
+		// SERVER WILL SEND A SESSION after it is being called
 		// Get session for a LIST of players
-		serverConnection.SendGetSessionMessage();
+		//serverConnection.SendGetSessionMessage();
 	}
 	
 	

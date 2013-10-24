@@ -37,6 +37,8 @@ bomb_left		-	how many bomb left to plant
 	// Speed and Avatar
 	private int speed = 15;
 	
+	private long playerID;
+	
 	
 	// Alive Status
 	private bool isAlive = true;
@@ -44,10 +46,22 @@ bomb_left		-	how many bomb left to plant
 	// If it is player himself or it is other player (opponent)
 	[SerializeField] bool isSelf = false;
 	
+	public Player(long playerID, int avatarID)
+	{
+		this.avatarId = avatarID;
+		this.playerID = playerID;
+	}
+	
 	public string PlayerName
 	{
         get { return playerName; }
         set { playerName = value; }
+    }
+	
+	public long PlayerID
+	{
+        get { return playerID; }
+        set { playerID = value; }
     }
 	
 	public int AvatarId
@@ -110,14 +124,13 @@ bomb_left		-	how many bomb left to plant
 	
 	}
 	
-	public void UpdatePosition(float cellX, float cellY)
+	void Update()
 	{
-		// Update position of other player but not yourself
-		if(character)
+		GameObject playerCharacter = GameObject.FindGameObjectWithTag("Player");
+		// Update player position so the camera will follow
+		if(playerCharacter)
 		{
-			gameObject.transform.position = character.gameObject.transform.position;
-			//playerCharacter.transform.position = new Vector3(ZooMap.GetHorizontalPos(cellX),ZooMap.GetVerticalPos(cellY), 0);
-			//Debug.Log ("Updating position to x: "+ZooMap.GetHorizontalPos(cellX)+" y: "+ZooMap.GetVerticalPos(cellY));
+			gameObject.transform.localPosition = playerCharacter.transform.position;
 		}
 	}
 	
@@ -126,7 +139,7 @@ bomb_left		-	how many bomb left to plant
 		
 	}
 	
-	public void InitZebraCharacter()
+	public void InitZebraCharacter(long playerID)
 	{
 		character = Instantiate(m_zebraCharacter, transform.position, transform.rotation) as GameObject;
 		var animationScript = character.GetComponent<CharacterAnimController>();
@@ -138,11 +151,15 @@ bomb_left		-	how many bomb left to plant
 			// Set the Zebra to tagged as Player
 			character.gameObject.tag = "Player";
 		}
+		else
+		{
+			character.gameObject.name = ""+playerID;
+		}
 		
 		Debug.Log ("Zebra is created");
 	}
 	
-	public void InitRhinoCharacter()
+	public void InitRhinoCharacter(long playerID)
 	{
 		character = Instantiate(m_rhinoCharacter, transform.position, transform.rotation) as GameObject;
 		var animationScript = character.GetComponent<CharacterAnimController>();
@@ -154,19 +171,12 @@ bomb_left		-	how many bomb left to plant
 			// Set the rhino to tagged as Player
 			character.gameObject.tag = "Player";
 		}
+		else
+		{
+			character.gameObject.name = ""+playerID;
+		}
 		
 		Debug.Log ("Rhino is created");
-	}
-
-	// Update is called once per frame
-	void Update () 
-	{
-		GameObject playerCharacter = GameObject.FindGameObjectWithTag("Player");
-		// Update player position so the camera will follow
-		if(playerCharacter)
-		{
-			gameObject.transform.localPosition = playerCharacter.transform.position;
-		}
 	}
 }
 

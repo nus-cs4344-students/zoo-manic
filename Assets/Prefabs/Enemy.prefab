@@ -42,7 +42,7 @@ MonoBehaviour:
   m_tigerCharacter: {fileID: 0}
   m_rhinoCharacter: {fileID: 100016, guid: 7f075c140025e1f43a6823a23681132b, type: 2}
   avatarId: 1
-  playerName: ZebraPlayer
+  playerName: RhinoPlayer
   isSelf: 0
 --- !u!1001 &100100000
 Prefab:
