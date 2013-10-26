@@ -12,18 +12,21 @@ public class DLLImport : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//connectToNodeJS();
+		
+		LocalHost local = new LocalHost("http://localhost:81/");
+		local.init();
 	}
 	
-	/*private void connectToNodeJS()
+	private void connectToNodeJS()
 	{
 		//string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/zoo";
 		//string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com/zoo";
 		//string socketUrl = "https://localhost:4344/pong";
-		string socketUrl = "http://localhost:4344/pong/";
+		string url = "http://localhost:81/";
 		//http://127.0.0.1:50122
-    	Debug.Log("socket url: " + socketUrl);
+    	Debug.Log("socket url: " + url);
 		
-		socket = new Client(socketUrl);
+		socket = new Client(url);
 		
 
 		this.socket.Opened += this.SocketOpened;
@@ -38,7 +41,7 @@ public class DLLImport : MonoBehaviour {
 		socket.Connect();
 		
 		Debug.Log ("Client is connected?: "+socket.IsConnected);
-	}*/
+	}
 	
 	private void SocketOpened(object sender, EventArgs  e) {
     	 Debug.Log(e);

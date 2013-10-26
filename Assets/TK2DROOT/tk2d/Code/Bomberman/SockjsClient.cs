@@ -6,250 +6,303 @@ using UnityEngine;
 using System.Collections;
 using Random = UnityEngine.Random;
 
-public class SockjsClient : MonoBehaviour {
-	
-	public enum ConnectionState
-	{
-		Disconnected,
-		Connecting,
-		Connected
-	}
-	
-	public delegate void OnMessageCallback(string _msg);
-	public delegate void OnConnectCallback();
-	public delegate void OnDisconnectCallback(int _code,string _message);
-	
-	public event OnMessageCallback OnMessage;
-	public event OnDisconnectCallback OnDisconnect;
-	public event OnConnectCallback OnConnect;
+public class SockjsClient : MonoBehaviour{
+        
+        public enum ConnectionState
+        {
+                Disconnected,
+                Connecting,
+                Connected
+        }
+        
+        public delegate void OnMessageCallback(string _msg);
+        public delegate void OnConnectCallback();
+        public delegate void OnDisconnectCallback(int _code,string _message);
+        
+        public event OnMessageCallback OnMessage;
+        public event OnDisconnectCallback OnDisconnect;
+        public event OnConnectCallback OnConnect;
 
-	private ConnectionState m_state;
-	private string m_xhr;
-	private WWW m_wwwSending;
-	private float m_sentTime;
-	private WWW m_wwwPolling;
-	private int m_ping;
-	private string m_host;
-	private readonly Regex m_splitter = new Regex("\",\"");
-	private readonly Hashtable m_sendHeader = new Hashtable();
-	private readonly List<string> m_outQueue = new List<string>();
+        private ConnectionState m_state;
+        private string m_xhr;
+        private WWW m_wwwSendingObject;
+        private WWW m_wwwCurrentSending;
+        private float m_sentTime;
+        private WWW m_wwwPolling;
+        private int m_ping;
+        private string m_host;
+        private readonly List<string> m_outQueue = new List<string>();
+        private static readonly Regex RegexSplitter = new Regex("\",\"");
+        private static readonly byte[] PollPostData = {0};
+        private static readonly string[] PollHeaders = {};
+        private static readonly ASCIIEncoding AsciiEncoding = new ASCIIEncoding();
+        private static readonly StringBuilder HashStringBuilder = new StringBuilder();
+        private static readonly Hashtable SendHeader = new Hashtable();
+        private static readonly string[] SendHeaderStrings = {"Content-Type=application/xml"};
 
-	public ConnectionState State
-	{
-		get { return m_state; }
-	}
-	
-	public bool Connected
-	{
-		get { return m_state == ConnectionState.Connected; }
-	}
+        public ConnectionState State
+        {
+                get { return m_state; }
+        }
+        
+        public bool Connected
+        {
+                get { return m_state == ConnectionState.Connected; }
+        }
 
-	public int Ping
-	{
-		get { return m_ping; }
-	}
+        public int Ping
+        {
+                get { return m_ping; }
+        }
 
-	public string Host
-	{
-		get { return m_host; }
-	}
+        public int AutoPingRefreshMs
+        {
+                get; set;
+        }
 
-	// Use this for initialization
-	public void Start () {
-		
-		m_sendHeader["Content-Type"] = "application/xml";
-	}
+        public string Host
+        {
+                get { return m_host; }
+        }
 
-	public void Update()
-	{
-		if (m_wwwSending != null && m_wwwSending.isDone)
-		{
-			if (m_wwwSending.error != null)
-			{
-				OnEventDisconnect(-1, "error sending data");
-			}
+        public SockjsClient()
+        {
+                if (SendHeader.Count == 0)
+                        SendHeader["Content-Type"] = "application/xml";
+        }
 
-			m_ping = (int)((Time.time - m_sentTime)*1000);
+        public void Update()
+        {
+                if (m_wwwCurrentSending != null && m_wwwCurrentSending.isDone)
+                {
+                        if (m_wwwCurrentSending.error != null)
+                        {
+                                //OnEventDisconnect(-1, "error sending data");
+                                Debug.LogError("[sockjs] send error -> disconnect");
+                        }
 
-			m_wwwSending = null;
-		}
+                        m_ping = (int)((Time.time - m_sentTime)*1000);
 
-		FlushOutqueue();
+                        m_wwwCurrentSending = null;
+                }
 
-		// long poll finished ?
-		if (m_wwwPolling != null && m_wwwPolling.isDone)
-		{
-			if(m_wwwPolling.error != null)
-			{
-				if (Connected)
-				{
-					OnEventDisconnect(-1, "net error");
-				}
-			}
-			else
-			{
-				var response = m_wwwPolling.text;
-				if (!Connected)
-				{
-					if (response.Length > 0 && response[0] == 'o')
-					{
-						OnEventConnected();
-					}
-				}
-				else
-				{
-					if (response.Length > 0)
-					{
-						if (response[0] == 'c')
-						{
-							var payload = response.Substring(2, response.Length - 4);
+                //AutoPingRefresh();
 
-							var separatorIdx = payload.IndexOf(',');
+                FlushOutqueue();
 
-							string partCode = payload.Substring(0, separatorIdx);
-							string partMessage = payload.Substring(separatorIdx + 1, payload.Length - separatorIdx - 1);
+                // long poll finished ?
+                if (m_wwwPolling != null && m_wwwPolling.isDone)
+                {
+                        if(m_wwwPolling.error != null)
+                        {
+                                if (Connected)
+                                {
+                                        OnEventDisconnect(-1, "net error");
+                                        Debug.LogError("[sockjs] poll error -> disconnect");
+                                }
+                                else
+                                {
+                                        OnEventDisconnect(-1, "connect error");
+                                }
+                        }
+                        else
+                        {
+                                var response = m_wwwPolling.text;
 
-							OnEventDisconnect(int.Parse(partCode), partMessage.Trim('"'));
-						}
-						else if (response[0] == 'h')
-						{
-							//Debug.Log("heartbeat");
-						}
-						else if (response[0] == 'a')
-						{
-							var payload = response.Substring(3, response.Length - 6);
+                                if (!Connected)
+                                {
+                                        if (response.Length > 0 && response[0] == 'o')
+                                        {
+                                                OnEventConnected();
+                                        }
+                                        else
+                                                Debug.LogError("[sockjs] unkown message: " + response);        
+                                }
+                                else
+                                {
+                                        if (response.Length > 0)
+                                        {
+                                                if (response[0] == 'c')
+                                                {
+                                                        var payload = response.Substring(2, response.Length - 4);
 
-							var messages = m_splitter.Split(payload);
+                                                        var separatorIdx = payload.IndexOf(',');
 
-							if (OnMessage != null)
-							{
-								foreach(var msg in messages)
-									OnMessage(DecodeMsg(msg));
-							}
-						}
-						else
-						{
-							Debug.LogError("[sockjs] unkown message: " + response);
-						}
-					}
-				}
-			}
+                                                        string partCode = payload.Substring(0, separatorIdx);
+                                                        string partMessage = payload.Substring(separatorIdx + 1, payload.Length - separatorIdx - 1);
 
-			if (Connected)
-				StartPoll();
-		}
-	}
+                                                        OnEventDisconnect(int.Parse(partCode), partMessage.Trim('"'));
+                                                }
+                                                else if (response[0] == 'h')
+                                                {
+                                                        //Debug.Log("heartbeat");
+                                                }
+                                                else if (response[0] == 'a')
+                                                {
+                                                        response = response.TrimEnd();
+                                                        var payload = response.Substring(3, response.Length - 5);
 
-	public void Connect(string _host)
-	{
-		if(m_state == ConnectionState.Disconnected)
-		{
-			m_host = _host;
+                                                        var messages = RegexSplitter.Split(payload);
 
-			var serverId = Random.Range(0, 999);
+                                                        if (OnMessage != null)
+                                                        {
+                                                                foreach(var msg in messages)
+                                                                        OnMessage(DecodeMsg(msg));
+                                                        }
+                                                }
+                                                else
+                                                {
+                                                        Debug.LogError("[sockjs] unkown message: " + response);
+                                                }
+                                        }
+                                }
+                        }
 
-			var sessionIdRnd = Random.Range(0, 100000000);
+                        if (Connected)
+                                StartPoll();
+                        else
+                               m_wwwPolling = null;
+                }
+        }
 
-			var sessionId = string.Format("{0}.{1}.{2}",
-				System.DateTime.UtcNow.ToLongTimeString(), 
-				sessionIdRnd,
-				SystemInfo.deviceUniqueIdentifier);
+        private void AutoPingRefresh()
+        {
+                if (AutoPingRefreshMs > 0)
+                {
+                        var lastSent = (int)((Time.time - m_sentTime) * 1000.0f);
+                        if (lastSent > AutoPingRefreshMs)
+                        {
+                                SendData("");
+                        }
+                }
+        }
 
-			m_xhr = _host + string.Format("{0:000}/{1}/xhr", serverId, GetHashString(sessionId));
+        public void Connect(string _host)
+        {
+                if(m_state == ConnectionState.Disconnected)
+                {
+                        m_host = _host;
 
-			m_state = ConnectionState.Connecting;
+                        var serverId = Random.Range(0, 999);
 
-			StartPoll();
-		}
-	}
+                        var sessionIdRnd = Random.Range(0, 100000000);
 
-	public void Disconnect()
-	{
-		if (m_state != ConnectionState.Disconnected)
-		{
-			m_state = ConnectionState.Disconnected;
+                        var sessionId = string.Format("{0}.{1}.{2}",
+                                System.DateTime.UtcNow.ToLongTimeString(), 
+                                sessionIdRnd,
+                                SystemInfo.deviceUniqueIdentifier);
 
-			m_wwwSending = null;
-			m_wwwPolling = null;
-			m_outQueue.Clear();
-		}
-	}
+                        m_xhr = _host + string.Format("{0:000}/{1}/xhr", serverId, GetHashString(sessionId));
 
-	public void SendData(string _payload, bool _tryFlush=false)
-	{
-		if (m_state == ConnectionState.Connected)
-		{
-			var escapedMsg = '"' + EncodeMsg(_payload) + '"';
+                        m_state = ConnectionState.Connecting;
 
-			m_outQueue.Add(escapedMsg);
-		}
+                        StartPoll();
+                }
+        }
 
-		if (_tryFlush)
-			FlushOutqueue();
-	}
+        public void Disconnect()
+        {
+                if (m_state != ConnectionState.Disconnected)
+                {
+                        OnEventDisconnect(0, "user disconnect");
 
-	private static string DecodeMsg(string _msg)
-	{
-		return _msg.Replace("\\\\", "\\").Replace("\\\"", "\"");
-	}
+                        if (m_wwwCurrentSending != null)
+                                m_wwwCurrentSending.Dispose();
 
-	private static string EncodeMsg(string _payload)
-	{
-		return _payload.Replace("\\", "\\\\").Replace("\"", "\\\"");
-	}
+                        if (m_wwwPolling != null)
+                                m_wwwPolling.Dispose();
 
-	private void FlushOutqueue()
-	{
-		if (m_wwwSending == null && m_outQueue.Count > 0)
-		{
-			var messages = string.Join(",", m_outQueue.ToArray());
+                        m_wwwCurrentSending = null;
+                        m_wwwPolling = null;
 
-			m_wwwSending = new WWW(m_xhr + "_send", StringToByteArray(string.Format("[{0}]", messages)), m_sendHeader);
+                        m_outQueue.Clear();
+                }
+        }
 
-			m_sentTime = Time.time;
-			m_outQueue.Clear();
-		}
-	}
+        public void SendData(string _payload, bool _tryFlush=false)
+        {
+                if (m_state == ConnectionState.Connected)
+                {
+                        var escapedMsg = '"' + EncodeMsg(_payload) + '"';
 
-	private void StartPoll()
-	{
-		m_wwwPolling = new WWW(m_xhr, new byte[] { 0 });
-	}
+                        m_outQueue.Add(escapedMsg);
+                }
 
-	private static byte[] GetHash(string _inputString)
-	{
-		HashAlgorithm algorithm = MD5.Create();
-		return algorithm.ComputeHash(Encoding.UTF8.GetBytes(_inputString));
-	}
+                if (_tryFlush)
+                        FlushOutqueue();
+        }
 
-	private static string GetHashString(string _inputString)
-	{
-		var sb = new StringBuilder();
-		foreach (byte b in GetHash(_inputString))
-			sb.Append(b.ToString("X2"));
+        private static string DecodeMsg(string _msg)
+        {
+                return _msg.Replace("\\\\", "\\").Replace("\\\"", "\"");
+        }
 
-		return sb.ToString();
-	}
-	
-	private void OnEventConnected()
-	{
-		m_state = ConnectionState.Connected;
-		
-		if(OnConnect != null)
-			OnConnect();
-	}
-	
-	private void OnEventDisconnect(int _code, string _msg)
-	{
-		m_state = ConnectionState.Disconnected;
-		
-		if(OnDisconnect != null)
-			OnDisconnect(_code,_msg);
-	}
-	
-	private static byte[] StringToByteArray(string _str)
-	{
-		var enc = new ASCIIEncoding();
-		return enc.GetBytes(_str);
-	}
+        private static string EncodeMsg(string _payload)
+        {
+                return _payload.Replace("\\", "\\\\").Replace("\"", "\\\"");
+        }
+
+        private void FlushOutqueue()
+        {
+                if (m_wwwCurrentSending == null && m_outQueue.Count > 0)
+                {
+                        var messages = string.Join(",", m_outQueue.ToArray());
+
+                        var postData = StringToByteArray(string.Format("[{0}]", messages));
+
+                        m_wwwSendingObject = new WWW(m_xhr + "_send", postData, SendHeader);
+                                
+                        m_wwwCurrentSending = m_wwwSendingObject;
+
+                        m_sentTime = Time.time;
+                        m_outQueue.Clear();
+                }
+        }
+
+        private void StartPoll()
+        {
+                if (m_wwwPolling == null)
+                        m_wwwPolling = new WWW(m_xhr, PollPostData);
+                else
+                        m_wwwPolling.InitWWW(m_xhr, PollPostData, PollHeaders);
+        }
+
+        private static byte[] GetHash(string _inputString)
+        {
+                HashAlgorithm algorithm = MD5.Create();
+                return algorithm.ComputeHash(Encoding.UTF8.GetBytes(_inputString));
+        }
+
+        private static string GetHashString(string _inputString)
+        {
+                HashStringBuilder.Length = 0;
+                foreach (byte b in GetHash(_inputString))
+                        HashStringBuilder.Append(b.ToString("X2"));
+
+                return HashStringBuilder.ToString();
+        }
+        
+        private void OnEventConnected()
+        {
+			Debug.Log("Connected to server : ");
+            m_state = ConnectionState.Connected;
+            
+            if(OnConnect != null)
+                    OnConnect();
+        }
+        
+        private void OnEventDisconnect(int _code, string _msg)
+        {
+			Debug.Log("Disconnected from server : " + _msg);
+            m_state = ConnectionState.Disconnected;
+            
+            if(OnDisconnect != null)
+                    OnDisconnect(_code,_msg);
+        }
+        
+        private static byte[] StringToByteArray(string _str)
+        {
+                var enc = AsciiEncoding;
+                return enc.GetBytes(_str);
+        }
 }

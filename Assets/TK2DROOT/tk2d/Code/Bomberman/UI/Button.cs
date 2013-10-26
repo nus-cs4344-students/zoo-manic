@@ -9,7 +9,6 @@ public class Button : MonoBehaviour {
 	[SerializeField] tk2dUIItem uiItem;
 	[SerializeField] ButtonType buttonType;
 	
-	
 	// Button class calls scene manager, and scene manager calls serverconnection/gamemanager
 	private SceneManager sceneManager;
 	
@@ -26,7 +25,7 @@ public class Button : MonoBehaviour {
 	
 	void OnEnable()
 	{
-	    uiItem.OnDown += ButtonDown;
+	    uiItem.OnRelease += ButtonDown;
 	    uiItem.OnClickUIItem += Clicked;
 	}
 	
@@ -93,7 +92,7 @@ public class Button : MonoBehaviour {
 	{
 		sceneManager.ConnectToRoom();
 		
-		StartCoroutine( WaitForRoom(3.0f) );
+		StartCoroutine( WaitForRoom(1.0f) );
 	}
 	
 	// Check room is not full then enter game
@@ -126,7 +125,7 @@ public class Button : MonoBehaviour {
 	//Also remember if you are adding event listeners to events you need to also remove them:
 	void OnDisable()
 	{
-	    uiItem.OnDown -= ButtonDown;
+	    uiItem.OnRelease -= ButtonDown;
 	    uiItem.OnClickUIItem -= Clicked;
 	}
 }

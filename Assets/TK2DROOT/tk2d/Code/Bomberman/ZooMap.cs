@@ -21,6 +21,11 @@ public class ZooMap : MonoBehaviour {
 	[SerializeField] GameObject woodenCratePrefab;	
 	[SerializeField] GameObject rockPrefab;	
 	
+	[SerializeField] Transform m_spawnPoint1;	
+	[SerializeField] Transform m_spawnPoint2;
+	[SerializeField] Transform m_spawnPoint3;
+	[SerializeField] Transform m_spawnPoint4;	
+	
 	//horizontalCellNum, verticalCellNum, type, item
 	
 
@@ -56,6 +61,7 @@ public class ZooMap : MonoBehaviour {
 	void Awake()
 	{
 		InitZooMap();
+		InitSpawnPoint();
 		Debug.Log ("Zoo Map Created! Map Size: "+zooMapInfoDict.Count);
 		
 		// Make this game object and all its transform children
@@ -66,6 +72,14 @@ public class ZooMap : MonoBehaviour {
 	void Start () 
 	{
 		
+	}
+	
+	private void InitSpawnPoint()
+	{
+		m_spawnPoint1.localPosition = new Vector3(GetHorizontalPos(0), GetVerticalPos(0), 0);
+		m_spawnPoint2.localPosition = new Vector3(GetHorizontalPos(horizontalCell-1), GetVerticalPos(0), 0);
+		m_spawnPoint3.localPosition = new Vector3(0, GetVerticalPos(verticalCell-1), 0);
+		m_spawnPoint4.localPosition = new Vector3(GetHorizontalPos(horizontalCell-1), GetVerticalPos(verticalCell-1), 0);
 	}
 	
 	private void InitZooMap()

@@ -39,11 +39,13 @@ public class GameManager : MonoBehaviour {
 			float positionX = ZooMap.GetHorizontalPos(cellX);
 			float positionY = ZooMap.GetVerticalPos(cellY);
 			
+			Debug.Log("Updating Position: CELL X: "+cellX + " CELLY: "+cellY);
+			
 			characterObject.GetComponent<CharacterAnimController>().UpdatePosition(positionX, positionY);
 		}
 	}
 	
-	public void InitCharacter(long playerID, int avatarID)
+	public void InitCharacter(long playerID, int avatarID, int cellX, int cellY)
 	{
 		// If it is the player
 		if(playerID == GameManager.PlayerID)
@@ -52,12 +54,12 @@ public class GameManager : MonoBehaviour {
 			{
 				// rhino
 				case 0:
-				playerScript.InitRhinoCharacter(playerID);
+				playerScript.InitRhinoCharacter(playerID, cellX, cellY);
 				break;
 				
 				// zebra
 				case 1:
-				playerScript.InitZebraCharacter(playerID);
+				playerScript.InitZebraCharacter(playerID, cellX, cellY);
 				break;
 			}
 		}
@@ -70,12 +72,12 @@ public class GameManager : MonoBehaviour {
 			{
 				// rhino
 				case 0:
-				enemyScript.InitRhinoCharacter(playerID);
+				enemyScript.InitRhinoCharacter(playerID, cellX, cellY);
 				break;
 			
 				// zebra
 				case 1:
-				enemyScript.InitZebraCharacter(playerID);
+				enemyScript.InitZebraCharacter(playerID, cellX, cellY);
 				break;
 			}
 		}

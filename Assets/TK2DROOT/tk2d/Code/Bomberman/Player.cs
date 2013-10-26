@@ -139,11 +139,15 @@ bomb_left		-	how many bomb left to plant
 		
 	}
 	
-	public void InitZebraCharacter(long playerID)
+	public void InitZebraCharacter(long playerID, int cellX, int cellY)
 	{
 		character = Instantiate(m_zebraCharacter, transform.position, transform.rotation) as GameObject;
 		var animationScript = character.GetComponent<CharacterAnimController>();
 		animationScript.EnemyPlayer = !isSelf;
+		
+		float spawnX = ZooMap.GetHorizontalPos(cellX);
+		float spawnY = ZooMap.GetVerticalPos(cellY);
+		animationScript.SpawnCharacter(spawnX, spawnY);
 		
 		// If is player himself
 		if(isSelf)
@@ -151,19 +155,22 @@ bomb_left		-	how many bomb left to plant
 			// Set the Zebra to tagged as Player
 			character.gameObject.tag = "Player";
 		}
-		else
-		{
-			character.gameObject.name = ""+playerID;
-		}
+		
+		character.gameObject.name = ""+playerID;
 		
 		Debug.Log ("Zebra is created");
 	}
 	
-	public void InitRhinoCharacter(long playerID)
+	public void InitRhinoCharacter(long playerID, int cellX, int cellY)
 	{
 		character = Instantiate(m_rhinoCharacter, transform.position, transform.rotation) as GameObject;
 		var animationScript = character.GetComponent<CharacterAnimController>();
 		animationScript.EnemyPlayer = !isSelf;
+		
+		float spawnX = ZooMap.GetHorizontalPos(cellX);
+		float spawnY = ZooMap.GetVerticalPos(cellY);
+		
+		animationScript.SpawnCharacter(spawnX, spawnY);
 		
 		// If is player himself
 		if(isSelf)
@@ -171,10 +178,8 @@ bomb_left		-	how many bomb left to plant
 			// Set the rhino to tagged as Player
 			character.gameObject.tag = "Player";
 		}
-		else
-		{
-			character.gameObject.name = ""+playerID;
-		}
+		
+		character.gameObject.name = ""+playerID;
 		
 		Debug.Log ("Rhino is created");
 	}
