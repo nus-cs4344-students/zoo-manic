@@ -12,10 +12,11 @@ using System.Collections;
 using UnityEngine;
 using MiniJSON;
 using System.Collections.Generic;
+using System.Threading;
 
-public class TCPConnector
+public class TCPConnector : MonoBehaviour
 {
-	const int READ_BUFFER_SIZE = 1000000;
+	const int READ_BUFFER_SIZE = 100000;
 	const Int32 PORT_NUM = 10000;
 	private TcpClient client;
 	//var client;
@@ -25,19 +26,16 @@ public class TCPConnector
 	public string res=String.Empty;
 	private string pUserName;
 	
-	public List<string> m_messageQueue = new List<string>();
+	public delegate string AsyncDelegate();
 	
-	/*
-	TcpClient mySocket;
-    NetworkStream theStream;
-    StreamWriter theWriter;
-    StreamReader theReader;
-    String Host = "localhost";
-    Int32 Port = 5000;
-	bool socketReady;*/
+	public List<string> m_messageQueue = new List<string>();
 	
     public delegate void OnMessageCallback(string _msg);
     public event OnMessageCallback OnMessage;
+	
+	AutoResetEvent stopWaitHandle = new AutoResetEvent(false);
+	
+	private ClientSocket clientConnection;
 
 	public TCPConnector(){}
 
@@ -52,9 +50,11 @@ public class TCPConnector
 			client = new TcpClient(netIP, portNum);
 			// Start an asynchronous read invoking DoRead to avoid lagging the user
 			// interface.
-			client.GetStream().BeginRead(readBuffer, 0, READ_BUFFER_SIZE, new AsyncCallback(DoRead), null);
+			client.GetStream().BeginRead(readBuffer, 0, READ_BUFFER_SIZE, DoRead, null);
 			// Make sure the window is showing before popping up connection dialog.
-
+			
+			clientConnection = GameObject.Find ("PlayerConnection").GetComponent<ClientSocket>();
+			
 			//AttemptLogin(sUserName);
 			return "Connection Succeeded";
 		} 
@@ -83,9 +83,159 @@ public class TCPConnector
 	{
 		SendData("REQUESTUSERS");
 	}
+	
+	void Update()
+	{
+	}
+	
+	/*public void SomeFunction()
+    {    
+        StopOperation();
+        stopWaitHandle.WaitOne(); // wait for callback    
+        StartOperation();
+    }*/
+	
+	private void StartOperation(int BytesRead)
+    {
+		strMessage = Encoding.ASCII.GetString(readBuffer, 0, BytesRead-2);
+		//strMessage = this.Encoding.GetString(readBuffer, 0, BytesRead-2);
+		ProcessCommands(strMessage);
+		
+		Thread.Sleep(500);
+		
+		// do something
+		client.GetStream().BeginRead(readBuffer, 0, READ_BUFFER_SIZE, DoRead, null);
+		
+		//Thread.Sleep(500);
+    }
+    private int StopOperation(IAsyncResult ar)
+    {
+        // This task simulates an asynchronous call that will invoke
+        // Stop_Callback upon completion. In real code you will probably
+        // have something like this instead:
+        //
+        //     someObject.DoSomethingAsync("input", Stop_Callback);
+        //
+        
+		/*new Task(() =>
+            {
+                Thread.Sleep(500);
+                Stop_Callback(); // invoke the callback
+            }).Start();*/
+		
+		return ReadData(ar);
+    }
+	
+	private int ReadData(IAsyncResult ar)
+	{
+		int BytesRead = -1;
+		try
+		{
+			// Finish asynchronous read into readBuffer and return number of bytes read.
+			BytesRead = client.GetStream().EndRead(ar);
+		
+			if (BytesRead < 1) 
+			{
+				// if no bytes were read server has close.  
+				res="Disconnected";
+				return BytesRead;
+			}
+			// Convert the byte array the message was saved into, minus two for the
+			// Chr(13) and Chr(10)
+			
+			//client.GetStream().BeginRead(readBuffer, 0, READ_BUFFER_SIZE, DoRead, null);
+		} 
+		catch
+		{
+	
+			res="Disconnected";
+		}
+		
+		Stop_Callback(); // invoke the callback
+		
+		return BytesRead;
+	}
+
+    private void Stop_Callback()
+    {
+        // signal the wait handle
+        stopWaitHandle.Set();
+    }
+
 
 	private void DoRead(IAsyncResult ar)
 	{ 
+		/*int BytesRead;
+		try
+		{
+			// Finish asynchronous read into readBuffer and return number of bytes read.
+			BytesRead = client.GetStream().EndRead(ar);
+		
+			if (BytesRead < 1) 
+			{
+				// if no bytes were read server has close.  
+				res="Disconnected";
+				return;
+			}
+			// Convert the byte array the message was saved into, minus two for the
+			// Chr(13) and Chr(10)
+			strMessage = Encoding.ASCII.GetString(readBuffer, 0, BytesRead-2);
+			//strMessage = this.Encoding.GetString(readBuffer, 0, BytesRead-2);
+			ProcessCommands(strMessage);
+			
+			// Start a new asynchronous read into readBuffer.
+			client.GetStream().BeginRead(readBuffer, 0, READ_BUFFER_SIZE, new AsyncCallback(DoRead), null);
+			
+			//client.GetStream().BeginRead(readBuffer, 0, READ_BUFFER_SIZE, DoRead, null);
+		} 
+		catch
+		{
+	
+			res="Disconnected";
+		}
+		
+		//Thread.Sleep(2000);*/
+
+		int bytesRead = StopOperation(ar);
+        stopWaitHandle.WaitOne(); // wait for callback    
+        StartOperation(bytesRead);
+	}
+	
+	/*public static void ExecuteSync(AsyncDelegate func)
+    {
+        ManualResetEvent reset = new ManualResetEvent(false);
+        int threadId;
+        func.BeginInvoke((a)=>reset.Set(), null);
+        reset.WaitOne();
+    }
+	
+	public static void Execute()
+	{
+		ManualResetEvent reset = new ManualResetEvent(false);
+		this.AsyncActionDone += (sender, args) => reset.Set();
+		this.PerformAsyncAction();
+		reset.WaitOne();
+	}
+	
+
+	public object Operation(object arg)
+	{
+	    var ar = BeginOperation(arg, DoRead, null);
+	
+	    return EndOperation(ar);
+	}
+	
+	public IAsyncResult BeginOperation(object arg, AsyncCallback asyncCallback, object state)
+	{
+	    AsyncResult asyncResult = new AsyncResult(asyncCallback, state);
+	
+	    // Lauch the asynchronous operation
+	    return asyncResult;
+	}
+	
+	private void LaunchOperation(AsyncResult asyncResult)
+	{
+	    // Do something asynchronously and call OnOperationFinished when finished
 		int BytesRead;
 		try
 		{
@@ -101,16 +251,25 @@ public class TCPConnector
 			// Chr(13) and Chr(10)
 			strMessage = Encoding.ASCII.GetString(readBuffer, 0, BytesRead-2);
 			ProcessCommands(strMessage);
-			// Start a new asynchronous read into readBuffer.
-			client.GetStream().BeginRead(readBuffer, 0, READ_BUFFER_SIZE, new AsyncCallback(DoRead), null);
-
 		} 
 		catch
 		{
-	
 			res="Disconnected";
 		}
 	}
+	
+	private void OnOperationFinished(AsyncResult asyncResult, object result)
+	{
+	    asyncResult.Complete(result);
+	}
+	
+	
+	public object EndOperation(IAsyncResult asyncResult)
+	{
+	    AsyncResult ar = (AsyncResult)asyncResult;
+	
+	    return ar.EndInvoke();
+	}*/
 
 	// Process the command received from the server, and take appropriate action.
 	private void ProcessCommands(string strMessage)
@@ -147,22 +306,41 @@ public class TCPConnector
 		
 		//Thread.Sleep(1000);
 		
-		
-		
+		//StartCoroutine(SendDataToClient());	
 		if(strMessage != null && OnMessage != null)
 		{
 			lock (ClientSocket.Lock) 
 			{
-				//ClientSocket.threadMsg = strMessage;
-				//ClientSocket.isMsgUpdated = true;
+				ClientSocket.threadMsg = strMessage;
+				ClientSocket.isMsgUpdated = true;
+				
+				m_messageQueue.Add (ClientSocket.threadMsg);
+			}
+			
+			//OnMessage(strMessage);
+		}
+	}
+	
+	/*IEnumerator SendDataToClient()
+	{
+     	yield return new WaitForSeconds(0.1f);
+		
+		if(strMessage != null && OnMessage != null)
+		{
+			lock (clientConnection.Lock) 
+			{
+				clientConnection.threadMsg = strMessage;
+				clientConnection.isMsgUpdated = true;
 				
 				m_messageQueue.Add (strMessage);
 			}
-			
+
 			//threadMessage = strMessage;
 			//OnMessage( strMessage );
+			
+			//OnMessage(strMessage);
 		}
-	}
+	}*/
 
 	// Use a StreamWriter to send a message to server.
 	public void SendData(string data)

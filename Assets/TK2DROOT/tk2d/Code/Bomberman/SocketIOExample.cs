@@ -36,8 +36,7 @@ public class SocketIOExample : MonoBehaviour
 
 			// emit Json Serializable object, anonymous types, or strings
 			//Part newPart = new Part() { PartNumber = "K4P2G324EC", Code = "DDR2", Level = 1 };
-			//socket.Emit("partInfo", newPart);
-
+			socket.Emit("partInfo", "Hello");
 		});
 
 		

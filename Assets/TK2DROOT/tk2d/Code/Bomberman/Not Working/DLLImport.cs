@@ -5,16 +5,19 @@ using WebSocket4Net;
 using SuperSocket;
 using SimpleJson;
 using System;
+using pomeloUnityClient;
 
 public class DLLImport : MonoBehaviour {
 	private Client socket;
+	public static PomeloClient pclient = null;
 
 	// Use this for initialization
 	void Start () {
 		//connectToNodeJS();
 		
-		LocalHost local = new LocalHost("http://localhost:5000/");
-		local.init();
+		//LocalHost local = new LocalHost("http://localhost:5000/");
+		//local.init();
+		//local.sendMessage("
 		
 		
 		//Note: your data can only be numbers and strings.  This is not a solution for object serialization or anything like that.
@@ -25,6 +28,17 @@ public class DLLImport : MonoBehaviour {
 		j.AddField("field2", "sampletext");
 		
 		local.sendMessage(1, "hello", j);*/
+
+		//pclient.disconnect();
+	}
+	
+	private void ConnectChat()
+	{
+		string url = "http://localhost:5000";
+		pclient = new PomeloClient(url);
+		pclient.init();
+		JsonObject userMessage = new JsonObject();
+		userMessage.Add("uid", "abc");
 	}
 	
 	private void connectToNodeJS()
@@ -32,7 +46,12 @@ public class DLLImport : MonoBehaviour {
 		//string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/zoo";
 		//string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com/zoo";
 		//string socketUrl = "https://localhost:4344/pong";
-		string url = "http://localhost:5000/";
+		//string url = "http://localhost:5000/";
+		
+		//string host = "ec2-54-225-24-113.compute-1.amazonaws.com";
+		string host = "localhost";
+		int port = 5000;
+		string url = "http://"+host+":"+port+"/";
     	Debug.Log("socket url: " + url);
 		
 		socket = new Client(url);
@@ -47,13 +66,26 @@ public class DLLImport : MonoBehaviour {
 				
 		socket.Connect();
 		
-		//socket.Send("my other event");
+		//this.socket.Send("my other event");
 		
 		 //this.socket.Emit("welcome", { message: "Welcome!" });
-		 this.socket.Emit("welcome", "hello world");
+		//this.socket.Emit("welcome", "hello world");
 		
-		//Debug.Log ("Client is connected?: "+socket.IsConnected);
+		StartCoroutine( WaitFor(2.0f) );
 	}
+	
+	
+	// Wait for server to reply with the list of lobby
+	IEnumerator WaitFor(float duration)
+    {
+		Debug.Log ("Waiting for "+duration +" sec");
+		yield return new WaitForSeconds(duration);   //Wait duration sec for server to reply
+		
+		Debug.Log ("Client is connected?: "+socket.IsConnected);
+		
+		socket.Send("{type: \"getAllSession\"}");
+    }
+	
 	
 	private void SocketOpened(object sender, EventArgs  e) {
     	 Debug.Log(e);

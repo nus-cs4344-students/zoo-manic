@@ -6,11 +6,11 @@ using MiniJSON;
 
 public class ClientSocket : MonoBehaviour {
 
-    public SockjsClient m_sockjs;// = new SockjsClient();
+    //public SockjsClient m_sockjs;// = new SockjsClient();
 	
 	//public TCPSocket m_sockjs;// = new SockjsClient();
 	
-	//public TCPConnector m_sockjs = new TCPConnector();
+	public TCPConnector m_sockjs;
 
 	//[SerializeField] Player playerScript;	
 	//[SerializeField] CharacterType characterType;	
@@ -60,29 +60,31 @@ public class ClientSocket : MonoBehaviour {
 		
 		//JsonSample();
 		
-		//InitTCPConnector();
+		InitTCPConnector();
 		
-		InitSockJS();
+		//InitSockJS();
 	}
 	
 	void InitSockJS()
 	{
-		m_sockjs.OnMessage += OnMessage;
+		//m_sockjs.OnMessage += OnMessage;
 		
-		m_sockjs.Connect("http://localhost:5000/");
+		//m_sockjs.Connect("http://localhost:5000/");
 		//m_sockjs.OnConnect += OnConnect;
 	}
 	
 	void InitTCPConnector()
 	{
-		//m_sockjs.OnMessage += OnMessage;
-		//string message = m_sockjs.fnConnectResult("localhost",5000);
-		//Debug.Log ("CONNECTION: "+message);
+		m_sockjs = new TCPConnector();
+		m_sockjs.OnMessage += OnMessage;
+		//string message = m_sockjs.fnConnectResult("ec2-54-225-24-113.compute-1.amazonaws.com", 5000);
+		string message = m_sockjs.fnConnectResult("localhost", 5000);
+		Debug.Log ("TCP Connection Result: "+message);
 	}
 	
 	void Update()
 	{
-		/*string msg = null;
+		string msg = null;
 		lock (Lock) 
 		{
 			//if(isMsgUpdated && threadMsg != null)
@@ -92,24 +94,31 @@ public class ClientSocket : MonoBehaviour {
 			
 			//msg = m_sockjs.m_messageQueue.RemoveAt(0);
 			
-			if(m_sockjs.m_messageQueue.Count > 0){
+			if(m_sockjs.m_messageQueue.Count > 0 && isMsgUpdated){
 				msg = m_sockjs.m_messageQueue[0];
 				
-				m_sockjs.m_messageQueue.Clear();
+				m_sockjs.m_messageQueue.Clear();				
 				//m_sockjs.m_messageQueue.RemoveAt(0);
 			}
 		}
+		
 		if (msg != null)
-			OnMessage(msg);*/
+			OnMessage(msg);
 	}
 
     private void OnMessage(string serverMsg)
     {
         // Receive the JSON message from server
         Debug.Log("Received Msg: "+serverMsg);
-		//isMsgUpdated = false;
+		isMsgUpdated = false;
 
 		var dict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		
+		if(dict != null && dict.ContainsKey("type") == false)
+		{
+			Debug.Log ("No such key for type");
+			return;
+		}
 		
 		string messageType = (string) dict["type"];
 		string messageContent = "";
@@ -149,7 +158,6 @@ public class ClientSocket : MonoBehaviour {
 			// Wait for 0.5 seconds for the game to load
 			//StartCoroutine(WaitForGameToLoad(3.0f, serverMsg));
 			//hasGameStarted = true;
-			Debug.Log ("GAME HAS LOADED!!");
 			break;
 			
 			case "update":
@@ -330,16 +338,18 @@ public class ClientSocket : MonoBehaviour {
 		}
 		
 		
-		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
+		/*var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		
 		Dictionary<string, object> bombDict = (Dictionary<string, object>) dict["bombs"];
 		Dictionary<string, object> playersDict = (Dictionary<string, object>) dict["players"];
 		Dictionary<string, object> zooMapDict = (Dictionary<string, object>) dict["zooMap"];
 		
+		Debug.Log ("COUNT OF DICT IS: "+zooMapDict.Count);*/
+		
 		/*
 		 * {"type":"update","bombs":{"exploded":[],"active":[]},"players":{"1382421891543":{}},"zooMap":{"0":{"type":0,"item":0},"1":{"type":0,"item":0}
 		 * */
-		List<object> bombList = (List<object>) bombDict["exploded"];
+		/*List<object> bombList = (List<object>) bombDict["exploded"];
 		List<object> activeList = (List<object>) bombDict["active"];
 		
 		//Debug.Log ("SERVER MESSAGE: "+dataFromServer);
@@ -381,16 +391,15 @@ public class ClientSocket : MonoBehaviour {
 		for(int index=0; index < (int) ZooMap.horizontalCell * ZooMap.verticalCell; index++)
 		{
 			Dictionary<string, object> zooMapInfoDict = (Dictionary<string, object>) zooMapDict[""+index];
-			long cellType = (long) zooMapInfoDict["type"];
+			//long cellType = (long) zooMapInfoDict["type"];
+			long cellType = (long) zooMapInfoDict["tile_type"];
 			long cellItem = (long) zooMapInfoDict["item"];
 			long horizontalCellNum = (long) zooMapInfoDict["x"];
 			long verticalCellNum = (long) zooMapInfoDict["y"];
 			
-			Debug.Log("CELL TYPE: "+cellType);
-			
 			//zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
 			gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
-		}
+		}*/ 
 		
 	
 		
