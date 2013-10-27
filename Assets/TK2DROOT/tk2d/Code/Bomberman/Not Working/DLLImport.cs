@@ -13,8 +13,18 @@ public class DLLImport : MonoBehaviour {
 	void Start () {
 		//connectToNodeJS();
 		
-		LocalHost local = new LocalHost("http://localhost:81/");
+		LocalHost local = new LocalHost("http://localhost:5000/");
 		local.init();
+		
+		
+		//Note: your data can only be numbers and strings.  This is not a solution for object serialization or anything like that.
+		/*JSONObject j = new JSONObject(JSONObject.Type.OBJECT);
+		//number
+		j.AddField("field1", 0.5);
+		//string
+		j.AddField("field2", "sampletext");
+		
+		local.sendMessage(1, "hello", j);*/
 	}
 	
 	private void connectToNodeJS()
@@ -22,13 +32,10 @@ public class DLLImport : MonoBehaviour {
 		//string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/zoo";
 		//string socketUrl = "http://ec2-54-225-24-113.compute-1.amazonaws.com/zoo";
 		//string socketUrl = "https://localhost:4344/pong";
-		string url = "http://localhost:81/";
-		//http://127.0.0.1:50122
+		string url = "http://localhost:5000/";
     	Debug.Log("socket url: " + url);
 		
 		socket = new Client(url);
-		
-
 		this.socket.Opened += this.SocketOpened;
         this.socket.Message += this.SocketMessage;
         this.socket.SocketConnectionClosed += this.SocketConnectionClosed;
@@ -40,13 +47,18 @@ public class DLLImport : MonoBehaviour {
 				
 		socket.Connect();
 		
-		Debug.Log ("Client is connected?: "+socket.IsConnected);
+		//socket.Send("my other event");
+		
+		 //this.socket.Emit("welcome", { message: "Welcome!" });
+		 this.socket.Emit("welcome", "hello world");
+		
+		//Debug.Log ("Client is connected?: "+socket.IsConnected);
 	}
 	
 	private void SocketOpened(object sender, EventArgs  e) {
     	 Debug.Log(e);
    		 Debug.Log("socket opened");
-   		 //this.socket.Emit("hello", "");
+   		 this.socket.Emit("connection", "hello world");
 	}
 	
 	private void SocketError(object sender, ErrorEventArgs e) {

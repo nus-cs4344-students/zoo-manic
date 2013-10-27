@@ -21,7 +21,7 @@ public class SocketIOExample : MonoBehaviour
 	{
 		UnityEngine.Debug.Log("Starting TestSocketIOClient Example...");
 
-		socket = new Client("ws://127.0.0.1:5000/zoo"); // url to the nodejs / socket.io instance
+		socket = new Client("http://localhost:5000/"); // url to the nodejs / socket.io instance
 
 		socket.Opened += SocketOpened;
 		socket.Message += SocketMessage;

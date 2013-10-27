@@ -83,10 +83,7 @@ public class ListButton : MonoBehaviour {
 		//clickedObject.GetChildren
 		clickedObject.transform.Find ("ListSelected").gameObject.SetActive(true);
 		clickedObject.GetComponent<tk2dUIHoverItem>().enabled = false;
-		
-		// connect to the selected room
-		//ConnectToRoom.ConnectToRoom(roomID);
-		
+
 		sceneManager.UpdateSelectedRoom(selectedNumber);
 	}
 

@@ -101,8 +101,7 @@ public class ZooMap : MonoBehaviour {
 	// type  empty - 0, box - 1, rock - 2
 	// item  no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs, 5 - shakable
 	public void UpdateZooMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, int cellNum)
-	{
-		
+	{	
 		if(zooMapInfoDict == null || zooMapInfoDict.Count == 0)
 		{
 			Debug.Log ("Map has not been INITIALISED");

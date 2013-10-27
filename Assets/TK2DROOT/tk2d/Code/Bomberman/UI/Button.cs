@@ -25,7 +25,7 @@ public class Button : MonoBehaviour {
 	
 	void OnEnable()
 	{
-	    uiItem.OnRelease += ButtonDown;
+	    uiItem.OnDown += ButtonDown;
 	    uiItem.OnClickUIItem += Clicked;
 	}
 	
@@ -51,11 +51,12 @@ public class Button : MonoBehaviour {
 			break;
 			
 			// Lobby
-			case ButtonType.Lobby_HostGame:
-			ConnectToRoom();
-			break;
+			//case ButtonType.Lobby_HostGame:
+			//ConnectToRoom();
+			//break;
 			
 			case ButtonType.Lobby_JoinGame:
+			Debug.Log ("BUTTON IS PRESSED!: ");
 			ConnectToRoom();
 			break;
 			
@@ -125,7 +126,7 @@ public class Button : MonoBehaviour {
 	//Also remember if you are adding event listeners to events you need to also remove them:
 	void OnDisable()
 	{
-	    uiItem.OnRelease -= ButtonDown;
+	    uiItem.OnDown -= ButtonDown;
 	    uiItem.OnClickUIItem -= Clicked;
 	}
 }

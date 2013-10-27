@@ -42,29 +42,6 @@ public class SceneManager : MonoBehaviour {
 	void Awake()
 	{
 		serverConnection = GameObject.Find ("PlayerConnection").GetComponent<ClientSocket>();
-	}
-	
-	public int SelectedRoom
-	{
-        get { return selectedRoom; }
-        set { selectedRoom = value; }
-    }
-
-	public bool RoomFull
-	{
-        get { return isRoomFull; }
-        set { isRoomFull = value; }
-    }
-	
-	public string PlayerName
-	{
-        get { return m_playerName.text; }
-        set { m_playerName.text = value; }
-    }
-	
-	// Use this for initialization
-	void Start () 
-	{
 		switch(m_currentScene)
 		{
 			case SceneType.Start:
@@ -89,6 +66,29 @@ public class SceneManager : MonoBehaviour {
 			Debug.Log ("Game scene");
 			break;
 		}
+	}
+	
+	public int SelectedRoom
+	{
+        get { return selectedRoom; }
+        set { selectedRoom = value; }
+    }
+
+	public bool RoomFull
+	{
+        get { return isRoomFull; }
+        set { isRoomFull = value; }
+    }
+	
+	public string PlayerName
+	{
+        get { return m_playerName.text; }
+        set { m_playerName.text = value; }
+    }
+	
+	// Use this for initialization
+	void Start () 
+	{
 	}
 	
 	// Update is called once per frame
@@ -179,14 +179,10 @@ public class SceneManager : MonoBehaviour {
 	// Wait for server to reply with the list of lobby
 	IEnumerator WaitForLobbyList(float duration)
     {
-		Debug.Log ("Waiting for "+duration);
+		Debug.Log ("Waiting for "+duration +" sec");
 		yield return new WaitForSeconds(duration);   //Wait duration sec for server to reply
 		
-		List<Lobby> serverLobby = serverConnection.GetLobbyList();
-		if(serverLobby.Count > 0)
-			UpdateLobbyUI(serverLobby);
-		else
-			Debug.Log ("No lobby retrieved!");
+		UpdateLobbyList();
     }
 	
 	void InitLobbyList()
@@ -214,6 +210,15 @@ public class SceneManager : MonoBehaviour {
 		serverConnection.SendGetSessionMessage();
 		
 		StartCoroutine( WaitForLobbyList(1.0f) );
+	}
+	
+	public void UpdateLobbyList()
+	{
+		List<Lobby> serverLobby = serverConnection.GetLobbyList();
+		if(serverLobby.Count > 0)
+			UpdateLobbyUI(serverLobby);
+		else
+			Debug.Log ("No lobby retrieved!");
 	}
 	
 	void UpdateLobbyUI(List<Lobby> list)

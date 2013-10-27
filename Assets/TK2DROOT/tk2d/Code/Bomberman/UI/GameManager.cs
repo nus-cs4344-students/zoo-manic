@@ -173,6 +173,10 @@ public class GameManager : MonoBehaviour {
 	public static void LoadGameScene()
 	{
 		CurrentScene = SceneType.Game;
-		Application.LoadLevel("BombermanScene");
+		//Application.LoadLevel("BombermanScene");
+		AsyncOperation async = Application.LoadLevelAsync("BombermanScene");
+		
+		//yield return async;
+		Debug.Log ("Loading complete");
 	}
 }
