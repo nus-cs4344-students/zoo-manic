@@ -9,12 +9,12 @@ public class ZooMap : MonoBehaviour {
 	//float widthDimension = 138.0f;
 	
 	// Number of cells
-	public static float horizontalCell = 38.0f;		
-	public static float verticalCell = 28.0f;
+	public static float horizontalCell = 16.0f;		
+	public static float verticalCell = 11.0f;
 	
 	// Cell dimensions
-	static float cellWidth = 3.50f;		// previously is 3.4, 3.0
-	static float cellHeight = 3.1f;
+	public static float cellWidth = 8.0f;		// previously is 3.4, 3.0
+	public static float cellHeight = 8.0f;
 	
 	bool isCellCreated = false;
 	

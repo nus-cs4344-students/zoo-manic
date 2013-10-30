@@ -9,9 +9,7 @@ public class ListButton : MonoBehaviour {
 	[SerializeField] tk2dUIItem uiItem;
 	[SerializeField] GameObject clickedObject;
 	[SerializeField] LobbyNumber lobbyNum;
-	
-	public static int selectedRoomID;
-	
+
 	// Button class calls scene manager, and scene manager calls serverconnection/gamemanager
 	private SceneManager sceneManager;
 	
@@ -19,6 +17,15 @@ public class ListButton : MonoBehaviour {
 	void Start () 
 	{
 		sceneManager = GameObject.Find ("SceneObject").GetComponent<SceneManager>();
+		
+		// If button is initialised
+		if(lobbyNum == LobbyNumber.Num_1)
+		{
+			int selectedNumber = 1;
+			clickedObject.transform.Find ("ListSelected").gameObject.SetActive(true);
+			clickedObject.GetComponent<tk2dUIHoverItem>().enabled = false;
+			sceneManager.UpdateSelectedRoom(selectedNumber);
+		}
 	}
 	
 	// Update is called once per frame
@@ -28,7 +35,7 @@ public class ListButton : MonoBehaviour {
 	
 	void OnEnable()
 	{
-	    uiItem.OnRelease += ListDown;
+	    uiItem.OnDown += ListDown;
 	    uiItem.OnClickUIItem += Clicked;
 	}
 	
@@ -96,7 +103,7 @@ public class ListButton : MonoBehaviour {
 	//Also remember if you are adding event listeners to events you need to also remove them:
 	void OnDisable()
 	{
-	    uiItem.OnRelease -= ListDown;
+	    uiItem.OnDown -= ListDown;
 	    uiItem.OnClickUIItem -= Clicked;
 	}
 }

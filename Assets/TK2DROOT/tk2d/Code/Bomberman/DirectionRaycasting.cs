@@ -34,6 +34,8 @@ public class DirectionRaycasting : MonoBehaviour
     public List<Ray> raysDown;
     public List<Ray> raysLeft;
     public List<Ray> raysRight;
+	
+	public string currentRay = "RayCastingFront";
 
     //-------------------------------
     //          Unity
@@ -71,7 +73,8 @@ public class DirectionRaycasting : MonoBehaviour
         //check inside raycasting object for the children (children are inside the raycasting folder)
         for (int i = 0; i < children.Count; i++)
         {
-            if(children[i].name == "RayCasting")
+            //if(children[i].name == "RayCasting")
+			if(children[i].name == currentRay)
                 children2 = children[i].GetChildren();
         }
 

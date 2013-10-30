@@ -7,10 +7,6 @@ using MiniJSON;
 public class ClientSocket : MonoBehaviour {
 
     public SockjsClient m_sockjs;// = new SockjsClient();
-	
-	//public TCPSocket m_sockjs;// = new SockjsClient();
-	
-	//public TCPConnector m_sockjs;
 
 	//[SerializeField] Player playerScript;	
 	//[SerializeField] CharacterType characterType;	
@@ -35,10 +31,9 @@ public class ClientSocket : MonoBehaviour {
 	
 	private List<Player> playerList;
 	private List<Lobby> lobbyList = new List<Lobby>();
-	private bool hasLobbyInfo = false;
-	
+	private List<Avatar> roomAvatarList = new List<Avatar>();
 	bool hasGameStarted = false;
-	
+
 	AsyncOperation BombermanGame;
 	
 	// Make this game object and all its transform children
@@ -50,66 +45,18 @@ public class ClientSocket : MonoBehaviour {
 			// Use this for initialization
 	public void Start()
 	{
-		//m_sockjs.AutoPingRefreshMs = 2000;		// don't do the auto ping refresh
-		//m_sockjs.OnMessage += OnMessage;
-		//m_sockjs.OnConnect += OnConnect;
-		
-		//string url = "http://localhost:5000/";
-		//string host = "localhost";
-		//Int32 portNum = 5000;
-		
-		//JsonSample();
-		
-		//InitTCPConnector();
-		
 		InitSockJS();
 	}
 	
 	void InitSockJS()
 	{
-		m_sockjs.AutoPingRefreshMs = 2000;
+		//m_sockjs.AutoPingRefreshMs = 2000;
 		m_sockjs.OnMessage += OnMessage;
 		m_sockjs.OnConnect += OnConnect;
 		m_sockjs.OnDisconnect += OnDisconnect;
 		
 		m_sockjs.Connect("http://localhost:5000/");
 		//m_sockjs.Connect("http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/");
-	}
-	
-	
-	
-	void InitTCPConnector()
-	{
-		//m_sockjs = new TCPConnector();
-		//m_sockjs.OnMessage += OnMessage;
-		//string message = m_sockjs.fnConnectResult("ec2-54-225-24-113.compute-1.amazonaws.com", 5000);
-		//string message = m_sockjs.fnConnectResult("localhost", 5000);
-		//Debug.Log ("TCP Connection Result: "+message);
-	}
-	
-	void Update()
-	{
-		/*string msg = null;
-		lock (Lock) 
-		{
-			//if(isMsgUpdated && threadMsg != null)
-			//{	
-			//	OnMessage(threadMsg);
-			//}
-			
-			//msg = m_sockjs.m_messageQueue.RemoveAt(0);
-			
-			if(m_sockjs.m_messageQueue.Count > 0 && isMsgUpdated){
-				msg = m_sockjs.m_messageQueue[0];
-				
-				//m_sockjs.m_messageQueue.Clear();				
-				m_sockjs.m_messageQueue.RemoveAt(0);
-			}
-		}
-		
-		if (msg != null)
-			OnMessage(msg);
-		*/
 	}
 
     private void OnMessage(string serverMsg)
@@ -128,17 +75,25 @@ public class ClientSocket : MonoBehaviour {
 		}
 		
 		string messageType = (string) dict["type"];
-		string messageContent = "";
 
 		switch(messageType)
 		{
 			case "message":
-			messageContent = (string) dict["content"];
-			HandleMessage(messageContent);
+			string messageContent = (string) dict["content"];
+			long messageStatus = (long) dict["status"];
+			HandleMessage(messageContent, (int) status);
+			break;
+			
+			case "newPlayerReply":
+			HandleNewPlayer(serverMsg);
 			break;
 			
 			case "session":
 			HandleGetSession(serverMsg);
+			break;
+			
+			case "roomSession":
+			HandleGetRoomSession(serverMsg);
 			break;
 			
 			case "setPropertyReply":
@@ -187,7 +142,7 @@ public class ClientSocket : MonoBehaviour {
 		playerList = gameManager.GetPlayerList();
 		hasGameStarted = true;
 	}
-	
+
 	private void HandleReadyReply(int serverReply, Dictionary<string, object> playerDict)
 	{
 		if( serverReply == 0 )
@@ -212,17 +167,81 @@ public class ClientSocket : MonoBehaviour {
 			Debug.Log ("Set Property ERROR");
 	}
 	
-	private void HandleMessage(string content)
-	{
-		Debug.Log ("Server message content is: "+content);
-		
+	private void HandleMessage(string content, int status)
+	{	
 		// Game room is full
-		if(content != null && content.ToLower ().Equals ("the room is full.") )
+		if(content != null && status == 1 )
 		{
 			SceneManager sceneScript = GameObject.Find ("SceneObject").GetComponent<SceneManager>();
 			sceneScript.RoomFull = true;
 			Debug.Log ("ROOM IS FULL");
 		}
+	}
+	
+	private void HandleNewPlayer(string serverData)
+	{
+		//HandleNewPlayer(serverMsg);
+		var dict = Json.Deserialize(serverData) as Dictionary<string,object>;
+		long statusReply = (long) dict["status"];
+		if(statusReply != 0)
+		{
+			Debug.LogError("Something went wrong in creating new player!");
+			return;
+		}
+		
+		long playerID = (long) dict["playerId"];
+		
+		GameManager.UpdatePlayerID(playerID);
+	}
+	
+	private void HandleGetRoomSession(string sessionData)
+	{
+		Debug.Log ("Server reply of session data is: "+sessionData);
+
+		var dict = Json.Deserialize(sessionData) as Dictionary<string,object>;
+		List<object> contentList = (List<object>) dict["content"];
+		
+		for(int i=0; i<contentList.Count; i++)
+		{
+			Dictionary<string, object> sessionDict = (Dictionary<string, object>) contentList[i];
+
+			string serverSessionID =  (string) sessionDict["id"];
+			long numOfPlayers = (long) sessionDict["size"];
+			List<object> playerList = (List<object>) sessionDict["players"];
+
+			// if session ID is equals to game manager one
+			if(Convert.ToInt32(serverSessionID) == GameManager.SessionID)
+			{
+				Debug.Log ("MY ROOM IS: "+GameManager.SessionID);
+				PopulateRoomList(playerList);
+				break;
+			}
+		}
+		
+		// After finish retrieving data from server, load the game room
+		GameManager.LoadGameRoomScene();
+	}
+	
+	private void PopulateRoomList(List<object> playerList)
+	{
+		if(playerList == null)
+		{
+			Debug.LogError("Playerlist is null");
+			return;
+		}
+		
+		for(int playerIndex=0; playerIndex<playerList.Count; playerIndex++)
+		{
+			Dictionary<string, object> playerDict = (Dictionary<string, object>) playerList[playerIndex];
+			long playerId = (long) playerDict["id"];
+			long avatarId = (long) playerDict["avatarId"];
+			roomAvatarList.Add (new Avatar(playerId, (int) avatarId) );
+		}
+	}
+	
+	public List<Avatar> GetRoomAvatarList()
+	{
+		return roomAvatarList;
 	}
 	
 	private void HandleGetSession(string sessionData)
@@ -258,9 +277,7 @@ public class ClientSocket : MonoBehaviour {
 			lobbyList.Add (new Lobby( Convert.ToInt32(sessionID), (int) numOfPlayers, false));
 		}
 		
-		hasLobbyInfo = true;
-		
-		//GameObject.Find ("SceneObject").GetComponent<SceneManager>().UpdatedLobbyList();
+		GameObject.Find ("SceneObject").GetComponent<SceneManager>().UpdateLobbyList();
 	}
 	
 	private void HandleGameStart(string dataFromServer)
@@ -286,12 +303,28 @@ public class ClientSocket : MonoBehaviour {
 		}
 	}
 	
+	public void SendNewPlayerMessage(string playerName)
+	{
+		ClearList();
+		
+		messageTypeList.Add("type");
+		contentList.Add("newPlayer");
+		
+		messageTypeList.Add("playerName");
+		contentList.Add(playerName);
+		
+		SendMessageToServer(messageTypeList, contentList);
+	}
+	
 	public void SendSetPropertyMessage(string playerName, int avatarID)
 	{
 		ClearList();
 		
 		messageTypeList.Add("type");
 		contentList.Add("setProperty");
+		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);
 		
 		messageTypeList.Add("properties");
 		Dictionary<string, object> propertiesList = new Dictionary<string, object>();
@@ -306,24 +339,6 @@ public class ClientSocket : MonoBehaviour {
 		
 		SendMessageToServer(messageTypeList, contentList);
 	}
-	
-	/*private void IteratePlayerList(List<object> listOfPlayers)
-	{
-		for(int i=0; i<listOfPlayers.Count; i++)
-		{
-			Dictionary<string, object> playerDict = (Dictionary<string, object>) listOfPlayers[i];
-			long serverPlayerId = (long) playerDict["id"];
-			string playerName = (string) playerDict["name"];
-			long avatarId = (long) playerDict["avatarId"];
-			
-			
-			gameManager.InitCharacter(serverPlayerId, (int) avatarId);
-			
-			Debug.Log ("Playerid: "+serverPlayerId);
-			Debug.Log ("Playername: "+playerName);
-			Debug.Log ("AvatarId: "+avatarId);
-		}
-	}*/
 	
 	IEnumerator WaitForGameToLoad(float duration, string serverMsg)
     {
@@ -415,6 +430,9 @@ public class ClientSocket : MonoBehaviour {
 		messageTypeList.Add("type");
 		contentList.Add("move");
 		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);
+		
 		messageTypeList.Add("x");
 		contentList.Add(playerX);
 		
@@ -431,6 +449,9 @@ public class ClientSocket : MonoBehaviour {
 		messageTypeList.Add("type");
 		contentList.Add("ready");
 		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);
+		
 		messageTypeList.Add("avatarId");
 		contentList.Add(avatarID);
 		
@@ -443,6 +464,9 @@ public class ClientSocket : MonoBehaviour {
 		
 		messageTypeList.Add("type");
 		contentList.Add("start");
+		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);
 		
 		SendMessageToServer(messageTypeList, contentList);
 	}
@@ -482,16 +506,33 @@ public class ClientSocket : MonoBehaviour {
 	}
 	
 	// Get a List of LOBBY
-	public void SendGetSessionMessage()
+	public void SendGetAllSessionMessage()
 	{
 		ClearList(); 
 		
 		// clear the previous list
 		lobbyList.Clear();
-		hasLobbyInfo = false;
 		
 		messageTypeList.Add("type");
 		contentList.Add("getAllSession");
+		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);
+		
+		SendMessageToServer(messageTypeList, contentList);
+	}
+	
+	public void SendGetRoomSession()
+	{
+		ClearList(); 
+		
+		roomAvatarList.Clear();
+		
+		messageTypeList.Add("type");
+		contentList.Add("getRoomSession");
+		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);
 		
 		SendMessageToServer(messageTypeList, contentList);
 	}
@@ -502,6 +543,9 @@ public class ClientSocket : MonoBehaviour {
 
 		messageTypeList.Add("type");
 		contentList.Add("setSession");
+		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);
 		
 		messageTypeList.Add("sessionId");
 		contentList.Add (sessionID);
@@ -535,7 +579,6 @@ public class ClientSocket : MonoBehaviour {
 		}
 		
 		var connectStr = Json.Serialize(connectionDict);
-		//Debug.Log ("Message to send: "+connectStr);
 		m_sockjs.SendData(connectStr);
 	}
 

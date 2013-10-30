@@ -38,6 +38,14 @@ public class SceneManager : MonoBehaviour {
 	
 	// Game Room
 	[SerializeField] tk2dTextMesh m_readyButton;
+	[SerializeField] GameObject m_AvatarItem1;
+	[SerializeField] GameObject m_AvatarItem2;
+	[SerializeField] GameObject m_AvatarItem3;
+	[SerializeField] GameObject m_AvatarItem4;
+	
+	[SerializeField] tk2dTextMesh m_roomTitleText;
+	[SerializeField] tk2dTextMesh m_playerStatusText;
+	[SerializeField] tk2dTextMesh m_gameText;
 	
 	void Awake()
 	{
@@ -53,13 +61,13 @@ public class SceneManager : MonoBehaviour {
 			break;
 			
 			case SceneType.Lobby:
-			InitLobbyList();		// init the data structure
 			Debug.Log ("Lobby scene");
-			GetLobbyList();
+			DisplayLobby();
 			break;
 		
 			case SceneType.GameRoom:
 			Debug.Log ("Game Room scene");
+			DisplayRoom();
 			break;
 			
 			case SceneType.Game:
@@ -124,20 +132,22 @@ public class SceneManager : MonoBehaviour {
 	}
 	
 	// Ready
-	public void Ready()
+	public bool Ready()
 	{
-		//serverConnection.EnterGame();
-	
-		//InitPlayer1();
+		if(GameManager.AvatarID == -1)
+		{
+			m_gameText.text = "Please select an avatar first!";
+			return false;
+		}
 		
-		InitPlayer2();
+		LockAvatarSelection();
 		
-		Debug.Log ("AVATAR ID IS: "+(int) GameManager.AvatarID);
+		serverConnection.SendSetPropertyMessage(GameManager.PlayerName, (int) GameManager.AvatarID);
 		
-		// Player's is READY
 		serverConnection.SendReadyMessage( (int) GameManager.AvatarID);
-		
 		m_readyButton.text = "Start Game";
+		
+		return true;
 	}
 	
 	public void StartGame()
@@ -150,16 +160,25 @@ public class SceneManager : MonoBehaviour {
 		//serverConnection.SendGetSessionMessage();
 	}
 	
+	public void CreateNewPlayer()
+	{
+		serverConnection.SendNewPlayerMessage(GameManager.PlayerName);
+	}
+	
 	
 	public void ConnectToRoom()
 	{
 		Lobby lobby = m_serverLobbyData[selectedRoom-1];
 		Debug.Log("Connecting to room of ID: "+lobby.SessionID);
+		
 		GameManager.UpdateSessionID(lobby.SessionID);
 		
 		// reset the value
 		isRoomFull = false;
 		serverConnection.SendJoinARoomMessage(lobby.SessionID);
+
+		// Send a get session message
+		serverConnection.SendGetRoomSession();
 	}
 	
 	public void UpdatePlayerName()
@@ -185,8 +204,101 @@ public class SceneManager : MonoBehaviour {
 		UpdateLobbyList();
     }
 	
+	public void UpdateSelectedAvatar(int avatarID)
+	{
+		GameManager.UpdateAvatarID(avatarID);
+	}
+	
+	public void UpdateAvatarList()
+	{
+		InitAvatarList();
+		
+		m_roomTitleText.text = "Room " + GameManager.SessionID;
+		m_playerStatusText.text = "";
+		m_gameText.text = "Welcome to Room " + GameManager.SessionID;
+		
+		List<Avatar> avatarList = serverConnection.GetRoomAvatarList();
+		for(int i=0; i<avatarList.Count; i++)
+		{
+			Avatar avatar = avatarList[i];
+			UpdateAvatar(avatar.AvatarID, avatar.SelectedPlayerID, avatar.AvatarType);
+		}
+	}
+	
+	public void UpdateAvatar(int avatarID, long playerID, AvatarIcon avatarType)
+	{
+		tk2dTextMesh nameScript = null;
+		tk2dSprite avatarScript = null;
+		
+		//int selectedAvatar = Avatar
+		switch(avatarType)
+		{
+			// If server returns avatarID of -1
+			case AvatarIcon.NotSelected:
+			return;
+			break;
+			
+			case AvatarIcon.Zebra:
+			nameScript = m_AvatarItem1.transform.Find ("Name").gameObject.GetComponent<tk2dTextMesh>();
+			avatarScript = m_AvatarItem1.transform.Find ("Portrait").gameObject.GetComponent<tk2dSprite>();
+			m_AvatarItem1.GetComponent<AvatarButton>().enabled = false;
+			break;
+			
+			case AvatarIcon.Rhino:
+			nameScript = m_AvatarItem2.transform.Find ("Name").gameObject.GetComponent<tk2dTextMesh>();
+			avatarScript = m_AvatarItem2.transform.Find ("Portrait").gameObject.GetComponent<tk2dSprite>();
+			m_AvatarItem2.GetComponent<AvatarButton>().enabled = false;
+			break;
+			
+			case AvatarIcon.Tiger:
+			nameScript = m_AvatarItem3.transform.Find ("Name").gameObject.GetComponent<tk2dTextMesh>();
+			avatarScript = m_AvatarItem3.transform.Find ("Portrait").gameObject.GetComponent<tk2dSprite>();
+			m_AvatarItem3.GetComponent<AvatarButton>().enabled = false;
+			break;
+			
+			case AvatarIcon.Cassowary:
+			nameScript = m_AvatarItem4.transform.Find ("Name").gameObject.GetComponent<tk2dTextMesh>();
+			avatarScript = m_AvatarItem4.transform.Find ("Portrait").gameObject.GetComponent<tk2dSprite>();
+			m_AvatarItem4.GetComponent<AvatarButton>().enabled = false;
+			break;
+		}
+		
+		// If they are selected, set the alpha to not so transparent
+		if(nameScript)
+			nameScript.color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
+			
+		if(avatarScript)
+			avatarScript.color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
+	}
+	
+	public void InitAvatarList()
+	{
+		/* Set selected BG to false
+		m_AvatarItem1.transform.Find ("SelectedBG").gameObject.SetActive(false);
+		m_AvatarItem2.transform.Find ("SelectedBG").gameObject.SetActive(false);
+		m_AvatarItem3.transform.Find ("SelectedBG").gameObject.SetActive(false);
+		m_AvatarItem4.transform.Find ("SelectedBG").gameObject.SetActive(false);*/
+		
+		m_AvatarItem1.GetComponent<AvatarButton>().enabled = true;
+		m_AvatarItem2.GetComponent<AvatarButton>().enabled = true;
+		m_AvatarItem3.GetComponent<AvatarButton>().enabled = true;
+		m_AvatarItem4.GetComponent<AvatarButton>().enabled = true;
+	}
+	
+	public void DisplayRoom()
+	{		
+		UpdateAvatarList();
+	}
+	
+	public void DisplayLobby()
+	{
+		InitLobbyList();
+		GetLobbyList();
+	}
+	
 	void InitLobbyList()
 	{
+		m_lobbyList.Clear();
 		m_lobbyList.Add(m_LobbyItem1);
 		m_lobbyList.Add(m_LobbyItem2);
 		m_lobbyList.Add(m_LobbyItem3);
@@ -207,9 +319,9 @@ public class SceneManager : MonoBehaviour {
 	void GetLobbyList()
 	{
 		// wait for awhile and get the updated lobby list from the server
-		serverConnection.SendGetSessionMessage();
+		serverConnection.SendGetAllSessionMessage();
 		
-		StartCoroutine( WaitForLobbyList(1.0f) );
+		//StartCoroutine( WaitForLobbyList(1.0f) );
 	}
 	
 	public void UpdateLobbyList()
@@ -248,6 +360,22 @@ public class SceneManager : MonoBehaviour {
 		}
 	}
 	
+	public void LockAvatarSelection()
+	{
+		m_AvatarItem1.GetComponent<AvatarButton>().enabled = false;
+		m_AvatarItem2.GetComponent<AvatarButton>().enabled = false;
+		m_AvatarItem3.GetComponent<AvatarButton>().enabled = false;
+		m_AvatarItem4.GetComponent<AvatarButton>().enabled = false;
+	}
+	
+	public void ClearAvatarSelection()
+	{
+		m_AvatarItem1.transform.Find ("SelectedBG").gameObject.SetActive(false);
+		m_AvatarItem2.transform.Find ("SelectedBG").gameObject.SetActive(false);
+		m_AvatarItem3.transform.Find ("SelectedBG").gameObject.SetActive(false);
+		m_AvatarItem4.transform.Find ("SelectedBG").gameObject.SetActive(false);
+	}
+	
 	public void ClearLobbySelection()
 	{
 		/*m_LobbyItem1.transform.Find ("ListSelected").gameObject.SetActive(false);
@@ -275,6 +403,7 @@ public class SceneManager : MonoBehaviour {
 		for(int i=0; i<m_lobbyList.Count; i++)
 		{
 			m_lobbyList[i].transform.Find ("ListSelected").gameObject.SetActive(false);
+			m_lobbyList[i].transform.Find ("ListHover").gameObject.SetActive(false);
 			m_lobbyList[i].GetComponent<tk2dUIHoverItem>().enabled = true;
 		}
 	}

@@ -97,7 +97,7 @@ public class SockjsClient : MonoBehaviour{
 				//}
             }
 		
-            AutoPingRefresh();
+            //AutoPingRefresh();
 
             FlushOutqueue();
 
@@ -280,7 +280,6 @@ public class SockjsClient : MonoBehaviour{
         {
             if (m_wwwPolling == null)
 			{
-				Debug.LogError ("LOG ERROR!!!");
                 m_wwwPolling = new WWW(m_xhr, PollPostData);
 			}
             else

@@ -11,7 +11,6 @@ GameObject:
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400000}
-  - 114: {fileID: 11400008}
   m_Layer: 0
   m_Name: PlayerConnection
   m_TagString: Untagged
@@ -66,22 +65,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_zebraCharacter: {fileID: 100014, guid: c206c09708c55014d8fe32265761467e, type: 2}
-  m_tigerCharacter: {fileID: 0}
+  m_tigerCharacter: {fileID: 100016, guid: bbf4ff539ed34f44c8056d7cdc846b8d, type: 2}
   m_rhinoCharacter: {fileID: 100016, guid: 7f075c140025e1f43a6823a23681132b, type: 2}
+  m_birdCharacter: {fileID: 100014, guid: fb42ee3c64fa6da498255eb6877397b8, type: 2}
   avatarId: 1
   playerName: ZebraPlayer
   isSelf: 1
---- !u!114 &11400008
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da4febbd07cc45a45bacd433ec96ab87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

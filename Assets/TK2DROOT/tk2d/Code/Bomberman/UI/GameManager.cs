@@ -6,10 +6,10 @@ public class GameManager : MonoBehaviour {
 	
 	// Player Information
 	public static string PlayerName;
-	public static long AvatarID;
+	public static long AvatarID = -1;
 	public static int SessionID;		// roomID
 	
-	public static long PlayerID;
+	public static long PlayerID = -1;
 	
 	private List<Player> playerList = new List<Player>();
 	
@@ -41,25 +41,34 @@ public class GameManager : MonoBehaviour {
 			
 			//Debug.LogError("Updating Position: CELL X: "+cellX + " CELL Y: "+cellY);
 			
-			characterObject.GetComponent<CharacterAnimController>().UpdatePosition(positionX, positionY);
+			//characterObject.GetComponent<CharacterAnimController>().UpdatePosition(positionX, positionY);
+			//characterObject.GetComponent<CharacterAnimController>().MoveUp();
 		}
 	}
 	
 	public void InitCharacter(long playerID, int avatarID, int cellX, int cellY)
 	{
+		AvatarIcon avatarType = Avatar.GetAvatarIcon(avatarID);
 		// If it is the player
 		if(playerID == GameManager.PlayerID)
 		{
-			switch(avatarID)
+			switch(avatarType)
 			{
-				// rhino
-				case 0:
+				case AvatarIcon.Rhino:
 				playerScript.InitRhinoCharacter(playerID, cellX, cellY);
 				break;
 				
-				// zebra
-				case 1:
+
+				case AvatarIcon.Zebra:
 				playerScript.InitZebraCharacter(playerID, cellX, cellY);
+				break;
+				
+				case AvatarIcon.Tiger:
+				playerScript.InitTigerCharacter(playerID, cellX, cellY);
+				break;
+				
+				case AvatarIcon.Cassowary:
+				playerScript.InitBirdCharacter(playerID, cellX, cellY);
 				break;
 			}
 		}
@@ -68,16 +77,26 @@ public class GameManager : MonoBehaviour {
 		{
 			var enemyGameObj = Instantiate(enemyGameObject, transform.position, transform.rotation) as GameObject;
 			var enemyScript = enemyGameObj.GetComponent<Player>();
-			switch(avatarID)
+			switch(avatarType)
 			{
 				// rhino
-				case 0:
+				case AvatarIcon.Rhino:
 				enemyScript.InitRhinoCharacter(playerID, cellX, cellY);
 				break;
 			
 				// zebra
-				case 1:
+				case AvatarIcon.Zebra:
 				enemyScript.InitZebraCharacter(playerID, cellX, cellY);
+				break;
+				
+				// tiger
+				case AvatarIcon.Tiger:
+				enemyScript.InitTigerCharacter(playerID, cellX, cellY);
+				break;
+				
+				// bird
+				case AvatarIcon.Cassowary:
+				enemyScript.InitBirdCharacter(playerID, cellX, cellY);
 				break;
 			}
 		}
@@ -129,6 +148,11 @@ public class GameManager : MonoBehaviour {
 	public void UpdateMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, int cellNum)
 	{
 		zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, cellNum);
+	}
+	
+	public static void UpdatePlayerID(long id)
+	{
+		PlayerID = id;
 	}
 	
 	public static void UpdatePlayerName(string name)

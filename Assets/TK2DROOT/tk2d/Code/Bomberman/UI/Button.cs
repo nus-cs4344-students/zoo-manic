@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum ButtonType {Start_Tap, Main_Play, Main_Settings, Main_HowtoPlay, Lobby_HostGame, Lobby_JoinGame, GameRoom_Ready, GameRoom_Start}
+public enum ButtonType 
+{
+	Start_Tap, Main_Play, Main_Settings, Main_HowtoPlay, 
+	Lobby_HostGame, Lobby_JoinGame, Lobby_BacktoMain, Lobby_Refresh,
+	GameRoom_Ready, GameRoom_Start
+}
 
 public class Button : MonoBehaviour {
 	
@@ -35,7 +40,7 @@ public class Button : MonoBehaviour {
 		{
 			// go to main menu
 			case ButtonType.Start_Tap:
-			UpdatePlayerName();
+			CreateNewPlayer();
 			GameManager.LoadMainScene();
 			break;
 			
@@ -51,19 +56,21 @@ public class Button : MonoBehaviour {
 			break;
 			
 			// Lobby
-			//case ButtonType.Lobby_HostGame:
-			//ConnectToRoom();
-			//break;
+			case ButtonType.Lobby_BacktoMain:
+			GameManager.LoadMainScene();
+			break;
 			
 			case ButtonType.Lobby_JoinGame:
-			Debug.Log ("BUTTON IS PRESSED!: ");
 			ConnectToRoom();
+			break;
+			
+			case ButtonType.Lobby_Refresh:
+			DisplayLobby();
 			break;
 			
 			// Entering GameRoom
 			case ButtonType.GameRoom_Ready:
 			Ready();
-			buttonType = ButtonType.GameRoom_Start;
 			break;
 			
 			case ButtonType.GameRoom_Start:
@@ -79,7 +86,9 @@ public class Button : MonoBehaviour {
 	
 	void Ready()
 	{
-		sceneManager.Ready();
+		bool isAvatarSelected = sceneManager.Ready();
+		if(isAvatarSelected)
+			buttonType = ButtonType.GameRoom_Start;
 	}
 	
 	void StartGame()
@@ -89,15 +98,26 @@ public class Button : MonoBehaviour {
 		//StartCoroutine( WaitForGame(3.0f) );
 	}
 	
+	void CreateNewPlayer()
+	{
+		UpdatePlayerName();
+		sceneManager.CreateNewPlayer();
+	}
+	
+	void DisplayLobby()
+	{
+		sceneManager.DisplayLobby();
+	}
+	
 	void ConnectToRoom()
 	{
 		sceneManager.ConnectToRoom();
 		
-		StartCoroutine( WaitForRoom(1.0f) );
+		//StartCoroutine( WaitForRoom(1.0f) );
 	}
 	
 	// Check room is not full then enter game
-	void EnterRoom()
+	/*void EnterRoom()
 	{
 		if( !sceneManager.RoomFull )
 		{
@@ -115,8 +135,8 @@ public class Button : MonoBehaviour {
 		Debug.Log ("Waiting for 3 Seconds!!");
 		yield return new WaitForSeconds(duration);   //Wait duration sec for server to reply
 		
-		EnterRoom();
-    }
+		//EnterRoom();
+    }*/
 	
 	void Clicked(tk2dUIItem clickedUIItem)
 	{

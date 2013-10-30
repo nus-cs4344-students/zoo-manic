@@ -20,6 +20,11 @@ public class ExplosionDamage : MonoBehaviour {
 			collider.gameObject.BroadcastMessage("KillPlayer");
 		else if(collider.gameObject.tag == "Crate"){
 			collider.gameObject.BroadcastMessage("KillObject");
+			Debug.Log("HIT CRATE!! : ");
+		}
+		// Obstacle can be terrain boundary or a rick
+		else if(collider.gameObject.tag == "Obstacle"){
+			Debug.Log ("HIT OBSTACLE!!");
 		}
     }
 }

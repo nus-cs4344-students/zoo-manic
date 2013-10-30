@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum CharacterType {Zebra, Rhino, Tiger}
+public enum CharacterType {Zebra, Rhino, Tiger, Bird}
 
 public class Player : MonoBehaviour {
 	
@@ -21,8 +21,9 @@ bomb_left		-	how many bomb left to plant
 	[SerializeField] GameObject m_zebraCharacter;	
 	[SerializeField] GameObject m_tigerCharacter;	
 	[SerializeField] GameObject m_rhinoCharacter;	
+	[SerializeField] GameObject m_birdCharacter;	
 	
-	[SerializeField] int avatarId;			// 1 - Zebra, 2 - Rhino, 3 - Tiger
+	[SerializeField] int avatarId;			// 0 - Zebra, 1 - Rhino, 2 - Tiger, 3 - Bird
 	[SerializeField] string playerName;		// Playername
 	
 	private GameObject character;
@@ -182,6 +183,48 @@ bomb_left		-	how many bomb left to plant
 		character.gameObject.name = ""+playerID;
 		
 		Debug.Log ("Rhino is created");
+	}
+	
+	public void InitTigerCharacter(long playerID, int cellX, int cellY)
+	{
+		character = Instantiate(m_tigerCharacter, transform.position, transform.rotation) as GameObject;
+		var animationScript = character.GetComponent<CharacterAnimController>();
+		animationScript.EnemyPlayer = !isSelf;
+		
+		float spawnX = ZooMap.GetHorizontalPos(cellX);
+		float spawnY = ZooMap.GetVerticalPos(cellY);
+		
+		animationScript.SpawnCharacter(spawnX, spawnY);
+		
+		if(isSelf)
+		{
+			character.gameObject.tag = "Player";
+		}
+		
+		character.gameObject.name = ""+playerID;
+		
+		Debug.Log ("Tiger is created");
+	}
+	
+	public void InitBirdCharacter(long playerID, int cellX, int cellY)
+	{
+		character = Instantiate(m_birdCharacter, transform.position, transform.rotation) as GameObject;
+		var animationScript = character.GetComponent<CharacterAnimController>();
+		animationScript.EnemyPlayer = !isSelf;
+		
+		float spawnX = ZooMap.GetHorizontalPos(cellX);
+		float spawnY = ZooMap.GetVerticalPos(cellY);
+		
+		animationScript.SpawnCharacter(spawnX, spawnY);
+		
+		if(isSelf)
+		{
+			character.gameObject.tag = "Player";
+		}
+		
+		character.gameObject.name = ""+playerID;
+		
+		Debug.Log ("Bird is created");
 	}
 }
 
