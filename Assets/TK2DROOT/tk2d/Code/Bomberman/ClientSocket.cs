@@ -6,11 +6,11 @@ using MiniJSON;
 
 public class ClientSocket : MonoBehaviour {
 
-    //public SockjsClient m_sockjs;// = new SockjsClient();
+    public SockjsClient m_sockjs;// = new SockjsClient();
 	
 	//public TCPSocket m_sockjs;// = new SockjsClient();
 	
-	public TCPConnector m_sockjs;
+	//public TCPConnector m_sockjs;
 
 	//[SerializeField] Player playerScript;	
 	//[SerializeField] CharacterType characterType;	
@@ -60,31 +60,36 @@ public class ClientSocket : MonoBehaviour {
 		
 		//JsonSample();
 		
-		InitTCPConnector();
+		//InitTCPConnector();
 		
-		//InitSockJS();
+		InitSockJS();
 	}
 	
 	void InitSockJS()
 	{
-		//m_sockjs.OnMessage += OnMessage;
+		m_sockjs.AutoPingRefreshMs = 2000;
+		m_sockjs.OnMessage += OnMessage;
+		m_sockjs.OnConnect += OnConnect;
+		m_sockjs.OnDisconnect += OnDisconnect;
 		
-		//m_sockjs.Connect("http://localhost:5000/");
-		//m_sockjs.OnConnect += OnConnect;
+		m_sockjs.Connect("http://localhost:5000/");
+		//m_sockjs.Connect("http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/");
 	}
+	
+	
 	
 	void InitTCPConnector()
 	{
-		m_sockjs = new TCPConnector();
-		m_sockjs.OnMessage += OnMessage;
+		//m_sockjs = new TCPConnector();
+		//m_sockjs.OnMessage += OnMessage;
 		//string message = m_sockjs.fnConnectResult("ec2-54-225-24-113.compute-1.amazonaws.com", 5000);
-		string message = m_sockjs.fnConnectResult("localhost", 5000);
-		Debug.Log ("TCP Connection Result: "+message);
+		//string message = m_sockjs.fnConnectResult("localhost", 5000);
+		//Debug.Log ("TCP Connection Result: "+message);
 	}
 	
 	void Update()
 	{
-		string msg = null;
+		/*string msg = null;
 		lock (Lock) 
 		{
 			//if(isMsgUpdated && threadMsg != null)
@@ -97,24 +102,26 @@ public class ClientSocket : MonoBehaviour {
 			if(m_sockjs.m_messageQueue.Count > 0 && isMsgUpdated){
 				msg = m_sockjs.m_messageQueue[0];
 				
-				m_sockjs.m_messageQueue.Clear();				
-				//m_sockjs.m_messageQueue.RemoveAt(0);
+				//m_sockjs.m_messageQueue.Clear();				
+				m_sockjs.m_messageQueue.RemoveAt(0);
 			}
 		}
 		
 		if (msg != null)
 			OnMessage(msg);
+		*/
 	}
 
     private void OnMessage(string serverMsg)
     {
         // Receive the JSON message from server
-        Debug.Log("Received Msg: "+serverMsg);
 		isMsgUpdated = false;
 
 		var dict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
 		
-		if(dict != null && dict.ContainsKey("type") == false)
+		//Debug.Log ("SERVER MESSAGE: "+serverMsg);
+		
+		if(dict == null || dict.ContainsKey("type") == false)
 		{
 			Debug.Log ("No such key for type");
 			return;
@@ -152,12 +159,12 @@ public class ClientSocket : MonoBehaviour {
 			
 			break;
 			
+			case "pingRefresh":
+			Debug.Log("Ping refresh from server");
+			break;
+			
 			case "start":
 			StartCoroutine(LoadGameWorld(serverMsg));
-			//GameManager.LoadGameScene();
-			// Wait for 0.5 seconds for the game to load
-			//StartCoroutine(WaitForGameToLoad(3.0f, serverMsg));
-			//hasGameStarted = true;
 			break;
 			
 			case "update":
@@ -173,6 +180,8 @@ public class ClientSocket : MonoBehaviour {
 		BombermanGame = Application.LoadLevelAsync("BombermanScene");
 	    while (!BombermanGame.isDone)
 	    { yield return 0; }
+		
+		GameManager.CurrentScene = SceneType.Game;
 		
 		HandleGameStart(serverMsg);
 		playerList = gameManager.GetPlayerList();
@@ -337,22 +346,20 @@ public class ClientSocket : MonoBehaviour {
 			return;
 		}
 		
+		//Debug.Log ("Received: data " + dataFromServer);
 		
-		/*var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
+		
+		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		
 		Dictionary<string, object> bombDict = (Dictionary<string, object>) dict["bombs"];
 		Dictionary<string, object> playersDict = (Dictionary<string, object>) dict["players"];
 		Dictionary<string, object> zooMapDict = (Dictionary<string, object>) dict["zooMap"];
 		
-		Debug.Log ("COUNT OF DICT IS: "+zooMapDict.Count);*/
-		
 		/*
 		 * {"type":"update","bombs":{"exploded":[],"active":[]},"players":{"1382421891543":{}},"zooMap":{"0":{"type":0,"item":0},"1":{"type":0,"item":0}
 		 * */
-		/*List<object> bombList = (List<object>) bombDict["exploded"];
+		List<object> bombList = (List<object>) bombDict["exploded"];
 		List<object> activeList = (List<object>) bombDict["active"];
-		
-		//Debug.Log ("SERVER MESSAGE: "+dataFromServer);
 		
 		// Updating the list of player's 
 		for(int index=0; index<playerList.Count; index++)
@@ -378,15 +385,6 @@ public class ClientSocket : MonoBehaviour {
 		
 		
 		//"players":{"1382421891543":{}}
-		//Dictionary<string, object> playersInfoDict = (Dictionary<string, object>) playersDict[""+GameManager.PlayerID];
-		
-		//long bombLeft = (long) playersInfoDict["bombLeft"];
-		//Debug.Log ("bombleft: "+bombLeft);
-		//long x = (long) playersInfoDict["x"];
-		//long y = (long) playersInfoDict["y"];
-		
-		//Debug.Log ("Server DATA: "+ dataFromServer);
-		
 		// iterate through each cells, and get the cell status
 		for(int index=0; index < (int) ZooMap.horizontalCell * ZooMap.verticalCell; index++)
 		{
@@ -399,33 +397,8 @@ public class ClientSocket : MonoBehaviour {
 			
 			//zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
 			gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
-		}*/ 
+		}
 		
-	
-		
-		//
-		//Debug.Log ("MESSAGE IS: "+dataFromServer);
-		
-		//playerScript.UpdatePosition(x, y);
-		
-		//Debug.Log ("KEY IS: "+zooMapDict.);
-		
-		//{"0":{"type":0,"item":0}
-
-		//Debug.Log ("x: "+x + "   y " + y + "   bomb left "+bombLeft);
-		/*long x = (long) playersInfoList[0];
-		long y = (long) playersInfoList[1];
-		long bombLeft = (long) playersInfoList[2];
-		Debug.Log ("X: "+ x);
-		Debug.Log ("Y: "+ y);*/
-		
-		
-		//Debug.Log ("Data is: "+bombDict);
-		//string data = bombData.ToString();
-		//Debug.Log ("BOMB DATA IS : "+data);
-		//var bombDict = Json.Deserialize(bombData) as Dictionary<string,object>;
-		//
-		//Debug.Log ("Bomb List: "+ bombList);
 	}
 	
 	private void ClearList()
@@ -476,6 +449,9 @@ public class ClientSocket : MonoBehaviour {
 	
 	public void ConnectToLobby()
 	{
+		//type: newPlayer content {playerName: "ABC"}
+		// after message send playerId
+		
 		// Connect to lobby
 		//ClearList();
 		
@@ -559,15 +535,18 @@ public class ClientSocket : MonoBehaviour {
 		}
 		
 		var connectStr = Json.Serialize(connectionDict);
-		Debug.Log ("Message to send: "+connectStr);
+		//Debug.Log ("Message to send: "+connectStr);
 		m_sockjs.SendData(connectStr);
 	}
 
     private void OnConnect()
     {
-		Debug.Log("connected");
-		
-		ConnectToLobby();
+		Debug.Log("Connected to SockJS server");
+    }
+	
+  	private void OnDisconnect(int _code, string _msg)
+    {
+		Debug.LogError("Disconnected: "+ _msg + " Error code: " + _code);
     }
 	
 	private void JsonSample()

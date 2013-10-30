@@ -5,11 +5,11 @@ using WebSocket4Net;
 using SuperSocket;
 using SimpleJson;
 using System;
-using pomeloUnityClient;
+//using pomeloUnityClient;
 
 public class DLLImport : MonoBehaviour {
 	private Client socket;
-	public static PomeloClient pclient = null;
+	//public static PomeloClient pclient = null;
 
 	// Use this for initialization
 	void Start () {
@@ -34,11 +34,11 @@ public class DLLImport : MonoBehaviour {
 	
 	private void ConnectChat()
 	{
-		string url = "http://localhost:5000";
+		/*string url = "http://localhost:5000";
 		pclient = new PomeloClient(url);
 		pclient.init();
 		JsonObject userMessage = new JsonObject();
-		userMessage.Add("uid", "abc");
+		userMessage.Add("uid", "abc");*/
 	}
 	
 	private void connectToNodeJS()

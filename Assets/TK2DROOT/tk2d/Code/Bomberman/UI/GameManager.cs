@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
 			float positionX = ZooMap.GetHorizontalPos(cellX);
 			float positionY = ZooMap.GetVerticalPos(cellY);
 			
-			Debug.Log("Updating Position: CELL X: "+cellX + " CELLY: "+cellY);
+			//Debug.LogError("Updating Position: CELL X: "+cellX + " CELL Y: "+cellY);
 			
 			characterObject.GetComponent<CharacterAnimController>().UpdatePosition(positionX, positionY);
 		}

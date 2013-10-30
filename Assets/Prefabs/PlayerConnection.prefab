@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_sockjs: {fileID: 11400000}
-  gameManager: {fileID: 0}
+  gameManager: {fileID: 11400000, guid: 6247fcd0c8fbaaa41b0384aad06ea2ba, type: 2}
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
