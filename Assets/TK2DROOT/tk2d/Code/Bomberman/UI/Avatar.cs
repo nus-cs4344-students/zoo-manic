@@ -5,6 +5,8 @@ public class Avatar
 {
 	private long playerID;		// the player that selected this avatar
 	
+	private string playerName;
+	
 	private int avatarID;
 	
 	private AvatarIcon avatarType;
@@ -14,6 +16,29 @@ public class Avatar
         get { return avatarID; }
         set { avatarID = value; }
     }
+	
+	public string PlayerName
+	{
+        get { return playerName; }
+        set { playerName = value; }
+    }
+	
+	public static string ToString(int avatarID)
+	{
+		string result = "";
+		if(avatarID == -1)
+			result = "Not selected";
+		else if(avatarID == 0)
+			result = "Zebra";
+		else if(avatarID == 1)
+			result = "Rhino";
+		else if(avatarID == 2)
+			result = "Tiger";
+		else if(avatarID == 3)
+			result = "Cassowary";
+		
+		return result;
+	}
 	
 	public static AvatarIcon GetAvatarIcon(int avatarID)
 	{
@@ -45,10 +70,11 @@ public class Avatar
         set { playerID = value; }
     }
 	
-	public Avatar(long playerID, int avatarID)
+	public Avatar(long playerID, int avatarID, string playerName)
 	{
 		this.playerID = playerID;
 		this.avatarID = avatarID;
+		this.playerName = playerName;
 		
 		this.avatarType = GetAvatarIcon(avatarID);
 	}

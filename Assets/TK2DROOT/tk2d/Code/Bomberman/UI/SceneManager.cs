@@ -115,7 +115,6 @@ public class SceneManager : MonoBehaviour {
 		GameManager.UpdateAvatarID(avatarID);
 		
 		serverConnection.SendSetPropertyMessage(playerName, avatarID);
-
 	}
 	
 	void InitPlayer2()
@@ -214,18 +213,25 @@ public class SceneManager : MonoBehaviour {
 		InitAvatarList();
 		
 		m_roomTitleText.text = "Room " + GameManager.SessionID;
-		m_playerStatusText.text = "";
-		m_gameText.text = "Welcome to Room " + GameManager.SessionID;
+		
+		string statusText = "Welcome to Room, player " + GameManager.PlayerName;		
+		m_gameText.text = "";
 		
 		List<Avatar> avatarList = serverConnection.GetRoomAvatarList();
 		for(int i=0; i<avatarList.Count; i++)
 		{
 			Avatar avatar = avatarList[i];
-			UpdateAvatar(avatar.AvatarID, avatar.SelectedPlayerID, avatar.AvatarType);
+			
+			if(avatar.AvatarType != AvatarIcon.NotSelected)
+				statusText += "\n" + "Player: "+ avatar.PlayerName + " selected " + Avatar.ToString(avatar.AvatarID);
+
+			UpdateAvatar(avatar.AvatarID, avatar.SelectedPlayerID, avatar.AvatarType, avatar.PlayerName);
 		}
+		
+		m_playerStatusText.text = statusText;
 	}
 	
-	public void UpdateAvatar(int avatarID, long playerID, AvatarIcon avatarType)
+	public void UpdateAvatar(int avatarID, long playerID, AvatarIcon avatarType, string playerName)
 	{
 		tk2dTextMesh nameScript = null;
 		tk2dSprite avatarScript = null;

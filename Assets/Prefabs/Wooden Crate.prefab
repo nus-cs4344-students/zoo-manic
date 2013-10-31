@@ -66,7 +66,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.5, y: 3.5, z: 4}
+  m_Size: {x: 8, y: 8, z: 4}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collection: {fileID: 11400000, guid: bf883a7b977d5ee46b064229ea57a113, type: 2}
   _color: {r: 1, g: 1, b: 1, a: 1}
-  _scale: {x: 1, y: 1, z: 1}
+  _scale: {x: 2.5, y: 2.5, z: 1}
   _spriteId: 72
   boxCollider: {fileID: 0}
   meshCollider: {fileID: 0}

@@ -147,11 +147,14 @@ public class ClientSocket : MonoBehaviour {
 	{
 		if( serverReply == 0 )
 		{
-			// A reply
-			GameManager.PlayerID = (long) playerDict["id"];
-			//GameManager.AvatarID = (long) playerDict["avatarId"];
+			// A from the server that who update the thing
+			long playerId = (long) playerDict["id"];
+			long avatarId = (long) playerDict["avatarId"];
+			string playerName = (string) playerDict["name"];
+
+			roomAvatarList.Add (new Avatar(playerId, (int) avatarId, playerName) );
 			
-			Debug.Log ("PLAYER ID IS: "+GameManager.PlayerID);
+			GameObject.Find ("SceneObject").GetComponent<SceneManager>().UpdateAvatarList();
 		}
 		else
 		{
@@ -234,8 +237,9 @@ public class ClientSocket : MonoBehaviour {
 		{
 			Dictionary<string, object> playerDict = (Dictionary<string, object>) playerList[playerIndex];
 			long playerId = (long) playerDict["id"];
+			string playerName = (string) playerDict["name"];
 			long avatarId = (long) playerDict["avatarId"];
-			roomAvatarList.Add (new Avatar(playerId, (int) avatarId) );
+			roomAvatarList.Add (new Avatar(playerId, (int) avatarId, playerName) );
 		}
 	}
 	
@@ -298,8 +302,6 @@ public class ClientSocket : MonoBehaviour {
 			long spawnX = (long) gameDict["x"];
 			long spawnY = (long) gameDict["y"];
 			gameManager.InitCharacter(serverPlayerId, (int) avatarId, (int) spawnX, (int) spawnY);
-			
-			Debug.Log ("CREATED CHARACTER: "+serverPlayerId);
 		}
 	}
 	
@@ -447,7 +449,7 @@ public class ClientSocket : MonoBehaviour {
 		ClearList();
 		
 		messageTypeList.Add("type");
-		contentList.Add("ready");
+		contentList.Add("playerReady");
 		
 		messageTypeList.Add("playerId");
 		contentList.Add(GameManager.PlayerID);
