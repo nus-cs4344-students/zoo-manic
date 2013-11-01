@@ -403,7 +403,7 @@ public class ClientSocket : MonoBehaviour {
 		
 		//"players":{"1382421891543":{}}
 		// iterate through each cells, and get the cell status
-		for(int index=0; index < (int) ZooMap.horizontalCell * ZooMap.verticalCell; index++)
+		for(int index=0; index < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; index++)
 		{
 			Dictionary<string, object> zooMapInfoDict = (Dictionary<string, object>) zooMapDict[""+index];
 			//long cellType = (long) zooMapInfoDict["type"];

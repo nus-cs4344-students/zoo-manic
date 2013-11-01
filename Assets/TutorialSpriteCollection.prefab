@@ -61,7 +61,7 @@ MonoBehaviour:
   atlasWidth: 256
   atlasHeight: 512
   forceSquareAtlas: 0
-  atlasWastage: 52.7656555
+  atlasWastage: 54.7294617
   allowMultipleAtlases: 0
   removeDuplicates: 1
   textureParams:
@@ -142,15 +142,15 @@ MonoBehaviour:
     polyColliderIslands:
     - connected: 1
       points:
-      - {x: 55.5, y: 66.5}
-      - {x: 31, y: 71.5}
-      - {x: 8, y: 105}
-      - {x: 8.5, y: 138.5}
-      - {x: 31.5, y: 152}
-      - {x: 61, y: 153.5}
-      - {x: 85, y: 145}
-      - {x: 93, y: 120}
-      - {x: 80, y: 76}
+      - {x: 72, y: 9.5}
+      - {x: 46.5, y: 2}
+      - {x: 23, y: 7}
+      - {x: 1, y: 37.5}
+      - {x: .5, y: 65.5}
+      - {x: 22.5, y: 80.5}
+      - {x: 46.5, y: 83}
+      - {x: 73.5, y: 74.5}
+      - {x: 85, y: 52}
     polyColliderCap: 1
     colliderConvex: 0
     colliderSmoothSphereCollisions: 0
@@ -162,7 +162,7 @@ MonoBehaviour:
     scale: {x: 1, y: 1, z: 1}
     texture: {fileID: 2800000, guid: f6724743a506f464ea1684044c461aef, type: 3}
     materialId: 0
-    anchor: 4
+    anchor: 7
     anchorX: 0
     anchorY: 0
     overrideMesh: {fileID: 0}
@@ -273,7 +273,7 @@ MonoBehaviour:
   normalGenerationMode: 0
   padAmount: -1
   autoUpdate: 1
-  editorDisplayScale: 3.25
+  editorDisplayScale: 3.42999983
   version: 4
   assetName: 
 --- !u!1001 &100100000
