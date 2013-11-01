@@ -357,7 +357,7 @@ MonoBehaviour:
     - 1363328912
     - 1375224587
     - 1363328912
-    - 1363328912
+    - 1383353344.72483
     - 1363328912
     - 1363328912
     - 1363328912
@@ -719,7 +719,7 @@ MonoBehaviour:
     - 3171969fd9ec9624780d67087768a9a4
     spriteTextureTimeStamps:
     - 1363328912
-    - 1363328912
+    - 1383353344.72483
     - 1363328912
     - 1381955705.49224
     managedSpriteCollection: 0
@@ -1387,10 +1387,10 @@ MonoBehaviour:
     - Zebra-Bomb
     - Rhino-Left
     - Rhino-Back
-    - 
+    - Rhino-Bomb
     - Rhino-Front
     - Rhino-Right
-    - Rhino-Bomb(150dpi)
+    - 
     - Cassowary-Right1
     - Cassowary-Right0
     - Cassowary-Right2
@@ -1404,7 +1404,7 @@ MonoBehaviour:
     - Cassowary-Left1
     - Cassowary-Bomb(150dpi)
     - Cassowary-Back1
-    - 
+    - Rhino-Bomb4
     - Tiger-Bomb(150dpi)
     - Tiger-Left1
     - Tiger-Front0
@@ -1418,6 +1418,8 @@ MonoBehaviour:
     - Tiger-Front2
     - Tiger-Left0
     - Tiger-Right2
+    - Rhino-Bomb3
+    - Rhino-Bomb2
     spriteTextureGUIDs:
     - bfae2742fd4a6344f9456f64e9b7b50d
     - d5a02d92df1a4e246843f970a556fc44
@@ -1426,10 +1428,10 @@ MonoBehaviour:
     - 3a7534cf2a296c34ca9f46e40dc26206
     - 16e454bfefc249542b206c7c50081eae
     - 62b288c8608b3c44591fcd0e28e0190f
-    - 
+    - fca5b10bc01915247a518e8d7fdf7b43
     - da923c6b8cf20fd41be076676df3683d
     - eeea020c0cb41004085e6d204370dd94
-    - bb382b2cd649a1242833728fbed16863
+    - 
     - 0678160bd2baf0f43a38d02edbba4943
     - 0cacecff98a3b4045a91fb4573ca2e04
     - 519abcbda0cdc454280d6f85f863237b
@@ -1443,7 +1445,7 @@ MonoBehaviour:
     - c0a4235d4018ff14ab759a226ad8f83f
     - c6e02d3445b8a58488a636b521ac8d7e
     - d9b1915872efb16438d09553ec06b2bc
-    - 
+    - 4ba3b3f45df81c346a8a20b798e750c7
     - ef5d5afcbf3ab0d4d9d630b15c761270
     - 0045f48f63d5a214fbcc8caba6f73562
     - 143399fbce20c944fb5ceb581c714710
@@ -1457,18 +1459,20 @@ MonoBehaviour:
     - d1231157412e8a14cbfe38f60fe954c2
     - f6c82aaaa127f77498691d41f9bcaad1
     - 1b206e33b2e1952409def4628cfa0e43
+    - 7e50605961748d0488df2d532ad11fff
+    - c6d43c89ae573da4faaa373c114cfb71
     spriteTextureTimeStamps:
     - 1381958217.55792
     - 1381958207.14733
     - 1381958174.71947
     - 1381958188.59126
-    - 1381959229.30079
+    - 1382191801
     - 1382306053.23938
     - 1382306070.83939
-    - 0
+    - 1382191668
     - 1382306062.41291
     - 1382306041.90574
-    - 1383156035.6673
+    - 0
     - 1383154257.23858
     - 1383154180.06017
     - 1383154251.46925
@@ -1482,7 +1486,7 @@ MonoBehaviour:
     - 1383154261.87785
     - 1383154354.58815
     - 1383154241.41368
-    - 0
+    - 1383344383
     - 1383153873.28362
     - 1383153800.70447
     - 1383153720.61589
@@ -1496,6 +1500,8 @@ MonoBehaviour:
     - 1383153758.88208
     - 1383153768.96765
     - 1383153795.17915
+    - 1383344328
+    - 1383344142
     managedSpriteCollection: 0
     loadable: 0
     assetName: 
@@ -1510,9 +1516,22 @@ MonoBehaviour:
     - Power-up-Range
     - Power-up-Invulnerability
     - 'Power-up-Speed '
-    - Rhino-Bomb(150dpi)
-    - Cassowary-Bomb(150dpi)
+    - Rhino-Bomb
+    - Cassowary-Bomb
     - Tiger-Bomb(150dpi)
+    - Rhino-Bomb4
+    - Rhino-Bomb3
+    - Rhino-Bomb2
+    - Cassowary-Bomb3
+    - Cassowary-Bomb2
+    - Cassowary-Bomb4
+    - Tiger-Bomb3
+    - Tiger-Bomb
+    - Tiger-Bomb4
+    - Tiger-Bomb2
+    - Zebra-Bomb3
+    - Zebra-Bomb2
+    - Zebra-Bomb4
     spriteTextureGUIDs:
     - 3a7534cf2a296c34ca9f46e40dc26206
     - 0785717283a42b04bb482c6c95c83388
@@ -1520,19 +1539,45 @@ MonoBehaviour:
     - a6d4daadd65d0c64e9267ebc03097fe4
     - a833669fb5a22df4dae0619c455d9641
     - f60f182e1c8cdab4ea06ca9b148ba177
-    - bb382b2cd649a1242833728fbed16863
-    - c6e02d3445b8a58488a636b521ac8d7e
+    - fca5b10bc01915247a518e8d7fdf7b43
+    - 291d7d0f30440f04b988bec79a2fbec4
     - ef5d5afcbf3ab0d4d9d630b15c761270
+    - 4ba3b3f45df81c346a8a20b798e750c7
+    - 7e50605961748d0488df2d532ad11fff
+    - c6d43c89ae573da4faaa373c114cfb71
+    - 90659c11b706e40478fdae074c3b2808
+    - 98624738a7235bd4d9358314a594d0af
+    - b11e8014dddb4094cabbf1821202b65d
+    - 1370ec1dbac7f6046a5bcf5766d1d22c
+    - 2d9baae5999604b44bcfea67368d4fbd
+    - 446a67fe46d68a54b929ddaf289a8f5b
+    - c3ed92f175d41c643aee067d05b2af12
+    - 63217a271d3a6e44dacfd2e9229fea09
+    - 6c354d2986985e8439643c1de03625fe
+    - d8ca1c947920e8d4d93978ac752834fe
     spriteTextureTimeStamps:
-    - 1381959229.30079
+    - 1382191801
     - 1382202625
     - 1382200044
     - 1382200010
     - 1382197808
     - 1382199982
-    - 1383156035.6673
-    - 1383154354.58815
+    - 1382191668
+    - 1382791696
     - 1383153873.28362
+    - 1383344383
+    - 1383344328
+    - 1383344142
+    - 1383344301
+    - 1383344132
+    - 1383344373
+    - 1383344284
+    - 1382191078
+    - 1383344359
+    - 1383344111
+    - 1383344234
+    - 1383344090
+    - 1383344345
     managedSpriteCollection: 0
     loadable: 0
     assetName: 

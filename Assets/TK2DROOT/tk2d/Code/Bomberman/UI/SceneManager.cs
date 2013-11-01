@@ -46,6 +46,7 @@ public class SceneManager : MonoBehaviour {
 	[SerializeField] tk2dTextMesh m_roomTitleText;
 	[SerializeField] tk2dTextMesh m_playerStatusText;
 	[SerializeField] tk2dTextMesh m_gameText;
+
 	
 	void Awake()
 	{
