@@ -30,14 +30,37 @@ public class GameManager : MonoBehaviour {
 	{
 	}
 	
-	public void UpdatePosition(long serverPlayerID, float cellX, float cellY)
+	public void UpdatePosition(long serverPlayerID, float cellX, float cellY, string direction, float moveSpeed)
 	{
+		Debug.Log ("UPDATING PLAYER POSITION: "+serverPlayerID);
+		Debug.Log ("Own player ID is : "+PlayerID);
+		Debug.Log ("Direction : "+direction);
 		// If it is other player, then update the position
 		if(serverPlayerID != PlayerID)
 		{
 			GameObject characterObject = GameObject.Find(""+serverPlayerID);
-			float positionX = ZooMap.GetHorizontalPos(cellX);
-			float positionY = ZooMap.GetVerticalPos(cellY);
+
+			CharacterAnimController movementController = characterObject.GetComponent<CharacterAnimController>();
+			movementController.PlayerSpeed = moveSpeed;
+			
+			switch(direction)
+			{
+				case "UP":
+				movementController.MoveUp(false);
+				break;
+				
+				case "DOWN":
+				movementController.MoveDown(false);
+				break;
+				
+				case "LEFT":
+				movementController.MoveLeft(false);
+				break;
+				
+				case "RIGHT":
+				movementController.MoveRight(false);
+				break;
+			}
 			
 			//Debug.LogError("Updating Position: CELL X: "+cellX + " CELL Y: "+cellY);
 			

@@ -38,6 +38,12 @@ public class CharacterAnimController : MonoBehaviour {
         get { return isEnemy; }
         set { isEnemy = value; }
     }
+	
+	public float PlayerSpeed 
+	{
+        get { return speed; }
+        set { speed = value; }
+    }
 
 	public int BombLimit 
 	{
@@ -51,6 +57,8 @@ public class CharacterAnimController : MonoBehaviour {
         anim = GetComponent<tk2dSpriteAnimator>();
 		
 		InitAnimation();
+		
+		//clientSocketScript.SendGetRoomSession();
     }
 	
 	void InitAnimation()
@@ -114,18 +122,18 @@ public class CharacterAnimController : MonoBehaviour {
 			if(m_bombLimit > 0)
 				plantBomb();
         }
-		
+
 		// Input.GetAxis("Vertical") > 0
-		if (Input.GetKey(KeyCode.UpArrow) && !checkHitObstacle("up") ) { MoveUp(); return; }
+		if (Input.GetKey(KeyCode.UpArrow) && !checkHitObstacle("up") ) { MoveUp(true); return; }
 		
 		//else if ( Input.GetAxis("Horizontal") > 0
-  		if (Input.GetKey(KeyCode.RightArrow) && !checkHitObstacle("right") ) { MoveRight(); return; }
+  		if (Input.GetKey(KeyCode.RightArrow) && !checkHitObstacle("right") ) { MoveRight(true); return; }
 		
 		// else Input.GetAxis("Vertical") < 0 
-  		if (Input.GetKey(KeyCode.DownArrow) && !checkHitObstacle("down") ) { MoveDown(); return; }
+  		if (Input.GetKey(KeyCode.DownArrow) && !checkHitObstacle("down") ) { MoveDown(true); return; }
 		
 		//else if ( Input.GetAxis("Horizontal") < 0
-  		if (Input.GetKey(KeyCode.LeftArrow) && !checkHitObstacle("left") ) { MoveLeft(); return; }
+  		if (Input.GetKey(KeyCode.LeftArrow) && !checkHitObstacle("left") ) { MoveLeft(true); return; }
     }
 	
 		
@@ -178,20 +186,18 @@ public class CharacterAnimController : MonoBehaviour {
 		gameObject.transform.localPosition = new Vector3(spawnX, spawnY, 0);
 	}
 	
-	public void MoveUp()
+	public void MoveUp(bool sendToServer)
 	{
+		long a =123134;
+		clientSocketScript.SendGetAllSessionMessage();
+		
 		if(previousDirection != DirectionType.Front)
 		{
 			UpdateRayCasting(DirectionType.Front);
 			previousDirection = DirectionType.Front;
 		}
-		
-		playAnimation(front_anim);
-		//transform.Translate( 0, speed * Time.deltaTime, 0);
-		//clientSocketScript.SendMovementMessage( ZooMap.GetHorizontalCell(transform.position.x) , ZooMap.GetVerticalCell(transform.position.y) );
-	
+
 		Vector3 startPoint = transform.position;
-		//Vector3 endPoint = transform.position - new Vector3(ZooMap.cellWidth, 0, 0);
 		
 		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
 		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
@@ -212,25 +218,28 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		Vector3 endPoint = new Vector3(transform.position.x, nextPosY, transform.position.z);
 		
+		if(sendToServer)
+		{
+			Debug.Log ("SENDING TO SERVER ALREADY");
+			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "UP", speed);
+		}
+		
 		float time = ZooMap.cellHeight / speed;		// time = distance over speed
-		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Front));
+		//StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Front));
 	}
 	
-	public void MoveRight()
+	public void MoveRight(bool sendToServer)
 	{
+		long a =123134;
+		clientSocketScript.SendGetAllSessionMessage();
+		
 		if(previousDirection != DirectionType.Right)
 		{
 			UpdateRayCasting(DirectionType.Right);
 			previousDirection = DirectionType.Right;
 		}
 		
-		//playAnimation(right_anim);
-		//transform.Translate( speed * Time.deltaTime, 0, 0);
-		//clientSocketScript.SendMovementMessage( ZooMap.GetHorizontalCell(transform.position.x) , ZooMap.GetVerticalCell(transform.position.y) );
-	
 		Vector3 startPoint = transform.position;
-		//Vector3 endPoint = transform.position + new Vector3(ZooMap.cellWidth, 0, 0);
-		
 		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
 		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
 		
@@ -253,23 +262,31 @@ public class CharacterAnimController : MonoBehaviour {
 		//transform.position = Vector3.Lerp(startPoint, endPoint, (speed * Time.deltaTime));
 		
 		float time = ZooMap.cellWidth / speed;		// time = distance over speed
-		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Right));
+		
+		Debug.Log ("Time is: "+time);
+		
+		if(sendToServer)
+		{
+			Debug.Log ("SENDING TO SERVER ALREADY");
+			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);
+		}
+		
+		//StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Right));
 	}
 	
-	public void MoveDown()
+	public void MoveDown(bool sendToServer)
 	{
+		long a =123134;
+		clientSocketScript.SendGetAllSessionMessage();
+		
 		if(previousDirection != DirectionType.Down)
 		{
 			UpdateRayCasting(DirectionType.Down);
 			previousDirection = DirectionType.Down;
 		}
-		
-		//playAnimation(back_anim);
-		//transform.Translate( 0, -speed * Time.deltaTime, 0);
-		
+
 		Vector3 startPoint = transform.position;
-		//Vector3 endPoint = transform.position - new Vector3(ZooMap.cellWidth, 0, 0);
-		
+
 		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
 		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
 
@@ -288,39 +305,38 @@ public class CharacterAnimController : MonoBehaviour {
 		float nextPosY = ZooMap.GetVerticalPos(verticalCell - 1);
 		
 		Vector3 endPoint = new Vector3(transform.position.x, nextPosY, transform.position.z);
-		
-		//transform.Translate( 0, transform.position.y - ZooMap.cellHeight * Time.deltaTime, 0);
-		
+
 		// The step size is equal to speed times frame time.
 		var step = speed * Time.deltaTime;
-		
-		// Move our position a step closer to the target.
-		//transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
-		
-		//transform.position = Vector3.Lerp(startPoint, endPoint, (speed * Time.deltaTime));
-		
-		//clientSocketScript.SendMovementMessage( ZooMap.GetHorizontalCell(transform.position.x) , ZooMap.GetVerticalCell(transform.position.y) );
-	
+
 		float time = ZooMap.cellHeight / speed;		// time = distance over speed
 		
-		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Down));
+		if(sendToServer)
+		{
+			Debug.Log ("SENDING TO SERVER ALREADY");
+			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "DOWN", speed);
+		}
+		
+		
+		//StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Down));
+		
+		//if(sendToServer)
+		//	clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "DOWN", speed);
 	}
 	
-	public void MoveLeft()
+	public void MoveLeft(bool sendToServer)
 	{
+		long a =123134;
+		clientSocketScript.SendGetAllSessionMessage();
+		
 		if(previousDirection != DirectionType.Left)
 		{
 			UpdateRayCasting(DirectionType.Left);
 			previousDirection = DirectionType.Left;
 		}
-		
-		//playAnimation(left_anim);
-		//transform.Translate( -speed * Time.deltaTime, 0, 0);
-		//clientSocketScript.SendMovementMessage( ZooMap.GetHorizontalCell(transform.position.x) , ZooMap.GetVerticalCell(transform.position.y) );
 
 		Vector3 startPoint = transform.position;
-		//Vector3 endPoint = transform.position - new Vector3(ZooMap.cellWidth, 0, 0);
-		
+
 		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
 		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
 		
@@ -339,12 +355,19 @@ public class CharacterAnimController : MonoBehaviour {
 		float nextPosX = ZooMap.GetHorizontalPos(horizontalCell - 1);
 		
 		Vector3 endPoint = new Vector3(nextPosX, transform.position.y, transform.position.z);
+		
+		if(sendToServer)
+		{
+			Debug.Log ("SENDING TO SERVER ALREADY");
+			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);
+		}
 
 		
 		float time = ZooMap.cellWidth / speed;		// time = distance over speed
-		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Left));
-
-		//transform.position = Vector3.Lerp(startPoint, endPoint, (speed * Time.deltaTime));
+		//StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Left));
+		
+		//if(sendToServer)
+		//	clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);
 	}
 	
 	

@@ -33,6 +33,9 @@ public class ClientSocket : MonoBehaviour {
 	private List<Lobby> lobbyList = new List<Lobby>();
 	private List<Avatar> roomAvatarList = new List<Avatar>();
 	bool hasGameStarted = false;
+	
+	// time in milliseconds
+	private long localTimeStamp;
 
 	AsyncOperation BombermanGame;
 	
@@ -50,7 +53,7 @@ public class ClientSocket : MonoBehaviour {
 	
 	void InitSockJS()
 	{
-		//m_sockjs.AutoPingRefreshMs = 2000;
+		m_sockjs.AutoPingRefreshMs = 2000;
 		m_sockjs.OnMessage += OnMessage;
 		m_sockjs.OnConnect += OnConnect;
 		m_sockjs.OnDisconnect += OnDisconnect;
@@ -118,6 +121,10 @@ public class ClientSocket : MonoBehaviour {
 			Debug.Log("Ping refresh from server");
 			break;
 			
+			case "ping":
+			HandlePingMessage(serverMsg);
+			break;
+			
 			case "start":
 			StartCoroutine(LoadGameWorld(serverMsg));
 			break;
@@ -125,6 +132,10 @@ public class ClientSocket : MonoBehaviour {
 			case "update":
 			if(hasGameStarted)
 				HandleUpdate(serverMsg);
+			break;
+			
+			case "move":
+			HandleMovement(serverMsg);
 			break;
 		}
     }
@@ -141,6 +152,16 @@ public class ClientSocket : MonoBehaviour {
 		HandleGameStart(serverMsg);
 		playerList = gameManager.GetPlayerList();
 		hasGameStarted = true;
+		
+		SendMovementMessage(10.0f, 10.0f, "UP", 230.0f);
+		
+	}
+	
+	private void HandlePingMessage(string serverMsg)
+	{
+		var pingDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		long timeStamp = (long) pingDict["timestamp"];
+		SendPingMessage(timeStamp, GameManager.PlayerID);
 	}
 
 	private void HandleReadyReply(int serverReply, Dictionary<string, object> playerDict)
@@ -168,6 +189,19 @@ public class ClientSocket : MonoBehaviour {
 			Debug.Log ("Set Property OK");
 		else
 			Debug.Log ("Set Property ERROR");
+	}
+	
+	private void HandleMovement(string serverMsg)
+	{
+		Debug.Log ("Message Movement received from server: "+serverMsg);
+		var movementDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		long serverPlayerID = (long) movementDict["playerId"];
+		long cellX = (long) movementDict["cellX"];
+		long cellY = (long) movementDict["cellY"];
+		string direction = (string) movementDict["direction"];
+		float movementSpeed = (float) movementDict["speed"];
+		
+		gameManager.UpdatePosition(serverPlayerID, cellX, cellY, direction, movementSpeed);
 	}
 	
 	private void HandleMessage(string content, int status)
@@ -289,6 +323,19 @@ public class ClientSocket : MonoBehaviour {
 		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		List<object> contentList = (List<object>) dict["content"];
 		
+		long serverTime = (long) dict["timestamp"];
+		//localTimeStamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+		
+		localTimeStamp = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
+		localTimeStamp /= 10000; //Convert windows ticks to seconds
+		
+		Debug.Log ("Server time: "+serverTime);
+		Debug.Log ("Local time: "+localTimeStamp);
+		
+		Debug.Log ("Message from server: "+ dataFromServer);
+		
+		//{"type":"start","content":[{"id":1383373806006,"name":"456","delay":339,"isAlive":false,"avatarId":2,"sessionId":"100004"}],"timestamp":1383373811664}
+		
 		for(int i=0; i<contentList.Count; i++)
 		{
 			Dictionary<string, object> gameDict = (Dictionary<string, object>) contentList[i];
@@ -299,10 +346,26 @@ public class ClientSocket : MonoBehaviour {
 			long serverPlayerId = (long) gameDict["id"];
 			string playerName = (string) gameDict["name"];
 			long avatarId = (long) gameDict["avatarId"];
-			long spawnX = (long) gameDict["x"];
-			long spawnY = (long) gameDict["y"];
+			long spawnX = (long) gameDict["spawnX"];
+			long spawnY = (long) gameDict["spawnY"];
 			gameManager.InitCharacter(serverPlayerId, (int) avatarId, (int) spawnX, (int) spawnY);
 		}
+	}
+	
+	public void SendPingMessage(long time, long playerId)
+	{
+		ClearList();
+		
+		messageTypeList.Add("type");
+		contentList.Add("ping");
+		
+		messageTypeList.Add("timestamp");
+		contentList.Add(time);
+		
+		messageTypeList.Add("playerId");
+		contentList.Add(playerId);
+		
+		SendMessageToServer(messageTypeList, contentList);
 	}
 	
 	public void SendNewPlayerMessage(string playerName)
@@ -379,7 +442,7 @@ public class ClientSocket : MonoBehaviour {
 		List<object> activeList = (List<object>) bombDict["active"];
 		
 		// Updating the list of player's 
-		for(int index=0; index<playerList.Count; index++)
+		/*for(int index=0; index<playerList.Count; index++)
 		{
 			Player player = playerList[index];
 			long serverPlayerID = player.PlayerID;
@@ -398,7 +461,7 @@ public class ClientSocket : MonoBehaviour {
 
 				gameManager.UpdatePosition(serverPlayerID, cellX, cellY);
 			}
-		}
+		}*/
 		
 		
 		//"players":{"1382421891543":{}}
@@ -424,10 +487,14 @@ public class ClientSocket : MonoBehaviour {
 		contentList.Clear();
 	}
 	
-	// Send player's movement to server
-	public void SendMovementMessage(float playerX, float playerY)
+	// Send player's movement to server (current cell position)
+	public void SendMovementMessage(float cellX, float cellY, string direction, float moveSpeed)
 	{
 		ClearList();
+		
+		int newCellX = (int) cellX;
+		int newCellY = (int) cellY;
+		int newMoveSpeed = (int) moveSpeed;
 		
 		messageTypeList.Add("type");
 		contentList.Add("move");
@@ -435,11 +502,17 @@ public class ClientSocket : MonoBehaviour {
 		messageTypeList.Add("playerId");
 		contentList.Add(GameManager.PlayerID);
 		
-		messageTypeList.Add("x");
-		contentList.Add(playerX);
+		messageTypeList.Add("cellX");
+		contentList.Add(newCellX);
 		
-		messageTypeList.Add("y");
-		contentList.Add(playerY);
+		messageTypeList.Add("cellY");
+		contentList.Add(newCellY);
+		
+		messageTypeList.Add("direction");
+		contentList.Add(direction);
+		
+		messageTypeList.Add("speed");
+		contentList.Add(newMoveSpeed);
 		
 		SendMessageToServer(messageTypeList, contentList);
 	}

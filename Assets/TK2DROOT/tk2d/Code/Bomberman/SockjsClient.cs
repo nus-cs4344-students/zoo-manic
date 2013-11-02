@@ -97,7 +97,7 @@ public class SockjsClient : MonoBehaviour{
 				//}
             }
 		
-            //AutoPingRefresh();
+            AutoPingRefresh();
 
             FlushOutqueue();
 
@@ -238,6 +238,7 @@ public class SockjsClient : MonoBehaviour{
         {
 		
 			Debug.Log ("Send to server: "+_payload);
+		
             if (m_state == ConnectionState.Connected)
             {
                 var escapedMsg = '"' + EncodeMsg(_payload) + '"';
