@@ -21,11 +21,7 @@ public class ClientSocket : MonoBehaviour {
 	
 	// status 0 - success, > 1 means exception
 	private long status;
-	
-	public static string threadMsg;
-	public static bool isMsgUpdated;
-	public static object Lock = new object();
-	
+
 	ArrayList messageTypeList = new ArrayList();
 	ArrayList contentList = new ArrayList();
 	
@@ -53,20 +49,17 @@ public class ClientSocket : MonoBehaviour {
 	
 	void InitSockJS()
 	{
-		m_sockjs.AutoPingRefreshMs = 2000;
+		//m_sockjs.AutoPingRefreshMs = 2000;
 		m_sockjs.OnMessage += OnMessage;
 		m_sockjs.OnConnect += OnConnect;
 		m_sockjs.OnDisconnect += OnDisconnect;
 		
-		m_sockjs.Connect("http://localhost:5000/");
-		//m_sockjs.Connect("http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/");
+		//m_sockjs.Connect("http://localhost:5000/");
+		m_sockjs.Connect("http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/");
 	}
 
     private void OnMessage(string serverMsg)
     {
-        // Receive the JSON message from server
-		isMsgUpdated = false;
-
 		var dict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
 		
 		//Debug.Log ("SERVER MESSAGE: "+serverMsg);
@@ -83,7 +76,7 @@ public class ClientSocket : MonoBehaviour {
 		{
 			case "message":
 			string messageContent = (string) dict["content"];
-			long messageStatus = (long) dict["status"];
+			status = (long) dict["status"];
 			HandleMessage(messageContent, (int) status);
 			break;
 			
@@ -117,9 +110,9 @@ public class ClientSocket : MonoBehaviour {
 			
 			break;
 			
-			case "pingRefresh":
-			Debug.Log("Ping refresh from server");
-			break;
+			//case "pingRefresh":
+			//Debug.Log("Ping refresh from server");
+			//break;
 			
 			case "ping":
 			HandlePingMessage(serverMsg);
@@ -153,7 +146,7 @@ public class ClientSocket : MonoBehaviour {
 		playerList = gameManager.GetPlayerList();
 		hasGameStarted = true;
 		
-		SendMovementMessage(10.0f, 10.0f, "UP", 230.0f);
+		//SendMovementMessage(10.0f, 10.0f, "UP", 230.0f);
 		
 	}
 	
@@ -199,9 +192,9 @@ public class ClientSocket : MonoBehaviour {
 		long cellX = (long) movementDict["cellX"];
 		long cellY = (long) movementDict["cellY"];
 		string direction = (string) movementDict["direction"];
-		float movementSpeed = (float) movementDict["speed"];
+		long movementSpeed = (long) movementDict["speed"];
 		
-		gameManager.UpdatePosition(serverPlayerID, cellX, cellY, direction, movementSpeed);
+		gameManager.UpdatePosition(serverPlayerID, cellX, cellY, direction, (float) movementSpeed);
 	}
 	
 	private void HandleMessage(string content, int status)
@@ -249,7 +242,6 @@ public class ClientSocket : MonoBehaviour {
 			// if session ID is equals to game manager one
 			if(Convert.ToInt32(serverSessionID) == GameManager.SessionID)
 			{
-				Debug.Log ("MY ROOM IS: "+GameManager.SessionID);
 				PopulateRoomList(playerList);
 				break;
 			}

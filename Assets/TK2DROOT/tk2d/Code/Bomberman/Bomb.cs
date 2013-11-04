@@ -22,7 +22,7 @@ public class Bomb : MonoBehaviour {
 		timeLeftToExplode -= Time.deltaTime;
     	if (timeLeftToExplode <= 0.0f)
     	{
-			GameObject explosionInstance = Instantiate(explosionPrefab, transform.position, transform.rotation) as GameObject;
+			Instantiate(explosionPrefab, transform.position, transform.rotation);
 			
 			// Update the bomb limit of player
 			GameObject playerGO = GameObject.FindWithTag("Player");

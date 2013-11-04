@@ -32,9 +32,6 @@ public class GameManager : MonoBehaviour {
 	
 	public void UpdatePosition(long serverPlayerID, float cellX, float cellY, string direction, float moveSpeed)
 	{
-		Debug.Log ("UPDATING PLAYER POSITION: "+serverPlayerID);
-		Debug.Log ("Own player ID is : "+PlayerID);
-		Debug.Log ("Direction : "+direction);
 		// If it is other player, then update the position
 		if(serverPlayerID != PlayerID)
 		{
@@ -42,6 +39,8 @@ public class GameManager : MonoBehaviour {
 
 			CharacterAnimController movementController = characterObject.GetComponent<CharacterAnimController>();
 			movementController.PlayerSpeed = moveSpeed;
+			
+			Debug.Log ("Updating playerId position: "+serverPlayerID + " Direction: "+direction);
 			
 			switch(direction)
 			{

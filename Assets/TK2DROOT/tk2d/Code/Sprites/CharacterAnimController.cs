@@ -58,7 +58,7 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		InitAnimation();
 		
-		//clientSocketScript.SendGetRoomSession();
+		clientSocketScript = GameObject.Find("PlayerConnection").GetComponent<ClientSocket>();
     }
 	
 	void InitAnimation()
@@ -188,9 +188,6 @@ public class CharacterAnimController : MonoBehaviour {
 	
 	public void MoveUp(bool sendToServer)
 	{
-		long a =123134;
-		clientSocketScript.SendGetAllSessionMessage();
-		
 		if(previousDirection != DirectionType.Front)
 		{
 			UpdateRayCasting(DirectionType.Front);
@@ -220,19 +217,15 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		if(sendToServer)
 		{
-			Debug.Log ("SENDING TO SERVER ALREADY");
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "UP", speed);
 		}
 		
 		float time = ZooMap.cellHeight / speed;		// time = distance over speed
-		//StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Front));
+		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Front));
 	}
 	
 	public void MoveRight(bool sendToServer)
 	{
-		long a =123134;
-		clientSocketScript.SendGetAllSessionMessage();
-		
 		if(previousDirection != DirectionType.Right)
 		{
 			UpdateRayCasting(DirectionType.Right);
@@ -267,18 +260,14 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		if(sendToServer)
 		{
-			Debug.Log ("SENDING TO SERVER ALREADY");
-			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);
+			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "RIGHT", speed);
 		}
 		
-		//StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Right));
+		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Right));
 	}
 	
 	public void MoveDown(bool sendToServer)
 	{
-		long a =123134;
-		clientSocketScript.SendGetAllSessionMessage();
-		
 		if(previousDirection != DirectionType.Down)
 		{
 			UpdateRayCasting(DirectionType.Down);
@@ -313,12 +302,11 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		if(sendToServer)
 		{
-			Debug.Log ("SENDING TO SERVER ALREADY");
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "DOWN", speed);
 		}
 		
 		
-		//StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Down));
+		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Down));
 		
 		//if(sendToServer)
 		//	clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "DOWN", speed);
@@ -326,9 +314,6 @@ public class CharacterAnimController : MonoBehaviour {
 	
 	public void MoveLeft(bool sendToServer)
 	{
-		long a =123134;
-		clientSocketScript.SendGetAllSessionMessage();
-		
 		if(previousDirection != DirectionType.Left)
 		{
 			UpdateRayCasting(DirectionType.Left);
@@ -358,13 +343,12 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		if(sendToServer)
 		{
-			Debug.Log ("SENDING TO SERVER ALREADY");
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);
 		}
 
 		
 		float time = ZooMap.cellWidth / speed;		// time = distance over speed
-		//StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Left));
+		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Left));
 		
 		//if(sendToServer)
 		//	clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);

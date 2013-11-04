@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: Main_HowToPlayButton
+  m_Name: Main_HowtoplayButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -166,8 +166,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiItem: {fileID: 11400002}
   buttonType: 4
-  settingsWindow: {fileID: 100002, guid: 86fc2b6eca3a442d9b48d2ef13968b51, type: 2}
-  howToPlayWindow: {fileID: 100000, guid: 164c246e48298433f903c25cebed2f7b, type: 2}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

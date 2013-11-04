@@ -39,10 +39,10 @@ public class SockjsClient : MonoBehaviour{
         private static readonly ASCIIEncoding AsciiEncoding = new ASCIIEncoding();
         private static readonly StringBuilder HashStringBuilder = new StringBuilder();
         private static readonly Hashtable SendHeader = new Hashtable();
-        private static readonly string[] SendHeaderStrings = {"Content-Type=application/xml"};
+        //private static readonly string[] SendHeaderStrings = {"Content-Type=application/xml"};
 	
-		float ServerConnectionTimeout = 20f;
-		float tempTime = 0f;
+		//float ServerConnectionTimeout = 20f;
+		//float tempTime = 0f;
 
         public ConnectionState State
         {

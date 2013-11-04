@@ -7,8 +7,8 @@ public class Cell
 	private int itemType = 0;
 	
 	// get from zoomap
-	private float cellWidth = ZooMap.cellWidth;		
-	private float cellHeight = ZooMap.cellHeight;
+	//private float cellWidth = ZooMap.cellWidth;		
+	//private float cellHeight = ZooMap.cellHeight;
 	
 	private int numOfRows = (int) ZooMap.NumberofRows;				// number rows
 	private int numOfCols = (int) ZooMap.NumberofCols;				// num colns
