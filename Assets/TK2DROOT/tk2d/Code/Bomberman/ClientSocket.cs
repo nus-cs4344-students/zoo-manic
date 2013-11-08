@@ -54,8 +54,8 @@ public class ClientSocket : MonoBehaviour {
 		m_sockjs.OnConnect += OnConnect;
 		m_sockjs.OnDisconnect += OnDisconnect;
 		
-		//m_sockjs.Connect("http://localhost:5000/");
-		m_sockjs.Connect("http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/");
+		m_sockjs.Connect("http://localhost:5000/");
+		//m_sockjs.Connect("http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/");
 	}
 
     private void OnMessage(string serverMsg)

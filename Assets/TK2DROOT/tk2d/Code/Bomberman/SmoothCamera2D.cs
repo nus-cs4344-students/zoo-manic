@@ -7,10 +7,10 @@ public class SmoothCamera2D : MonoBehaviour {
     private Vector3 velocity = Vector3.zero;
     public Transform target;
 	
-	private float left_clip_x = 32.0f;
+	private float left_clip_x = 39.0f;
 	private float bottom_clip_y = 23.0f;
 	private float top_clip_y = 78.0f;
-	private float right_clip_x = 104.0f;
+	private float right_clip_x = 111.0f;
 
     // Update is called once per frame
     void Update () 
