@@ -199,7 +199,11 @@ public class ZooMap : MonoBehaviour {
 			new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
 			
 			currCell.CellType = 2;
-			
+		}
+		else if(cellType == 0)
+		{
+			// Receive the updated type from the server
+			currCell.CellType = (int) cellType;
 		}
 	}
 

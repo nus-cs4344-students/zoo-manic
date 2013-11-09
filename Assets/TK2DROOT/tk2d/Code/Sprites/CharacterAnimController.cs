@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 enum DirectionType { Left, Right, Front, Down };
 
@@ -32,6 +33,9 @@ public class CharacterAnimController : MonoBehaviour {
 	private DirectionType previousDirection = DirectionType.Left;
 	
 	private bool isStillMoving = false;
+	
+	// Datastructure that stores a list of bombs object
+	private Dictionary<string, GameObject> bombDict = new Dictionary<string, GameObject>();
 	
 	public bool EnemyPlayer 
 	{
@@ -120,7 +124,7 @@ public class CharacterAnimController : MonoBehaviour {
 		{
 			// Can play bomb
 			if(m_bombLimit > 0)
-				plantBomb();
+				SendPlantBombMessage();
         }
 
 		// Input.GetAxis("Vertical") > 0
@@ -142,11 +146,53 @@ public class CharacterAnimController : MonoBehaviour {
 		gameObject.transform.position = new Vector3(positionX, positionY, 0);
 	}
 	
-	void plantBomb()
+	public void PlantBomb(float horizontalCell, float verticalCell)
 	{
-		Vector3 bombPos = transform.position + new Vector3(0, 0, 0.01f);
+		// If player is still moving, don't plant the bomb
+		//if(isStillMoving)
+		//{
+		//	return;
+		//}
+			
+		//float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
+		//float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		
+		float verticalPos = ZooMap.GetVerticalPos(verticalCell);
+		float horizontalPos = ZooMap.GetHorizontalPos(horizontalCell);
+		
+		//Vector3 bombPos = transform.position + new Vector3(0, 0, 0.01f);
+		Vector3 bombPos = new Vector3(horizontalPos, verticalPos, 0.01f);
 		GameObject bombInstance = Instantiate(bombGO, bombPos, transform.rotation) as GameObject;
+		string bombId = (int) horizontalCell + "" + (int) verticalCell;
+		bombDict.Add(bombId, bombInstance);
+		
 		m_bombLimit--;
+	}
+	
+	public void ExplodeBomb(float horizontalCell, float verticalCell)
+	{
+		string bombId = (int) horizontalCell + "" + (int) verticalCell;
+		GameObject bombObject = (GameObject) bombDict[bombId];
+		Bomb bombScript = bombObject.GetComponent<Bomb>();
+		
+		if(bombScript)
+		{
+			bombScript.Explode();
+			bombDict.Remove(bombId);
+		}
+	}
+	
+	void SendPlantBombMessage()
+	{
+		// If player is still moving, don't sends update to the server
+		if(isStillMoving)
+		{
+			return;
+		}
+		
+		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
+		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		clientSocketScript.SendPlantBombMessage(horizontalCell, verticalCell);
 	}
 	
 	void playAnimation(string animation)
@@ -158,7 +204,6 @@ public class CharacterAnimController : MonoBehaviour {
 	// Return true if hits, otherwise returns false
 	bool checkHitObstacle(string direction)
 	{
-		
 		DirectionRaycasting collisionDetection = gameObject.GetComponent<DirectionRaycasting>();
 		bool isCollide = false;
 		
@@ -220,7 +265,9 @@ public class CharacterAnimController : MonoBehaviour {
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "UP", speed);
 		}
 		
+		
 		float time = ZooMap.cellHeight / speed;		// time = distance over speed
+		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Front));
 	}
 	
@@ -255,9 +302,7 @@ public class CharacterAnimController : MonoBehaviour {
 		//transform.position = Vector3.Lerp(startPoint, endPoint, (speed * Time.deltaTime));
 		
 		float time = ZooMap.cellWidth / speed;		// time = distance over speed
-		
-		Debug.Log ("Time is: "+time);
-		
+
 		if(sendToServer)
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "RIGHT", speed);
@@ -296,7 +341,7 @@ public class CharacterAnimController : MonoBehaviour {
 		Vector3 endPoint = new Vector3(transform.position.x, nextPosY, transform.position.z);
 
 		// The step size is equal to speed times frame time.
-		var step = speed * Time.deltaTime;
+		//var step = speed * Time.deltaTime;
 
 		float time = ZooMap.cellHeight / speed;		// time = distance over speed
 		
@@ -348,6 +393,7 @@ public class CharacterAnimController : MonoBehaviour {
 
 		
 		float time = ZooMap.cellWidth / speed;		// time = distance over speed
+		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Left));
 		
 		//if(sendToServer)
@@ -380,8 +426,8 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
 		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
-		Debug.Log ("Cell X: "+horizontalCell);
-		Debug.Log ("Cell Y: "+verticalCell);
+		//Debug.Log ("Cell X: "+horizontalCell);
+		//Debug.Log ("Cell Y: "+verticalCell);
 	}
 
 	void UpdateRayCasting(DirectionType direction)

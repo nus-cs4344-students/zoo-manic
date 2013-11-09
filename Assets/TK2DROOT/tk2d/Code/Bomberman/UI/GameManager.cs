@@ -30,18 +30,73 @@ public class GameManager : MonoBehaviour {
 	{
 	}
 	
-	public void UpdatePosition(long serverPlayerID, float cellX, float cellY, string direction, float moveSpeed)
+	public void PlantBomb(long serverPlayerID, float cellX, float cellY)
 	{
-		// If it is other player, then update the position
+		GameObject characterObject = GameObject.Find(""+serverPlayerID);
+		if(characterObject)
+		{
+			CharacterAnimController playerController = characterObject.GetComponent<CharacterAnimController>();
+			playerController.PlantBomb(cellX, cellY);	
+		}
+	}
+	
+	public void ExplodeBomb(long serverPlayerID, float cellX, float cellY)
+	{
+		GameObject characterObject = GameObject.Find(""+serverPlayerID);
+		if(characterObject)
+		{
+			CharacterAnimController playerController = characterObject.GetComponent<CharacterAnimController>();
+			playerController.ExplodeBomb(cellX, cellY);	
+		}
+	}
+	
+	public void UpdatePlayerStatus(string serverPlayerID, long bombLeft, bool isAlive)
+	{
+		GameObject characterObject = GameObject.Find(serverPlayerID);
+		
+		// If game object can be found
+		if(characterObject)
+		{
+			// If server says player is dead
+			if(isAlive == false)
+			{
+				Destroy(characterObject);
+			}
+		}
+	}
+	
+	public void UpdatePosition(long serverPlayerID, float cellX, float cellY, string direction, float moveSpeed, float timeDifference, float serverDelay)
+	{	
+		GameObject characterObject = GameObject.Find(""+serverPlayerID);
+		// If player already been destroyed (e.g. dead)
+		if(characterObject == null)
+		{
+			return;
+		}
+		
+		if(serverPlayerID == PlayerID)
+		{
+			timeDifference = 2 * serverDelay/1000.0f;
+		}
+
+		CharacterAnimController movementController = characterObject.GetComponent<CharacterAnimController>();
+		float defaultSpeed = moveSpeed;		// movement speed from the server
+		
+		// Some buffer time to handle jitter
+		float bufferTime = 0.1f;
+		
+		// Delayed time here can be faster or slower
+		float delayedTime = (ZooMap.cellWidth / defaultSpeed) + timeDifference;
+		movementController.PlayerSpeed = ZooMap.cellWidth / ( delayedTime + bufferTime );
+
+		Debug.Log ("LPF Speed is : " + movementController.PlayerSpeed);
+		
+		//movementController.PlayerSpeed = moveSpeed;
+		
+		Debug.Log ("Updating playerId position: "+serverPlayerID + " Direction: "+direction);
+		
 		if(serverPlayerID != PlayerID)
 		{
-			GameObject characterObject = GameObject.Find(""+serverPlayerID);
-
-			CharacterAnimController movementController = characterObject.GetComponent<CharacterAnimController>();
-			movementController.PlayerSpeed = moveSpeed;
-			
-			Debug.Log ("Updating playerId position: "+serverPlayerID + " Direction: "+direction);
-			
 			switch(direction)
 			{
 				case "UP":
@@ -60,11 +115,6 @@ public class GameManager : MonoBehaviour {
 				movementController.MoveRight(false);
 				break;
 			}
-			
-			//Debug.LogError("Updating Position: CELL X: "+cellX + " CELL Y: "+cellY);
-			
-			//characterObject.GetComponent<CharacterAnimController>().UpdatePosition(positionX, positionY);
-			//characterObject.GetComponent<CharacterAnimController>().MoveUp();
 		}
 	}
 	

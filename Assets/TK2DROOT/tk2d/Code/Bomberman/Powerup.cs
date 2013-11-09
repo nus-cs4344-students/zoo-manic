@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 
+// no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs (trick), 5 - shakable
 public enum PowerupType {Invulnerability, Range, Shake, Speed, Trick}
 
 public class Powerup : MonoBehaviour {

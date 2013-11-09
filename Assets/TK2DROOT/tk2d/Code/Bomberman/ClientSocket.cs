@@ -32,6 +32,14 @@ public class ClientSocket : MonoBehaviour {
 	
 	// time in milliseconds
 	private long localTimeStamp;
+	
+	private static long LOCAL_GAME_CLOCK;
+	private static long SERVER_GAME_CLOCK;
+	private static long LOCAL_START_TIME;
+	private static long SERVER_START_TIME;
+	
+	private long SERVER_DELAY;	
+	private long CURRENT_DELAY;
 
 	AsyncOperation BombermanGame;
 	
@@ -110,6 +118,10 @@ public class ClientSocket : MonoBehaviour {
 			
 			break;
 			
+			case "plantBombReply":
+			HandlePlantBombMessage(serverMsg);
+			break;
+			
 			//case "pingRefresh":
 			//Debug.Log("Ping refresh from server");
 			//break;
@@ -119,6 +131,9 @@ public class ClientSocket : MonoBehaviour {
 			break;
 			
 			case "start":
+			SERVER_START_TIME = (long) dict["startTime"];
+			LOCAL_START_TIME = GetLocalTimeStamp();
+			
 			StartCoroutine(LoadGameWorld(serverMsg));
 			break;
 			
@@ -146,8 +161,9 @@ public class ClientSocket : MonoBehaviour {
 		playerList = gameManager.GetPlayerList();
 		hasGameStarted = true;
 		
-		//SendMovementMessage(10.0f, 10.0f, "UP", 230.0f);
-		
+		// Handle Update Message from server
+		if(hasGameStarted)
+			HandleZooMap(serverMsg);
 	}
 	
 	private void HandlePingMessage(string serverMsg)
@@ -155,6 +171,18 @@ public class ClientSocket : MonoBehaviour {
 		var pingDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
 		long timeStamp = (long) pingDict["timestamp"];
 		SendPingMessage(timeStamp, GameManager.PlayerID);
+	}
+	
+	private void HandlePlantBombMessage(string serverMsg)
+	{
+		Debug.Log("Plant bomb message: "+serverMsg);
+		
+		var bombDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		long playerId = (long) bombDict["playerId"];
+		long bombX = (long) bombDict["bombX"];
+		long bombY = (long) bombDict["bombY"];
+		
+		gameManager.PlantBomb(playerId, (float) bombX, (float) bombY);
 	}
 
 	private void HandleReadyReply(int serverReply, Dictionary<string, object> playerDict)
@@ -189,12 +217,17 @@ public class ClientSocket : MonoBehaviour {
 		Debug.Log ("Message Movement received from server: "+serverMsg);
 		var movementDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
 		long serverPlayerID = (long) movementDict["playerId"];
-		long cellX = (long) movementDict["cellX"];
-		long cellY = (long) movementDict["cellY"];
+		long cellX = (long) movementDict["cellX"];		// starting point cell X
+		long cellY = (long) movementDict["cellY"];		// starting point cell Y
+		//long destX = (long) movementDict["destX"];
+		//long destY = (long) movementDict["destY"];
 		string direction = (string) movementDict["direction"];
 		long movementSpeed = (long) movementDict["speed"];
+		long serverTimeStamp = (long) movementDict["timestamp"];
+		SERVER_DELAY = (long) movementDict["serverDelay"];
 		
-		gameManager.UpdatePosition(serverPlayerID, cellX, cellY, direction, (float) movementSpeed);
+		float timeDifference = (float) CalculateTimeStampDifference((long) serverTimeStamp);
+		gameManager.UpdatePosition(serverPlayerID, cellX, cellY, direction, (float) movementSpeed, timeDifference, SERVER_DELAY);
 	}
 	
 	private void HandleMessage(string content, int status)
@@ -310,21 +343,39 @@ public class ClientSocket : MonoBehaviour {
 		GameObject.Find ("SceneObject").GetComponent<SceneManager>().UpdateLobbyList();
 	}
 	
+	private float CalculateTimeStampDifference(long serverCurrentTime)
+	{
+		//localTimeStamp = GetLocalTimeStamp();
+		//return serverTimeStamp - localTimeStamp;
+		
+		LOCAL_GAME_CLOCK = GetLocalTimeStamp() - LOCAL_START_TIME;
+		SERVER_GAME_CLOCK = serverCurrentTime - SERVER_START_TIME;
+		
+		Debug.Log ("Local Game Clock: " + LOCAL_GAME_CLOCK);
+		Debug.Log ("Server Game Clock: " + SERVER_GAME_CLOCK);
+		
+		Debug.Log ("Local Start Time: " + LOCAL_START_TIME);
+		Debug.Log ("Server Start Time: " + SERVER_START_TIME);
+		
+		CURRENT_DELAY = LOCAL_GAME_CLOCK - SERVER_GAME_CLOCK - SERVER_DELAY;
+		
+		// time stamp difference, convert windows ticks to seconds
+		return (float) (LOCAL_GAME_CLOCK - SERVER_GAME_CLOCK - SERVER_DELAY) / 1000;
+	}
+	
+	private long GetLocalTimeStamp()
+	{
+		long localTimeStamp = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
+		localTimeStamp /= 10000; //Convert windows ticks to seconds*/
+		return localTimeStamp;
+	}
+	
 	private void HandleGameStart(string dataFromServer)
 	{
 		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		List<object> contentList = (List<object>) dict["content"];
 		
-		long serverTime = (long) dict["timestamp"];
-		//localTimeStamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-		
-		localTimeStamp = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
-		localTimeStamp /= 10000; //Convert windows ticks to seconds
-		
-		Debug.Log ("Server time: "+serverTime);
-		Debug.Log ("Local time: "+localTimeStamp);
-		
-		Debug.Log ("Message from server: "+ dataFromServer);
+		//Debug.Log ("Message from server: "+ dataFromServer);
 		
 		//{"type":"start","content":[{"id":1383373806006,"name":"456","delay":339,"isAlive":false,"avatarId":2,"sessionId":"100004"}],"timestamp":1383373811664}
 		
@@ -403,8 +454,71 @@ public class ClientSocket : MonoBehaviour {
 		yield return new WaitForSeconds(duration);   //Wait duration sec for server to reply
     }
 	
+	private void HandleZooMap(string dataFromServer)
+	{
+		// Server should not send update even if i have not start the game
+		// Game is not started (ZooMap instance is null)
+		if(GameManager.CurrentScene != SceneType.Game)
+		{
+			return;
+		}
+		
+		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
+		Dictionary<string, object> zooMapDict = (Dictionary<string, object>) dict["zooMap"];
+		
+		for(int index=0; index < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; index++)
+		{
+			Dictionary<string, object> zooMapInfoDict = (Dictionary<string, object>) zooMapDict[""+index];
+			//long cellType = (long) zooMapInfoDict["type"];
+			long cellType = (long) zooMapInfoDict["tile_type"];
+			long cellItem = (long) zooMapInfoDict["item"];
+			long horizontalCellNum = (long) zooMapInfoDict["x"];
+			long verticalCellNum = (long) zooMapInfoDict["y"];
+			
+			//zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
+			gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
+		}
+	}
+	
+	private void HandlePlayerUpdate(string dataFromServer)
+	{
+		// Server should not send update even if i have not start the game
+		// Game is not started (ZooMap instance is null)
+		if(GameManager.CurrentScene != SceneType.Game)
+		{
+			return;
+		}
+		
+		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
+		Dictionary<string, object> playersDict = (Dictionary<string, object>) dict["players"];
+		
+		/*for(int i=0; i<playersDict.Count; i++)
+		{
+			Dictionary<string, object> playerInfo = (Dictionary<string, object>) playersDict[i+""];
+			long serverPlayerID = (long) playerInfo["playerId"];
+			//long playerCellX = (long) playerInfo["x"];
+			//long playerCellY = (long) playerInfo["y"];
+			//long playerSpeed = (long) playerInfo["speed"];
+			long bombLeft = (long) playerInfo["bombLeft"];
+			bool isAlive = (bool) playerInfo["isAlive"];
+			
+			gameManager.UpdatePlayerStatus(serverPlayerID, bombLeft, isAlive);
+		}*/
+		
+		// dictKeys here is all the playerID
+		foreach(string serverPlayerID in playersDict.Keys)
+		{
+			Dictionary<string, object> playerInfo = (Dictionary<string, object>) playersDict[serverPlayerID];
+			long bombLeft = (long) playerInfo["bombLeft"];
+			bool isAlive = (bool) playerInfo["isAlive"];
+			gameManager.UpdatePlayerStatus(serverPlayerID, bombLeft, isAlive);
+		}
+	}
+	
 	private void HandleUpdate(string dataFromServer)
 	{
+		Debug.Log ("Update: "+dataFromServer);
+		
 		// Server should not send update even if i have not start the game
 		// Game is not started (ZooMap instance is null)
 		if(GameManager.CurrentScene != SceneType.Game)
@@ -414,24 +528,41 @@ public class ClientSocket : MonoBehaviour {
 		
 		if(playerList == null)
 		{
-			//Debug.Log ("PLAYER LIST IS NULL");
 			return;
 		}
 		
-		//Debug.Log ("Received: data " + dataFromServer);
-		
-		
+
 		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		
 		Dictionary<string, object> bombDict = (Dictionary<string, object>) dict["bombs"];
-		Dictionary<string, object> playersDict = (Dictionary<string, object>) dict["players"];
-		Dictionary<string, object> zooMapDict = (Dictionary<string, object>) dict["zooMap"];
+		//Dictionary<string, object> zooMapDict = (Dictionary<string, object>) dict["zooMap"];
 		
 		/*
 		 * {"type":"update","bombs":{"exploded":[],"active":[]},"players":{"1382421891543":{}},"zooMap":{"0":{"type":0,"item":0},"1":{"type":0,"item":0}
 		 * */
-		List<object> bombList = (List<object>) bombDict["exploded"];
+		List<object> explosionList = (List<object>) bombDict["exploded"];
 		List<object> activeList = (List<object>) bombDict["active"];
+		
+		// Handle bomb explosion updates
+		for(int i=0; i<explosionList.Count; i++)
+		{
+			Dictionary<string, object> explodeInfo = (Dictionary<string, object>) explosionList[i];
+			long serverPlayerID = (long) explodeInfo["playerId"];
+			long cellX = (long) explodeInfo["x"];
+			long cellY = (long) explodeInfo["y"];
+			
+			gameManager.ExplodeBomb(serverPlayerID, cellX, cellY);
+		}
+		
+		
+		// If there is zoomap key, update the cells
+		if( dict.ContainsKey ("zooMap") )
+			HandleZooMap(dataFromServer);
+		
+		if( dict.ContainsKey ("players") )
+			HandlePlayerUpdate(dataFromServer);
+		
+		// Updating the ZOOMap if there is update
 		
 		// Updating the list of player's 
 		/*for(int index=0; index<playerList.Count; index++)
@@ -458,25 +589,41 @@ public class ClientSocket : MonoBehaviour {
 		
 		//"players":{"1382421891543":{}}
 		// iterate through each cells, and get the cell status
-		for(int index=0; index < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; index++)
-		{
-			Dictionary<string, object> zooMapInfoDict = (Dictionary<string, object>) zooMapDict[""+index];
-			//long cellType = (long) zooMapInfoDict["type"];
-			long cellType = (long) zooMapInfoDict["tile_type"];
-			long cellItem = (long) zooMapInfoDict["item"];
-			long horizontalCellNum = (long) zooMapInfoDict["x"];
-			long verticalCellNum = (long) zooMapInfoDict["y"];
-			
-			//zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
-			gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
-		}
-		
 	}
 	
 	private void ClearList()
 	{
 		messageTypeList.Clear();
 		contentList.Clear();
+	}
+	
+	// Send bomb's position to server (current cell position)
+	public void SendPlantBombMessage(float cellX, float cellY)
+	{
+		ClearList();
+		
+		int bombCellX = (int) cellX;
+		int bombCellY = (int) cellY;
+		
+		messageTypeList.Add("type");
+		contentList.Add("plantBomb");
+		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);		
+		
+		messageTypeList.Add("x");
+		contentList.Add(bombCellX);
+		
+		messageTypeList.Add("y");
+		contentList.Add(bombCellY);		
+		
+		if(CURRENT_DELAY < 0)
+			CURRENT_DELAY = 0;
+		
+		messageTypeList.Add("delay");
+		contentList.Add(CURRENT_DELAY);
+		
+		SendMessageToServer(messageTypeList, contentList);
 	}
 	
 	// Send player's movement to server (current cell position)
@@ -505,6 +652,17 @@ public class ClientSocket : MonoBehaviour {
 		
 		messageTypeList.Add("speed");
 		contentList.Add(newMoveSpeed);
+		
+		// Send to server in milliseconds
+		//long millisecondsDelay = CalculateTimeStampDifference
+		//CalculateTimeStampDifference
+		//messageTypeList.Add("delay");
+		
+		if(CURRENT_DELAY < 0)
+			CURRENT_DELAY = 0;
+		
+		messageTypeList.Add("delay");
+		contentList.Add(CURRENT_DELAY);
 		
 		SendMessageToServer(messageTypeList, contentList);
 	}
