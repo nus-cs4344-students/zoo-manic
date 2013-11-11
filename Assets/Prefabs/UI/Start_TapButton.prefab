@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiItem: {fileID: 11400004}
-  onDownScale: {x: .949999988, y: .949999988, z: .949999988}
+  onDownScale: {x: .899999976, y: .899999976, z: .899999976}
   tweenDuration: .100000001
   canButtonBeHeldDown: 1
   useOnReleaseInsteadOfOnUp: 0
@@ -255,8 +255,8 @@ MonoBehaviour:
   data:
     version: 1
     font: {fileID: 11400000, guid: fb1b97eccf6db514999d1605baf017e5, type: 2}
-    text: Tap to Start
-    color: {r: 1, g: 1, b: 1, a: 1}
+    text: Connect
+    color: {r: .985091269, g: 1, b: .845588207, a: 1}
     color2: {r: 1, g: 1, b: 1, a: 1}
     useGradient: 0
     textureGradient: 0
@@ -282,6 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiItem: {fileID: 11400004}
+  buttonText: {fileID: 0}
   buttonType: 0
 --- !u!1001 &100100000
 Prefab:

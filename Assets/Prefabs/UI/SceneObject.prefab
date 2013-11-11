@@ -38,6 +38,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2216d317d80c8ee49a2cae8304f79a54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_currentScene: 0
+  m_playerName: {fileID: 0}
+  buttonScript: {fileID: 0}
+  m_LobbyItem1: {fileID: 0}
+  m_LobbyItem2: {fileID: 0}
+  m_LobbyItem3: {fileID: 0}
+  m_LobbyItem4: {fileID: 0}
+  m_LobbyItem5: {fileID: 0}
+  m_LobbyItem6: {fileID: 0}
+  m_LobbyItem7: {fileID: 0}
+  m_LobbyItem8: {fileID: 0}
+  m_LobbyItem9: {fileID: 0}
+  m_LobbyItem10: {fileID: 0}
+  m_readyButton: {fileID: 0}
+  m_AvatarItem1: {fileID: 0}
+  m_AvatarItem2: {fileID: 0}
+  m_AvatarItem3: {fileID: 0}
+  m_AvatarItem4: {fileID: 0}
+  m_roomTitleText: {fileID: 0}
+  m_playerStatusText: {fileID: 0}
+  m_gameText: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -37,10 +37,17 @@ public class CharacterAnimController : MonoBehaviour {
 	// Datastructure that stores a list of bombs object
 	private Dictionary<string, GameObject> bombDict = new Dictionary<string, GameObject>();
 	
+	public float LOCAL_LAG_DELAY = 0.0f;
+	
 	public bool EnemyPlayer 
 	{
         get { return isEnemy; }
         set { isEnemy = value; }
+    }
+	
+	public CharacterType CharacterIcon 
+	{
+        get { return characterType; }
     }
 	
 	public float PlayerSpeed 
@@ -164,31 +171,68 @@ public class CharacterAnimController : MonoBehaviour {
 		Vector3 bombPos = new Vector3(horizontalPos, verticalPos, 0.01f);
 		GameObject bombInstance = Instantiate(bombGO, bombPos, transform.rotation) as GameObject;
 		string bombId = (int) horizontalCell + "" + (int) verticalCell;
-		bombDict.Add(bombId, bombInstance);
 		
-		m_bombLimit--;
+		if(bombDict.ContainsKey(bombId) == false)
+		{
+			bombDict.Add(bombId, bombInstance);
+			m_bombLimit--;
+			//hudScript.setBombLeft(characterScript.BombLimit);
+		}
 	}
 	
-	public void ExplodeBomb(float horizontalCell, float verticalCell)
+	public void UpdateBombLeft()
+	{
+		GameObject hud = GameObject.Find ("UnityHUDPrefab");
+		if(hud)
+		{
+			HUD hudScript = hud.GetComponent<HUD>();
+			bool isRangePowerupActivated = hudScript.IsRangeActivated();
+			
+			// make sure does not exceed 3
+			if(isRangePowerupActivated == false)
+			{
+				if(m_bombLimit < 3)
+					m_bombLimit++;
+			}
+			else
+			{
+				if(m_bombLimit < 6)
+					m_bombLimit++;
+			}
+			
+			hudScript.SetBombLeft(m_bombLimit);
+		}
+	}
+	
+	public void ExplodeBomb(float horizontalCell, float verticalCell, long explodeRange)
 	{
 		string bombId = (int) horizontalCell + "" + (int) verticalCell;
-		GameObject bombObject = (GameObject) bombDict[bombId];
-		Bomb bombScript = bombObject.GetComponent<Bomb>();
 		
-		if(bombScript)
+		if(bombDict.ContainsKey(bombId))
 		{
-			bombScript.Explode();
-			bombDict.Remove(bombId);
+			GameObject bombObject = (GameObject) bombDict[bombId];
+			Bomb bombScript = bombObject.GetComponent<Bomb>();
+			
+			if(bombScript)
+			{
+				bombScript.Explode((int) explodeRange);
+				bombDict.Remove(bombId);
+			}
 		}
+		else
+		{
+			Debug.LogError("ERROR!!: "+bombId + " is not found!");
+		}
+		
 	}
 	
-	void SendPlantBombMessage()
+	public void SendPlantBombMessage()
 	{
 		// If player is still moving, don't sends update to the server
-		if(isStillMoving)
-		{
-			return;
-		}
+		//if(isStillMoving)
+		//{
+		//	return;
+		//}
 		
 		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
 		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
@@ -260,13 +304,15 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		Vector3 endPoint = new Vector3(transform.position.x, nextPosY, transform.position.z);
 		
+		float time = ZooMap.cellHeight / speed;		// time = distance over speed
+		
+		// client moves
 		if(sendToServer)
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "UP", speed);
+			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+			soundManager.PlayMoveSound(transform.position);		
 		}
-		
-		
-		float time = ZooMap.cellHeight / speed;		// time = distance over speed
 		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Front));
 	}
@@ -302,10 +348,13 @@ public class CharacterAnimController : MonoBehaviour {
 		//transform.position = Vector3.Lerp(startPoint, endPoint, (speed * Time.deltaTime));
 		
 		float time = ZooMap.cellWidth / speed;		// time = distance over speed
-
+		
+		// client moves
 		if(sendToServer)
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "RIGHT", speed);
+			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+			soundManager.PlayMoveSound(transform.position);				
 		}
 		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Right));
@@ -345,16 +394,15 @@ public class CharacterAnimController : MonoBehaviour {
 
 		float time = ZooMap.cellHeight / speed;		// time = distance over speed
 		
+		// client moves
 		if(sendToServer)
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "DOWN", speed);
+			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+			soundManager.PlayMoveSound(transform.position);				
 		}
 		
-		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Down));
-		
-		//if(sendToServer)
-		//	clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "DOWN", speed);
 	}
 	
 	public void MoveLeft(bool sendToServer)
@@ -386,18 +434,17 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		Vector3 endPoint = new Vector3(nextPosX, transform.position.y, transform.position.z);
 		
+		float time = ZooMap.cellWidth / speed;		// time = distance over speed
+		
+		// client moves
 		if(sendToServer)
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);
+			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+			soundManager.PlayMoveSound(transform.position);		
 		}
-
-		
-		float time = ZooMap.cellWidth / speed;		// time = distance over speed
 		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Left));
-		
-		//if(sendToServer)
-		//	clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);
 	}
 	
 	
@@ -405,6 +452,7 @@ public class CharacterAnimController : MonoBehaviour {
 	IEnumerator MoveObject (Transform thisTransform, Vector3 startPos, Vector3 endPos, float time, DirectionType direction) {
 	    float i = 0.0f;
 	    float rate = 1.0f / time;
+		
 	    while (i < 1.0f) {
 			isStillMoving = true;
 	        i += Time.deltaTime * rate;

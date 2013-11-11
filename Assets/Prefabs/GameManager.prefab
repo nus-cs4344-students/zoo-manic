@@ -39,8 +39,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerScript: {fileID: 11400004, guid: fed03b5af8d28de4da89c444b69e2485, type: 2}
-  enemyGameObject: {fileID: 0}
-  zooMapScript: {fileID: 0}
+  enemyGameObject: {fileID: 100000, guid: 77b9804b778bc714ca83c67a773a8cad, type: 2}
+  zooMapScript: {fileID: 11400000, guid: 2d7a8f0d6e71b8b4b9cd8c7ff8826bfb, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

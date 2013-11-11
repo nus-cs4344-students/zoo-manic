@@ -8,7 +8,7 @@ public class SmoothCamera2D : MonoBehaviour {
     public Transform target;
 	
 	private float left_clip_x = 39.0f;
-	private float bottom_clip_y = 23.0f;
+	private float bottom_clip_y = -180.0f;
 	private float top_clip_y = 78.0f;
 	private float right_clip_x = 111.0f;
 

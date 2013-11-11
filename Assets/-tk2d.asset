@@ -1385,12 +1385,12 @@ MonoBehaviour:
     - Zebra-Back
     - Zebra-Front
     - Zebra-Bomb
-    - Rhino-Left
+    - Zebra-Bomb3
     - Rhino-Back
     - Rhino-Bomb
     - Rhino-Front
-    - Rhino-Right
-    - 
+    - Zebra-Bomb2
+    - Rhino-Right(L)
     - Cassowary-Right1
     - Cassowary-Right0
     - Cassowary-Right2
@@ -1420,18 +1420,36 @@ MonoBehaviour:
     - Tiger-Right2
     - Rhino-Bomb3
     - Rhino-Bomb2
+    - Rhino-Left(R)
+    - Rhino-Back(R)
+    - Zebra-Front(L)
+    - Rhino-Back(L)
+    - Rhino-Front(L)
+    - Zebra-Back(R)
+    - Rhino-Right
+    - Rhino-Left(L)
+    - Rhino-Right(R)
+    - Rhino-Front(R)
+    - Rhino-Left
+    - Zebra-Left(L)
+    - Zebra-Left(R)
+    - Zebra-Right(R)
+    - Zebra-Front(R)
+    - Zebra-Back(L)
+    - Zebra-Right(L)
+    - Zebra-Bomb4
     spriteTextureGUIDs:
     - bfae2742fd4a6344f9456f64e9b7b50d
     - d5a02d92df1a4e246843f970a556fc44
     - df71cac47f93585458904c7c3ed92d75
     - a65a91b6a5d94724989d18790848617b
     - 3a7534cf2a296c34ca9f46e40dc26206
-    - 16e454bfefc249542b206c7c50081eae
+    - 63217a271d3a6e44dacfd2e9229fea09
     - 62b288c8608b3c44591fcd0e28e0190f
     - fca5b10bc01915247a518e8d7fdf7b43
     - da923c6b8cf20fd41be076676df3683d
-    - eeea020c0cb41004085e6d204370dd94
-    - 
+    - 6c354d2986985e8439643c1de03625fe
+    - 4fa4401060012224196e7c1b1bdc1c3b
     - 0678160bd2baf0f43a38d02edbba4943
     - 0cacecff98a3b4045a91fb4573ca2e04
     - 519abcbda0cdc454280d6f85f863237b
@@ -1461,18 +1479,36 @@ MonoBehaviour:
     - 1b206e33b2e1952409def4628cfa0e43
     - 7e50605961748d0488df2d532ad11fff
     - c6d43c89ae573da4faaa373c114cfb71
+    - bfeb27053bd88ea4c89d00603e98b4f8
+    - 8c65826679809df498eba054ac20219d
+    - 2de9ec0122d72f742b38089db6554b0e
+    - c78f1f49cd6659641b32db078b25b1e0
+    - fddcb0caf6a3b8840b64de1ac91532fc
+    - 525ff00959644dc47ac87984389a645f
+    - eeea020c0cb41004085e6d204370dd94
+    - 10fd186ee2b751e438fdba57b56a4b7d
+    - 709e465f769eaab498b9e842d7fdb0ac
+    - 453ae18f2b597bd40b2753fd49edde1c
+    - 16e454bfefc249542b206c7c50081eae
+    - 69902e774e25dfd45b0df83ecba12bc7
+    - 700b45de015f91d40a75d5627a2ebc2c
+    - 84abd2625bbf2234cb06adff437d71fe
+    - a197c283248e58347a05dea2a2e3e842
+    - b1913a9f8109a1347949ec332290da13
+    - c8cddd7df35e99d44af1a07424c48725
+    - d8ca1c947920e8d4d93978ac752834fe
     spriteTextureTimeStamps:
-    - 1382016488.66745
-    - 1382016488.66645
-    - 1382016488.63245
-    - 1382016488.63645
+    - 1384088009.73718
+    - 1384087924.74932
+    - 1384087995.24135
+    - 1384087970.85396
     - 1383366006.06352
-    - 1382363612.92977
+    - 1383366006.07152
     - 1382363612.91677
     - 1383366005.96351
     - 1382363612.92877
-    - 1382363612.93077
-    - 0
+    - 1383366006.06652
+    - 1383366006.01351
     - 1383219509.38574
     - 1383219509.38374
     - 1383219509.38774
@@ -1502,6 +1538,24 @@ MonoBehaviour:
     - 1383219509.40974
     - 1383366005.98951
     - 1383366005.98551
+    - 1383366006.00951
+    - 1383366005.94751
+    - 1384087987.41591
+    - 1383366005.94351
+    - 1383366005.99651
+    - 1384088002.48277
+    - 1382363612.93077
+    - 1383366006.00551
+    - 1383366006.02151
+    - 1383366006.00151
+    - 1382363612.92977
+    - 1384087946.21655
+    - 1384087935.98396
+    - 1384087903.56711
+    - 1384087979.27944
+    - 1384088567.17907
+    - 1384087914.08071
+    - 1383366006.07552
     managedSpriteCollection: 0
     loadable: 0
     assetName: 

@@ -16,7 +16,12 @@ public class SceneManager : MonoBehaviour {
 	//private int roomID = 100000;
 	
 	// Start Scene UI Components
-	[SerializeField] tk2dTextMesh m_playerName;
+	[SerializeField] tk2dTextMesh m_playerName;	
+	[SerializeField] tk2dTextMesh m_ipText;	
+	[SerializeField] public GameObject m_playerTextBox;	
+	[SerializeField] public GameObject m_ipTextBox;	
+	
+	[SerializeField] public Button buttonScript;	
 	
 	// Lobby
 	private bool isRoomFull = false;
@@ -46,6 +51,11 @@ public class SceneManager : MonoBehaviour {
 	[SerializeField] tk2dTextMesh m_roomTitleText;
 	[SerializeField] tk2dTextMesh m_playerStatusText;
 	[SerializeField] tk2dTextMesh m_gameText;
+	
+	public SceneType CurrentScene
+    {
+        get { return m_currentScene; }
+    }
 
 	
 	void Awake()
@@ -165,6 +175,11 @@ public class SceneManager : MonoBehaviour {
 		serverConnection.SendNewPlayerMessage(GameManager.PlayerName);
 	}
 	
+	public void ConnectToServer()
+	{
+		string ipAddress = m_ipText.text;
+		serverConnection.ConnectToIP(ipAddress);
+	}
 	
 	public void ConnectToRoom()
 	{

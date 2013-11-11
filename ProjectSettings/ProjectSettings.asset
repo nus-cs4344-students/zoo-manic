@@ -151,10 +151,10 @@ PlayerSettings:
   scriptingDefineSymbols:
     data:
       first: 1
-      second: DLL
+      second: SoundManager
     data:
       first: 2
-      second: DLL
+      second: SoundManager
   metroPackageName: Bomberman
   metroPackageLogo: 
   metroPackageVersion: 

@@ -8742,7 +8742,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiItem: {fileID: 11400004}
-  buttonType: 5
+  buttonText: {fileID: 0}
+  buttonType: 6
 --- !u!114 &11400056
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -11262,6 +11263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiItem: {fileID: 11400252}
+  buttonText: {fileID: 0}
   buttonType: 4
 --- !u!114 &11400250
 MonoBehaviour:
@@ -11341,6 +11343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiItem: {fileID: 11400260}
+  buttonText: {fileID: 0}
   buttonType: 5
 --- !u!114 &11400258
 MonoBehaviour:

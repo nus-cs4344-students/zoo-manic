@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum ButtonType 
 {
-	Start_Tap, Main_Play, Main_Settings, Main_HowtoPlay, 
+	Connect, Start_Tap, Main_Play, Main_Settings, Main_HowtoPlay, 
 	Lobby_HostGame, Lobby_JoinGame, Lobby_BacktoMain, Lobby_Refresh,
 	GameRoom_Ready, GameRoom_Start
 }
@@ -12,7 +12,8 @@ public class Button : MonoBehaviour {
 	
 	
 	[SerializeField] tk2dUIItem uiItem;
-	[SerializeField] ButtonType buttonType;
+	[SerializeField] public tk2dTextMesh buttonText;
+	[SerializeField] public ButtonType buttonType;
 	
 	// Button class calls scene manager, and scene manager calls serverconnection/gamemanager
 	private SceneManager sceneManager;
@@ -38,10 +39,15 @@ public class Button : MonoBehaviour {
 	{
 		switch(buttonType)
 		{
+			case ButtonType.Connect:
+			ConnectToServer();
+			break;
+			
 			// go to main menu
 			case ButtonType.Start_Tap:
 			CreateNewPlayer();
-			GameManager.LoadMainScene();
+			//GameManager.LoadMainScene();
+			//GameManager.LoadLobbyScene();
 			break;
 			
 			// Main Menu
@@ -96,6 +102,11 @@ public class Button : MonoBehaviour {
 		sceneManager.StartGame();
 		// Wait for game to start, the server replies a "start" message, then everybody change the scene
 		//StartCoroutine( WaitForGame(3.0f) );
+	}
+	
+	void ConnectToServer()
+	{
+		sceneManager.ConnectToServer();
 	}
 	
 	void CreateNewPlayer()

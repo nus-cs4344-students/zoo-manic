@@ -165,7 +165,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiItem: {fileID: 11400010}
-  buttonType: 6
+  buttonText: {fileID: 0}
+  buttonType: 7
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

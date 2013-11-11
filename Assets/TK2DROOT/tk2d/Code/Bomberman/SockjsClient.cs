@@ -39,7 +39,7 @@ public class SockjsClient : MonoBehaviour{
         private static readonly ASCIIEncoding AsciiEncoding = new ASCIIEncoding();
         private static readonly StringBuilder HashStringBuilder = new StringBuilder();
         private static readonly Hashtable SendHeader = new Hashtable();
-        //private static readonly string[] SendHeaderStrings = {"Content-Type=application/xml"};
+        private static readonly string[] SendHeaderStrings = {"Content-Type=application/xml"};
 	
 		//float ServerConnectionTimeout = 20f;
 		//float tempTime = 0f;
@@ -82,8 +82,8 @@ public class SockjsClient : MonoBehaviour{
             {
 				//if(tempTime > ServerConnectionTimeout)
 				//{
-	                //if (m_wwwCurrentSending.error != null)
-					if(!String.IsNullOrEmpty(m_wwwCurrentSending.error))
+	                if (m_wwwCurrentSending.error != null)
+					//if(!String.IsNullOrEmpty(m_wwwCurrentSending.error))
 	                {
 	                    OnEventDisconnect(-1, "error sending data");
 	                    Debug.LogError("[sockjs] send error -> disconnect");
@@ -97,15 +97,15 @@ public class SockjsClient : MonoBehaviour{
 				//}
             }
 		
-            AutoPingRefresh();
+           // AutoPingRefresh();
 
             FlushOutqueue();
 
             // long poll finished ?
             if (m_wwwPolling != null && m_wwwPolling.isDone)
             {
-	            //if(m_wwwPolling.error != null)
-				if(!String.IsNullOrEmpty(m_wwwPolling.error))
+	            if(m_wwwPolling.error != null)
+				//if(!String.IsNullOrEmpty(m_wwwPolling.error))
 	            {
                     if (Connected)
                     {
@@ -128,8 +128,8 @@ public class SockjsClient : MonoBehaviour{
                         {
                                 OnEventConnected();
                         }
-                        //else
-                                //Debug.LogError("[sockjs] unkown message: " + response);        
+                        else
+                                Debug.LogError("[sockjs] unkown message: " + response);        
                     }
                     else
                     {
@@ -237,7 +237,7 @@ public class SockjsClient : MonoBehaviour{
         public void SendData(string _payload, bool _tryFlush=false)
         {
 		
-			Debug.Log ("Send to server: "+_payload);
+			//Debug.Log ("Send to server: "+_payload);
 		
             if (m_state == ConnectionState.Connected)
             {

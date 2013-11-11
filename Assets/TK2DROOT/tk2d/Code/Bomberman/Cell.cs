@@ -19,10 +19,12 @@ public class Cell
 	
 	private GameObject cellObject;
 	
-	public Cell(int index)
+	public Cell(int rowIndex, int columnIndex)
 	{
-		rowIndex = index % numOfCols;
-		columnIndex = index / numOfCols;
+		this.rowIndex = rowIndex;
+		this.columnIndex = columnIndex;
+		//rowIndex = index % numOfCols;
+		//columnIndex = index / numOfCols;
 	}
 	
 	public GameObject CellGameObject 
@@ -45,7 +47,7 @@ public class Cell
 	
 	public string PrintCell()
 	{
-		return "("+rowIndex+", "+columnIndex+")";
+		return rowIndex+":"+columnIndex;
 	}
 	
 	public int CellType 

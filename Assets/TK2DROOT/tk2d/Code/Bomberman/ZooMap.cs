@@ -26,13 +26,22 @@ public class ZooMap : MonoBehaviour {
 	[SerializeField] Transform m_spawnPoint3;
 	[SerializeField] Transform m_spawnPoint4;	
 	
+	[SerializeField] GameObject m_InvulnerablePowerup;
+	[SerializeField] GameObject m_RangePowerup;
+	[SerializeField] GameObject m_ShakePowerup;
+	[SerializeField] GameObject m_SpeedPowerup;
+	[SerializeField] GameObject m_TrickPowerup;
+	
+	int powerupValue = 0;
+	GameObject powerUpToCreate;
+
 	//horizontalCellNum, verticalCellNum, type, item
 	
 
 	// Store the cells info in a dictionary for efficiency
 	// cellNum, object{type, item,x, y}
 	// the game object here refers to the powerup, or the brick etc
-	private static Dictionary<int, Cell> zooMapInfoDict = new Dictionary<int, Cell>();		// Static so it won't disappear when scene change
+	private static Dictionary<string, Cell> zooMapInfoDict = new Dictionary<string, Cell>();		// Static so it won't disappear when scene change
 	//private Dictionary<int, List<GameObject>> zooMapItemObjectDict = new Dictionary<int, List<GameObject>>();
 	
 	
@@ -78,7 +87,7 @@ public class ZooMap : MonoBehaviour {
 			return false;
 		}
 		
-		int cellIndex = 0;
+		/*int cellIndex = 0;
 		
 		// the client start from horizontal cell 0,0 by right should be 1
 		//horizontalCell += 1;
@@ -89,7 +98,7 @@ public class ZooMap : MonoBehaviour {
 		else if(verticalCell == 0f)
 			cellIndex = horizontalCell;
 		else
-			cellIndex = (horizontalCell * (int) NumberofCols) + verticalCell;
+			cellIndex = (horizontalCell * (int) NumberofCols) + verticalCell;*/
 			
 		//cellIndex = (horizontalCell * (int) NumberofRows) + verticalCell;
 			
@@ -97,8 +106,9 @@ public class ZooMap : MonoBehaviour {
 		//cellIndex = (verticalCell * (int) NumberofRows) + horizontalCell;
 		
 		
-		Cell currCell = (Cell) zooMapInfoDict[cellIndex];
-		Debug.Log("Checking Cell Index: "+cellIndex + "  Obstacle? : "+ (currCell.CellType != 0) );
+		string cellID = horizontalCell+":"+verticalCell;
+		Cell currCell = (Cell) zooMapInfoDict[cellID];
+		Debug.Log("Checking Cell Index: "+cellID + "  Obstacle? : "+ (currCell.CellType != 0) );
 		
 		return currCell.CellType != 0;
 	}
@@ -148,6 +158,36 @@ public class ZooMap : MonoBehaviour {
 		
 	}
 	
+	public void SpawnPowerUp(PowerupType powerupType, Cell thisCell, float horizontalCell, float verticalCell)
+	{
+		switch (powerupType)
+		{
+			case PowerupType.Invulnerability:
+				powerUpToCreate = m_InvulnerablePowerup;
+				break;
+			case PowerupType.Range:
+				powerUpToCreate = m_RangePowerup;
+				break;
+			case PowerupType.Shake:
+				powerUpToCreate = m_ShakePowerup;
+				break;
+			case PowerupType.Speed:
+				powerUpToCreate = m_SpeedPowerup;
+				break;
+			case PowerupType.Trick:
+				powerUpToCreate = m_TrickPowerup;
+				break;
+		}
+		
+		Debug.Log("SPAWNING POWERUP: "+powerupType + "   CellX: "+horizontalCell + "   Vertical Cell: "+verticalCell);
+
+		// Spawn a powerup then destroy the game object
+		Vector3 powerupPos = new Vector3(GetHorizontalPos(horizontalCell), GetVerticalPos(verticalCell), powerUpToCreate.transform.position.z);
+		GameObject powerupInstance = Instantiate(powerUpToCreate, powerupPos, transform.rotation) as GameObject;
+		
+		thisCell.CellGameObject = powerupInstance;
+	}
+	
 	private void InitSpawnPoint()
 	{
 		/*m_spawnPoint1.localPosition = new Vector3(GetHorizontalPos(0), GetVerticalPos(0), 0);
@@ -160,9 +200,18 @@ public class ZooMap : MonoBehaviour {
 	{
 		// type  empty - 0, box - 1, rock - 2
 		// item  no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs, 5 - shakable
-		for(int index=0; index < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; index++)
+		/*for(int index=0; index < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; index++)
 		{
 			zooMapInfoDict.Add (index, new Cell(index));
+		}*/
+		
+		for(int row=0; row < (int) ZooMap.NumberofRows ; row++)
+		{
+			for(int column=0; column < (int) ZooMap.NumberofCols ; column++)
+			{
+				string zooCellID = row+":"+column;
+				zooMapInfoDict.Add (zooCellID, new Cell(row, column));
+			}
 		}
 	}
 	
@@ -174,7 +223,7 @@ public class ZooMap : MonoBehaviour {
 	// Cell number is from 0 to 27*37
 	// type  empty - 0, box - 1, rock - 2
 	// item  no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs, 5 - shakable
-	public void UpdateZooMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, int cellNum)
+	public void UpdateZooMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, string cellID)
 	{	
 		if(zooMapInfoDict == null || zooMapInfoDict.Count == 0)
 		{
@@ -182,7 +231,7 @@ public class ZooMap : MonoBehaviour {
 			return;
 		}
 		
-		Cell currCell = (Cell) zooMapInfoDict[cellNum];
+		Cell currCell = (Cell) zooMapInfoDict[cellID];
 		
 		// If server says add wooden crate, but your side has no crate
 		if(cellType == 1 && currCell.CellType != 1)
@@ -192,6 +241,7 @@ public class ZooMap : MonoBehaviour {
 			new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
 			
 			currCell.CellType = 1;
+			currCell.CellGameObject = woodenObj;
 		}
 		else if(cellType == 2 && currCell.CellType != 2)
 		{
@@ -199,18 +249,40 @@ public class ZooMap : MonoBehaviour {
 			new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
 			
 			currCell.CellType = 2;
+			currCell.CellGameObject = rockObj;
 		}
 		else if(cellType == 0)
 		{
 			// Receive the updated type from the server
-			currCell.CellType = (int) cellType;
+			//currCell.CellType = (int) cellType;
+			currCell.CellType = (int) cellType; 
+			
+			// delete previous game object
+			if(cellItem == 0)
+			{
+				if(currCell.CellGameObject)
+				{
+					Destroy (currCell.CellGameObject);
+					currCell.CellGameObject = null;
+				}
+			}
+			else if(cellItem == 1)
+				SpawnPowerUp(PowerupType.Range, currCell, horizontalCellNum, verticalCellNum);
+			else if(cellItem == 2)
+				SpawnPowerUp(PowerupType.Speed, currCell, horizontalCellNum, verticalCellNum);
+			else if(cellItem == 3)
+				SpawnPowerUp(PowerupType.Invulnerability, currCell, horizontalCellNum, verticalCellNum);
+			else if(cellItem == 4)
+				SpawnPowerUp(PowerupType.Trick, currCell, horizontalCellNum, verticalCellNum);
+			else if(cellItem == 5)
+				SpawnPowerUp(PowerupType.Shake, currCell, horizontalCellNum, verticalCellNum);
 		}
 	}
 
 	void DrawOwnGrid()
 	{
 		for (int i = 0; i < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; i++) {
-			Cell cell = (Cell) zooMapInfoDict[i];
+			/*Cell cell = (Cell) zooMapInfoDict[i];
 			
 			// Off set to the first position of the grid
 			float fromX = GetHorizontalPos( (float) cell.RowNum) - cellWidth / 2;
@@ -219,16 +291,9 @@ public class ZooMap : MonoBehaviour {
 			
 			float toX = GetHorizontalPos( (float) cell.RowNum) + cellWidth / 2;
 			float toY = GetVerticalPos( (float) cell.ColNum ) + cellHeight / 2;
-			//Vector3 toPosition = new Vector3(toX,toY, 0);
-			
-			//Debug.Log ("Drawing line from X-axis: "+fromX + " to : "+toX);
-			//Debug.Log ("Drawing line from Y-axis: "+fromY + " to : "+toY);
-			
-		    //Gizmos.DrawLine(new Vector3(fromX, 0, 0), new Vector3(toX, 0, 0));
-			//Gizmos.DrawLine(new Vector3(0, fromY, 0), new Vector3(0, toY, 0));
-			
+
 			Gizmos.DrawWireSphere(new Vector3(fromX, 0, 0), cellWidth);
-			Gizmos.DrawWireSphere(new Vector3(0, fromY, 0), cellHeight);
+			Gizmos.DrawWireSphere(new Vector3(0, fromY, 0), cellHeight);*/
 		}
 	}
 	
@@ -237,9 +302,9 @@ public class ZooMap : MonoBehaviour {
 	{
 	}
 	
-	void OnDrawGizmos()
+	/*void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
 		DrawOwnGrid();
-    }
+    }*/
 }

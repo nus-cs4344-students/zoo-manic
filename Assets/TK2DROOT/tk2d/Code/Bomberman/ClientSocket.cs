@@ -62,8 +62,17 @@ public class ClientSocket : MonoBehaviour {
 		m_sockjs.OnConnect += OnConnect;
 		m_sockjs.OnDisconnect += OnDisconnect;
 		
-		m_sockjs.Connect("http://localhost:5000/");
+		//m_sockjs.Connect("http://localhost:5000/");
 		//m_sockjs.Connect("http://ec2-54-225-24-113.compute-1.amazonaws.com:5000/");
+	}
+	
+	public void ConnectToIP(string ipAddress)
+	{
+		string http = "http://";
+		string port = ":5000/";
+		
+		string host = http + ipAddress + port;
+		m_sockjs.Connect(host);
 	}
 
     private void OnMessage(string serverMsg)
@@ -85,7 +94,7 @@ public class ClientSocket : MonoBehaviour {
 			case "message":
 			string messageContent = (string) dict["content"];
 			status = (long) dict["status"];
-			HandleMessage(messageContent, (int) status);
+			//HandleMessage(messageContent, (int) status);
 			break;
 			
 			case "newPlayerReply":
@@ -145,6 +154,13 @@ public class ClientSocket : MonoBehaviour {
 			case "move":
 			HandleMovement(serverMsg);
 			break;
+			
+			case "pingRefresh":
+			break;
+			
+			case "gameEnd":
+			HandleGameEnd(serverMsg);
+			break;
 		}
     }
 	
@@ -166,11 +182,49 @@ public class ClientSocket : MonoBehaviour {
 			HandleZooMap(serverMsg);
 	}
 	
+	// back to lobby
+	IEnumerator GoBacktoLobby()
+	{
+		yield return new WaitForSeconds(5.0f);
+		GameManager.LoadLobbyScene();
+	}
+	
+	private void HandleGameEnd(string serverMsg)
+	{
+		var dict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		/*long playerId = (long) dict["winnerId"];
+		string playerName = (string) dict["winnerName"];
+		
+		if(playerId == GameManager.PlayerID)
+		{
+			gameManager.DisplayGameEndMessage("ROUND ENDED. YOU ARE THE WINNER.\nGoing to lobby in 5 seconds");
+		}
+		else
+		{
+			gameManager.DisplayGameEndMessage("ROUND ENDED. WINNER IS "+playerName+", You lose.\nGoing to lobby in 5 seconds");
+		}*/
+		
+		gameManager.DisplayGameEndMessage("\nGoing to lobby in 5 seconds");
+		
+		StartCoroutine(GoBacktoLobby());
+	}
+	
 	private void HandlePingMessage(string serverMsg)
 	{
 		var pingDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
 		long timeStamp = (long) pingDict["timestamp"];
-		SendPingMessage(timeStamp, GameManager.PlayerID);
+		long serialNo = (long) pingDict["serialNo"];
+		SendPingMessage(timeStamp, GameManager.PlayerID, serialNo);
+	}
+	
+	private void HandleKillMessage(string serverMsg)
+	{
+		Debug.Log("Kill MESSAGE message: "+serverMsg);
+		
+		var killMsgDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		string message = (string) killMsgDict["content"];
+
+		gameManager.DisplayKillMessage(message);
 	}
 	
 	private void HandlePlantBombMessage(string serverMsg)
@@ -181,8 +235,9 @@ public class ClientSocket : MonoBehaviour {
 		long playerId = (long) bombDict["playerId"];
 		long bombX = (long) bombDict["bombX"];
 		long bombY = (long) bombDict["bombY"];
+		long bombLeft = (long) bombDict["bombLeft"];
 		
-		gameManager.PlantBomb(playerId, (float) bombX, (float) bombY);
+		gameManager.PlantBomb(playerId, (float) bombX, (float) bombY, bombLeft);
 	}
 
 	private void HandleReadyReply(int serverReply, Dictionary<string, object> playerDict)
@@ -223,9 +278,9 @@ public class ClientSocket : MonoBehaviour {
 		//long destY = (long) movementDict["destY"];
 		string direction = (string) movementDict["direction"];
 		long movementSpeed = (long) movementDict["speed"];
-		long serverTimeStamp = (long) movementDict["timestamp"];
+		long serverTimeStamp = (long) movementDict["timestamp"];  // time stamp server start moving
 		SERVER_DELAY = (long) movementDict["serverDelay"];
-		
+
 		float timeDifference = (float) CalculateTimeStampDifference((long) serverTimeStamp);
 		gameManager.UpdatePosition(serverPlayerID, cellX, cellY, direction, (float) movementSpeed, timeDifference, SERVER_DELAY);
 	}
@@ -253,8 +308,9 @@ public class ClientSocket : MonoBehaviour {
 		}
 		
 		long playerID = (long) dict["playerId"];
-		
 		GameManager.UpdatePlayerID(playerID);
+		
+		GameManager.LoadLobbyScene();
 	}
 	
 	private void HandleGetRoomSession(string sessionData)
@@ -360,7 +416,8 @@ public class ClientSocket : MonoBehaviour {
 		CURRENT_DELAY = LOCAL_GAME_CLOCK - SERVER_GAME_CLOCK - SERVER_DELAY;
 		
 		// time stamp difference, convert windows ticks to seconds
-		return (float) (LOCAL_GAME_CLOCK - SERVER_GAME_CLOCK - SERVER_DELAY) / 1000;
+		//return (float) (LOCAL_GAME_CLOCK - SERVER_GAME_CLOCK - SERVER_DELAY) / 1000;
+		return (float) (LOCAL_GAME_CLOCK - SERVER_GAME_CLOCK) / 1000;
 	}
 	
 	private long GetLocalTimeStamp()
@@ -374,6 +431,7 @@ public class ClientSocket : MonoBehaviour {
 	{
 		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		List<object> contentList = (List<object>) dict["content"];
+		//SERVER_DELAY = (long) dict["serverDelay"];
 		
 		//Debug.Log ("Message from server: "+ dataFromServer);
 		
@@ -391,11 +449,11 @@ public class ClientSocket : MonoBehaviour {
 			long avatarId = (long) gameDict["avatarId"];
 			long spawnX = (long) gameDict["spawnX"];
 			long spawnY = (long) gameDict["spawnY"];
-			gameManager.InitCharacter(serverPlayerId, (int) avatarId, (int) spawnX, (int) spawnY);
+			gameManager.InitCharacter(serverPlayerId, (int) avatarId, (int) spawnX, (int) spawnY, SERVER_DELAY);
 		}
 	}
 	
-	public void SendPingMessage(long time, long playerId)
+	public void SendPingMessage(long time, long playerId, long serialNum)
 	{
 		ClearList();
 		
@@ -407,6 +465,9 @@ public class ClientSocket : MonoBehaviour {
 		
 		messageTypeList.Add("playerId");
 		contentList.Add(playerId);
+		
+		messageTypeList.Add("serialNo");
+		contentList.Add(serialNum);
 		
 		SendMessageToServer(messageTypeList, contentList);
 	}
@@ -466,7 +527,7 @@ public class ClientSocket : MonoBehaviour {
 		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		Dictionary<string, object> zooMapDict = (Dictionary<string, object>) dict["zooMap"];
 		
-		for(int index=0; index < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; index++)
+		/*for(int index=0; index < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; index++)
 		{
 			Dictionary<string, object> zooMapInfoDict = (Dictionary<string, object>) zooMapDict[""+index];
 			//long cellType = (long) zooMapInfoDict["type"];
@@ -477,6 +538,24 @@ public class ClientSocket : MonoBehaviour {
 			
 			//zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
 			gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, index);
+		}*/
+		
+		int keyIndex = 0;
+		for(int row=0; row < (int) ZooMap.NumberofRows ; row++)
+		{
+			for(int column=0; column < (int) ZooMap.NumberofCols ; column++)
+			{
+				Dictionary<string, object> zooMapInfoDict = (Dictionary<string, object>) zooMapDict[""+keyIndex];
+				//long cellType = (long) zooMapInfoDict["type"];
+				long cellType = (long) zooMapInfoDict["tile_type"];
+				long cellItem = (long) zooMapInfoDict["item"];
+				long horizontalCellNum = (long) zooMapInfoDict["x"];
+				long verticalCellNum = (long) zooMapInfoDict["y"];
+				string cellID = row+":"+column;
+				
+				keyIndex++;
+				gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, cellID);
+			}
 		}
 	}
 	
@@ -511,7 +590,9 @@ public class ClientSocket : MonoBehaviour {
 			Dictionary<string, object> playerInfo = (Dictionary<string, object>) playersDict[serverPlayerID];
 			long bombLeft = (long) playerInfo["bombLeft"];
 			bool isAlive = (bool) playerInfo["isAlive"];
-			gameManager.UpdatePlayerStatus(serverPlayerID, bombLeft, isAlive);
+			List<object> powerupList = (List<object>) playerInfo["items"];
+			
+			gameManager.UpdatePlayerStatus(serverPlayerID, bombLeft, isAlive, powerupList);
 		}
 	}
 	
@@ -550,10 +631,10 @@ public class ClientSocket : MonoBehaviour {
 			long serverPlayerID = (long) explodeInfo["playerId"];
 			long cellX = (long) explodeInfo["x"];
 			long cellY = (long) explodeInfo["y"];
+			long explodeRange = (long) explodeInfo["range"];
 			
-			gameManager.ExplodeBomb(serverPlayerID, cellX, cellY);
+			gameManager.ExplodeBomb(serverPlayerID, cellX, cellY, explodeRange);
 		}
-		
 		
 		// If there is zoomap key, update the cells
 		if( dict.ContainsKey ("zooMap") )
@@ -561,6 +642,10 @@ public class ClientSocket : MonoBehaviour {
 		
 		if( dict.ContainsKey ("players") )
 			HandlePlayerUpdate(dataFromServer);
+		
+		if( dict.ContainsKey ("killMessage"))
+			HandleKillMessage(dataFromServer);
+		
 		
 		// Updating the ZOOMap if there is update
 		
@@ -809,7 +894,21 @@ public class ClientSocket : MonoBehaviour {
 
     private void OnConnect()
     {
-		Debug.Log("Connected to SockJS server");
+		//Debug.Log("Connected to SockJS server");
+		
+		GameObject sceneManager = GameObject.Find ("SceneObject");
+		if(sceneManager != null)
+		{
+			if(sceneManager.GetComponent<SceneManager>().CurrentScene == SceneType.Start)
+			{
+				Debug.Log ("Connected to SockJS Server");
+				sceneManager.GetComponent<SceneManager>().buttonScript.buttonType = ButtonType.Start_Tap;
+				sceneManager.GetComponent<SceneManager>().buttonScript.buttonText.text = "Tap to Start";
+				sceneManager.GetComponent<SceneManager>().m_playerTextBox.SetActive(true);
+				sceneManager.GetComponent<SceneManager>().m_ipTextBox.SetActive(true);
+				//sceneManager.GetComponent<SceneManager>() = "Enter your name";
+			}
+		}
     }
 	
   	private void OnDisconnect(int _code, string _msg)

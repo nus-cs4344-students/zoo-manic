@@ -16,13 +16,13 @@ public class ExplosionDamage : MonoBehaviour {
 	// When the explosion collider collide with the game object
 	void OnCollisionEnter(Collision collider)
     {
-		/*if(collider.gameObject.tag == "Player")
-			collider.gameObject.BroadcastMessage("KillPlayer");
-		else if(collider.gameObject.tag == "Crate"){
-			collider.gameObject.BroadcastMessage("KillObject");
-		}
+		//if(collider.gameObject.tag == "Player")
+		//	collider.gameObject.BroadcastMessage("KillPlayer");
+		//if(collider.gameObject.tag == "Crate"){
+		//	collider.gameObject.BroadcastMessage("KillObject");
+		//}
 		// Obstacle can be terrain boundary or a rick
-		else if(collider.gameObject.tag == "Obstacle"){
-		}*/
+		//else if(collider.gameObject.tag == "Obstacle"){
+		//}
     }
 }

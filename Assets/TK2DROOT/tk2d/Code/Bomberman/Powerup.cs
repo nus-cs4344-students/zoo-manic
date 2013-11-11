@@ -25,8 +25,12 @@ public class Powerup : MonoBehaviour {
 		if(collider.gameObject.tag == "Player"){
 			
 			DoPowerUp();
+			SoundManager soundManager = soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+			
+			soundManager.PlayItemSound(gameObject.transform.position);
+			
 			// get powerup
-			Destroy(gameObject);
+			//Destroy(gameObject);
 		}
     }
 	

@@ -282,9 +282,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiItem: {fileID: 11400000}
-  buttonType: 2
-  settingsWindow: {fileID: 100002, guid: 86fc2b6eca3a442d9b48d2ef13968b51, type: 2}
-  howToPlayWindow: {fileID: 100000, guid: 164c246e48298433f903c25cebed2f7b, type: 2}
+  buttonText: {fileID: 0}
+  buttonType: 3
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

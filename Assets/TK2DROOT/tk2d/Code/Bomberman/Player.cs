@@ -139,8 +139,8 @@ bomb_left		-	how many bomb left to plant
 	{
 		
 	}
-	
-	public void InitZebraCharacter(long playerID, int cellX, int cellY)
+
+	public void InitZebraCharacter(long playerID, int cellX, int cellY, float localLagDelay)
 	{
 		character = Instantiate(m_zebraCharacter, transform.position, transform.rotation) as GameObject;
 		var animationScript = character.GetComponent<CharacterAnimController>();
@@ -155,6 +155,8 @@ bomb_left		-	how many bomb left to plant
 		{
 			// Set the Zebra to tagged as Player
 			character.gameObject.tag = "Player";
+			
+			animationScript.LOCAL_LAG_DELAY = localLagDelay;
 		}
 		
 		character.gameObject.name = ""+playerID;
@@ -162,7 +164,7 @@ bomb_left		-	how many bomb left to plant
 		Debug.Log ("Zebra is created");
 	}
 	
-	public void InitRhinoCharacter(long playerID, int cellX, int cellY)
+	public void InitRhinoCharacter(long playerID, int cellX, int cellY, float localLagDelay)
 	{
 		character = Instantiate(m_rhinoCharacter, transform.position, transform.rotation) as GameObject;
 		var animationScript = character.GetComponent<CharacterAnimController>();
@@ -178,6 +180,7 @@ bomb_left		-	how many bomb left to plant
 		{
 			// Set the rhino to tagged as Player
 			character.gameObject.tag = "Player";
+			animationScript.LOCAL_LAG_DELAY = localLagDelay;			
 		}
 		
 		character.gameObject.name = ""+playerID;
@@ -185,7 +188,7 @@ bomb_left		-	how many bomb left to plant
 		Debug.Log ("Rhino is created");
 	}
 	
-	public void InitTigerCharacter(long playerID, int cellX, int cellY)
+	public void InitTigerCharacter(long playerID, int cellX, int cellY, float localLagDelay)
 	{
 		character = Instantiate(m_tigerCharacter, transform.position, transform.rotation) as GameObject;
 		var animationScript = character.GetComponent<CharacterAnimController>();
@@ -199,6 +202,7 @@ bomb_left		-	how many bomb left to plant
 		if(isSelf)
 		{
 			character.gameObject.tag = "Player";
+			animationScript.LOCAL_LAG_DELAY = localLagDelay;			
 		}
 		
 		character.gameObject.name = ""+playerID;
@@ -206,7 +210,7 @@ bomb_left		-	how many bomb left to plant
 		Debug.Log ("Tiger is created");
 	}
 	
-	public void InitBirdCharacter(long playerID, int cellX, int cellY)
+	public void InitBirdCharacter(long playerID, int cellX, int cellY, float localLagDelay)
 	{
 		character = Instantiate(m_birdCharacter, transform.position, transform.rotation) as GameObject;
 		var animationScript = character.GetComponent<CharacterAnimController>();
@@ -220,6 +224,7 @@ bomb_left		-	how many bomb left to plant
 		if(isSelf)
 		{
 			character.gameObject.tag = "Player";
+			animationScript.LOCAL_LAG_DELAY = localLagDelay;			
 		}
 		
 		character.gameObject.name = ""+playerID;
