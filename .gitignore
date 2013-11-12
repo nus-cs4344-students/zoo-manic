@@ -31,3 +31,12 @@ build/debug/native-ios/spritesheets/map.json
 build/debug/native-ios/spritesheets/spritesheetSizeMap.json
 sdk
 Assets/Walkthrough/Sprites/UI/HUD/Sound Button.png.meta
+Assets/Plugins.meta
+Assets/Plugins/SimpleJson.dll.meta
+Assets/Plugins/SocketIO.dll.meta
+Assets/Plugins/SocketIO.pdb.meta
+Assets/Plugins/SuperSocket.ClientEngine.Common.dll.meta
+Assets/Plugins/SuperSocket.ClientEngine.Core.dll.meta
+Assets/Plugins/SuperSocket.ClientEngine.Protocol.dll.meta
+Assets/Plugins/SuperSocket.ClientEngine.Proxy.dll.meta
+Assets/Plugins/WebSocket4Net.dll.meta

@@ -23,8 +23,6 @@ public class Cell
 	{
 		this.rowIndex = rowIndex;
 		this.columnIndex = columnIndex;
-		//rowIndex = index % numOfCols;
-		//columnIndex = index / numOfCols;
 	}
 	
 	public GameObject CellGameObject 

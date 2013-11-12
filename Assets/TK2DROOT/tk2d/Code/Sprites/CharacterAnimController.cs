@@ -236,7 +236,12 @@ public class CharacterAnimController : MonoBehaviour {
 		
 		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
 		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
-		clientSocketScript.SendPlantBombMessage(horizontalCell, verticalCell);
+		string bombId = (int) horizontalCell + "" + (int) verticalCell;
+		
+		if(bombDict.ContainsKey(bombId) == false)
+		{
+			clientSocketScript.SendPlantBombMessage(horizontalCell, verticalCell);
+		}
 	}
 	
 	void playAnimation(string animation)
@@ -311,7 +316,9 @@ public class CharacterAnimController : MonoBehaviour {
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "UP", speed);
 			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
-			soundManager.PlayMoveSound(transform.position);		
+			
+			if(soundManager != null)
+				soundManager.PlayMoveSound(transform.position);		
 		}
 		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Front));
@@ -354,7 +361,9 @@ public class CharacterAnimController : MonoBehaviour {
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "RIGHT", speed);
 			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
-			soundManager.PlayMoveSound(transform.position);				
+			
+			if(soundManager != null)
+				soundManager.PlayMoveSound(transform.position);				
 		}
 		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Right));
@@ -399,7 +408,9 @@ public class CharacterAnimController : MonoBehaviour {
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "DOWN", speed);
 			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
-			soundManager.PlayMoveSound(transform.position);				
+			
+			if(soundManager != null)
+				soundManager.PlayMoveSound(transform.position);				
 		}
 		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Down));
@@ -441,7 +452,9 @@ public class CharacterAnimController : MonoBehaviour {
 		{
 			clientSocketScript.SendMovementMessage(horizontalCell, verticalCell, "LEFT", speed);
 			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
-			soundManager.PlayMoveSound(transform.position);		
+			
+			if(soundManager != null)
+				soundManager.PlayMoveSound(transform.position);		
 		}
 		
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Left));

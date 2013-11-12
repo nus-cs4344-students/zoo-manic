@@ -198,7 +198,7 @@ public class SceneManager : MonoBehaviour {
 	
 	public void UpdatePlayerName()
 	{
-		string name = m_playerName.text;
+		string name = m_ipText.text;
 		
 		GameManager.UpdatePlayerName(name);
 		Debug.Log ("Updating player name: "+name);

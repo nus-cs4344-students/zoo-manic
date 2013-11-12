@@ -541,6 +541,7 @@ public class ClientSocket : MonoBehaviour {
 		}*/
 		
 		int keyIndex = 0;
+		
 		for(int row=0; row < (int) ZooMap.NumberofRows ; row++)
 		{
 			for(int column=0; column < (int) ZooMap.NumberofCols ; column++)
@@ -552,6 +553,8 @@ public class ClientSocket : MonoBehaviour {
 				long horizontalCellNum = (long) zooMapInfoDict["x"];
 				long verticalCellNum = (long) zooMapInfoDict["y"];
 				string cellID = row+":"+column;
+				//Debug.Log ("SERVER IS : " + horizontalCellNum+":"+verticalCellNum);
+				//Debug.Log ("CLIENT IS : " + cellID);
 				
 				keyIndex++;
 				gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, cellID);

@@ -205,6 +205,8 @@ public class ZooMap : MonoBehaviour {
 			zooMapInfoDict.Add (index, new Cell(index));
 		}*/
 		
+		// column is the x, row is the y
+		
 		for(int row=0; row < (int) ZooMap.NumberofRows ; row++)
 		{
 			for(int column=0; column < (int) ZooMap.NumberofCols ; column++)
@@ -234,7 +236,7 @@ public class ZooMap : MonoBehaviour {
 		Cell currCell = (Cell) zooMapInfoDict[cellID];
 		
 		// If server says add wooden crate, but your side has no crate
-		if(cellType == 1 && currCell.CellType != 1)
+		if(cellType == 1 && currCell.CellType == 0)
 		{
 			// Add the wooden crate into the scene
 			GameObject woodenObj = Instantiate(woodenCratePrefab, 
@@ -243,7 +245,7 @@ public class ZooMap : MonoBehaviour {
 			currCell.CellType = 1;
 			currCell.CellGameObject = woodenObj;
 		}
-		else if(cellType == 2 && currCell.CellType != 2)
+		else if(cellType == 2 && currCell.CellType == 0)
 		{
 			GameObject rockObj = Instantiate(rockPrefab, 
 			new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
@@ -254,19 +256,19 @@ public class ZooMap : MonoBehaviour {
 		else if(cellType == 0)
 		{
 			// Receive the updated type from the server
-			//currCell.CellType = (int) cellType;
-			currCell.CellType = (int) cellType; 
+			currCell.CellType = (int) cellType;
 			
 			// delete previous game object
-			if(cellItem == 0)
+			if(cellType == 0)
 			{
-				if(currCell.CellGameObject)
+				if(currCell.CellGameObject != null)
 				{
 					Destroy (currCell.CellGameObject);
 					currCell.CellGameObject = null;
 				}
 			}
-			else if(cellItem == 1)
+			
+			if(cellItem == 1)
 				SpawnPowerUp(PowerupType.Range, currCell, horizontalCellNum, verticalCellNum);
 			else if(cellItem == 2)
 				SpawnPowerUp(PowerupType.Speed, currCell, horizontalCellNum, verticalCellNum);
