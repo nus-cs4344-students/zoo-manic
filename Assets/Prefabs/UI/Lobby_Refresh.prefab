@@ -182,7 +182,7 @@ MonoBehaviour:
   data:
     version: 1
     font: {fileID: 11400000, guid: fb1b97eccf6db514999d1605baf017e5, type: 2}
-    text: Reresh
+    text: Refresh
     color: {r: 1, g: 1, b: 1, a: 1}
     color2: {r: 1, g: 1, b: 1, a: 1}
     useGradient: 0

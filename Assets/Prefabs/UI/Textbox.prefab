@@ -372,7 +372,7 @@ MonoBehaviour:
   data:
     version: 1
     font: {fileID: 11400000, guid: fb1b97eccf6db514999d1605baf017e5, type: 2}
-    text: 
+    text: Your IP <X.X.X.X>
     color: {r: .737254918, g: 1, b: 1, a: .70588237}
     color2: {r: 1, g: 1, b: 1, a: 1}
     useGradient: 0
@@ -427,7 +427,7 @@ MonoBehaviour:
   cursor: {fileID: 100012}
   fieldLength: 1.10000002
   maxCharacterLength: 30
-  emptyDisplayText: 
+  emptyDisplayText: Your IP <X.X.X.X>
   isPasswordField: 0
   passwordChar: '*'
   layoutItem: {fileID: 0}

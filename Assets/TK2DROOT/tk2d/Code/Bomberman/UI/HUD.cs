@@ -61,6 +61,10 @@ public class HUD : MonoBehaviour {
 	[SerializeField] Texture2D plantBird;
 	[SerializeField] Texture2D plantTiger;
 	
+	
+	[SerializeField] GameObject chatTextboxObject;
+	[SerializeField] GameObject serverChatObject;
+	
 	private CharacterAnimController playerController;
 	
 	private GUIStyle bombLeftStyle;
@@ -83,6 +87,10 @@ public class HUD : MonoBehaviour {
 	float shakeDuration = 10.0f;
 	float hasteDuration = 10.0f;
 	
+	bool isTextFieldVisible = false;
+	int setVisibleOnce = 0;
+	string chatText = "";
+	
 	SoundManager soundManager;
 	
 	public bool IsRangeActivated()
@@ -92,14 +100,6 @@ public class HUD : MonoBehaviour {
 	
 	void Start()
 	{
-		/*SetPlayerAvatarHUD(AvatarIcon.Rhino);
-		
-		ToggleInvulnerable(false);
-		ToggleTrick(false);
-		ToggleRange(false);
-		ToggleShake(false);
-		ToggleSpeed(false);*/
-		
 		ClearPowerup();
 		soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
 	}
@@ -135,6 +135,43 @@ public class HUD : MonoBehaviour {
 		
 		if(hasteDuration <= 0)
 			ToggleHaste(false);	
+	}
+	
+	void InitServerDisplay()
+	{
+		if(serverChatObject)
+		{
+			tk2dUITextInput serverDisplayScript = serverChatObject.GetComponent<tk2dUITextInput>();
+			serverDisplayScript.Text = "Server message: Game Started.\nEnjoy!";
+		}
+	}
+	
+	void InitTextbox()
+	{
+     	if (Event.current.type == EventType.KeyUp && Event.current.keyCode == KeyCode.Return) 
+		{
+			isTextFieldVisible = !isTextFieldVisible;
+			// When user presses enter
+			tk2dUITextInput textboxScript = chatTextboxObject.GetComponent<tk2dUITextInput>();
+			string userInput = textboxScript.Text;
+			textboxScript.Text = "";
+			
+			chatTextboxObject.SetActive(false);
+			setVisibleOnce = 0;
+		}
+    	else if (isTextFieldVisible == false)  
+		{
+			//chatText = GUI.TextField(new Rect(Screen.width/2 - 150,Screen.height/2 - 30,300,30), chatText, 25);
+			
+			if(setVisibleOnce == 0)
+			{
+				chatTextboxObject.SetActive(true);
+				tk2dUITextInput textboxScript = chatTextboxObject.GetComponent<tk2dUITextInput>();
+				textboxScript.SetFocus();
+			}
+			
+			setVisibleOnce++;
+		}
 	}
 	
 	public void ClearPowerup()
@@ -182,7 +219,7 @@ public class HUD : MonoBehaviour {
 		//GUILayout.Button ("HUDDock", customGuiStyle);
 		
 		//Rect params left, top, width, height
-		GUI.Box(new Rect (25, (Screen.height - height_offset), 1400, 180), "", hudboxStyle);
+		GUI.Box(new Rect (0.013157894f * Screen.width, 0.802197802f * Screen.height, 0.95f * Screen.width, 0.197802197f * Screen.height), "", hudboxStyle);
 		
 		
 		InitDirectionalButtons();
@@ -198,6 +235,10 @@ public class HUD : MonoBehaviour {
 		InitHUDMessage();
 		
 		InitGameEndMessage();
+		
+		InitTextbox();
+		
+		InitServerDisplay();
 	}
 	
 	public void SetPlayerAvatarHUD(AvatarIcon type)
@@ -297,7 +338,7 @@ public class HUD : MonoBehaviour {
 	
 	void InitPlantBombButton()
 	{
-		if(GUI.Button(new Rect (Screen.width - 60 - 140, (Screen.height - height_offset) + 20, 136, 140), "", plantBombStyle))
+		if(GUI.Button(new Rect (0.87f * Screen.width, 0.824175824f * Screen.height, 0.071578947f * Screen.width, 0.153846153f * Screen.height), "", plantBombStyle))
 		{
 			if(playerController)
 				playerController.SendPlantBombMessage();
@@ -316,11 +357,12 @@ public class HUD : MonoBehaviour {
 
 	void InitHUDIcon()
 	{
-		GUI.Box(new Rect (25 + space*3 + 131 + 131 + 200, (Screen.height - height_offset + 47/2) + 10, 40, 60), "", invulnerablePowerup);
-		GUI.Box(new Rect (25 + space*3 + 131 + 131 + 200 + 50, (Screen.height - height_offset + 47/2) + 10, 40, 60), "", rangePowerup);
-		GUI.Box(new Rect (25 + space*3 + 131 + 131 + 200 + 110, (Screen.height - height_offset + 47/2) + 10, 40, 60), "", shakePowerup);
-		GUI.Box(new Rect (25 + space*3 + 131 + 131 + 200 + 170, (Screen.height - height_offset + 47/2) + 10, 40, 60), "", speedPowerup);
-		GUI.Box(new Rect (25 + space*3 + 131 + 131 + 200 + 220, (Screen.height - height_offset + 47/2) + 10, 40, 60), "", trickPowerup);
+		// 577 823
+		GUI.Box(new Rect (0.30368421f * Screen.width, 0.904395604f * Screen.height, 0.021052631f * Screen.width, 0.065934065f * Screen.height), "", invulnerablePowerup);
+		GUI.Box(new Rect (0.33f * Screen.width, 0.904395604f * Screen.height, 0.021052631f * Screen.width, 0.065934065f * Screen.height), "", rangePowerup);
+		GUI.Box(new Rect (0.361578947f * Screen.width, 0.904395604f * Screen.height, 0.021052631f * Screen.width, 0.065934065f * Screen.height), "", shakePowerup);
+		GUI.Box(new Rect (0.393157894f * Screen.width, 0.904395604f * Screen.height, 0.021052631f * Screen.width, 0.065934065f * Screen.height), "", speedPowerup);
+		GUI.Box(new Rect (0.419473684f * Screen.width, 0.904395604f * Screen.height, 0.021052631f * Screen.width, 0.065934065f * Screen.height), "", trickPowerup);
 	}
 	
 	// Invoked by the bomb class when it explode
@@ -339,8 +381,8 @@ public class HUD : MonoBehaviour {
 			//if(playerObj)
 			//	hud_bombLeft = playerObj.GetComponent<CharacterAnimController>();
 			
-			GUI.Box(new Rect (25 + space*3 + 131 + 131, (Screen.height - height_offset + 47/2) - 5, 104, 130), "", bombLeftStyle);
-			GUI.Label(new Rect (25 + space*3 + 131 + 131 + 104, (Screen.height - height_offset + 47/2) + 55, 104, 130), ""+hud_bombLeft, labelStyle);
+			GUI.Box(new Rect (0.198421052f * Screen.width, 0.821978022f * Screen.height, 0.054736842f * Screen.width, 0.12857142f * Screen.height), "", bombLeftStyle);
+			GUI.Label(new Rect (0.253157894f * Screen.width, 0.887912087f * Screen.height, 0.054736842f * Screen.width, 0.142857142f * Screen.height), ""+hud_bombLeft, labelStyle);
 		}
 		//GUI.Label(new Rect (25 + space*3 + 131 + 131, (Screen.height - height_offset + 47/2), 104, 130), "3", rhinoBomb);
 		//GUI.Label(new Rect (25 + space*3 + 131 + 131, (Screen.height - height_offset + 47/2), 104, 130), "3", tigerBomb);
@@ -349,31 +391,33 @@ public class HUD : MonoBehaviour {
 	
 	void InitAvatarPanel()
 	{
-		GUI.Box(new Rect (25 + space*2 + 131, (Screen.height - height_offset + 47/2), 131, 133), "", avatarBox);
+		GUI.Box(new Rect (0.11368421f * Screen.width, 0.827472527f * Screen.height, 0.068947368f * Screen.width, 0.146153846f * Screen.height), "", avatarBox);
 		
 		if(avatarIconStyle != null)
-			GUI.Box(new Rect (25 + space*2 + 145, (Screen.height - height_offset + 47/2) + 7, 67, 108), "", avatarIconStyle);
-		
-		//GUI.Box(new Rect (25 + space*2 + 145, (Screen.height - height_offset + 47/2) + 7, 67, 108), "", avatarZebra);
-		//GUI.Box(new Rect (25 + space*2 + 145, (Screen.height - height_offset + 47/2) + 7, 67, 108), "", avatarRhino);
-		//GUI.Box(new Rect (25 + space*2 + 145, (Screen.height - height_offset + 47/2) + 7, 67, 108), "", avatarBird);
-		//GUI.Box(new Rect (25 + space*2 + 140, (Screen.height - height_offset + 47/2) + 5, 67, 108), "", avatarTiger);
+			GUI.Box(new Rect (0.121052631f * Screen.width, 0.835164835f * Screen.height, 0.035263157f * Screen.width, 0.118681318f * Screen.height), "", avatarIconStyle);
 	}
 	
 	void InitDirectionalButtons()
 	{
-		GUI.Box(new Rect (25 + space * 1, (Screen.height - height_offset + 47/2), 131, 133), "", directionalPadStyle);
+		GUI.Box(new Rect (0.028947368f * Screen.width, 0.827472527f * Screen.height, 0.068947368f * Screen.width, 0.146153846f * Screen.height), "", directionalPadStyle);
 		
 		// Button Up
-		if (GUI.Button( new Rect(25 + space + 45, (Screen.height - height_offset + 47/2) + 10, 38, 25), "", button_direction_up))
+		//if (GUI.Button( new Rect(25 + space + 45, (Screen.height - height_offset + 47/2) + 10, 38, 25), "", button_direction_up))
+		if (GUI.Button( new Rect(0.052631578f * Screen.width, 0.838461538f * Screen.height, 0.02f * Screen.width, 0.027472527f * Screen.height), "", button_direction_up))
 		{
+			Debug.Log ("SCREEN.WIDTH 1900"+ Screen.width );
+			Debug.Log ("SCREEN.HEIGHT 910"+ Screen.height );
+			Debug.Log ("X: "+ (25 + space*3 + 131 + 131 + 200) );
+			Debug.Log ("Y: "+ ( (Screen.height - height_offset) + 20) );
+			
 			soundManager.PlayHUDClickSound(transform.position);			
 			if(playerController)
 				playerController.MoveUp(true);
 		}
 		
 		//Button Left
-		if (GUI.Button( new Rect(25 + space + 12, (Screen.height - height_offset + 47/2) + 45, 26, 40), "", button_direction_left))
+		//if (GUI.Button( new Rect(25 + space + 12, (Screen.height - height_offset + 47/2) + 45, 26, 40), "", button_direction_left))
+		if (GUI.Button( new Rect(0.035263157f * Screen.width, 0.876923076f * Screen.height, 0.01368421f * Screen.width, 0.043956043f * Screen.height), "", button_direction_left))
 		{
 			soundManager.PlayHUDClickSound(transform.position);
 			if(playerController)
@@ -381,21 +425,21 @@ public class HUD : MonoBehaviour {
 		}
 		
 		//Button Down
-		if (GUI.Button( new Rect(25 + space + 45, (Screen.height - height_offset + 47/2) + 100, 38, 25), "", button_direction_down))
-		{
+		//if (GUI.Button( new Rect(25 + space + 45, (Screen.height - height_offset + 47/2) + 100, 38, 25), "", button_direction_down))
+		if (GUI.Button( new Rect(0.052631578f * Screen.width, 0.937362637f * Screen.height, 0.02f * Screen.width, 0.027472527f * Screen.height), "", button_direction_down))
+		{			
 			soundManager.PlayHUDClickSound(transform.position);			
 			if(playerController)
 				playerController.MoveDown(true);
 		}
 		
 		//Button Right
-		if (GUI.Button( new Rect(25 + space + 100, (Screen.height - height_offset + 47/2) + 45, 24, 40), "", button_direction_right))
-		{
+		//if (GUI.Button( new Rect(25 + space + 100, (Screen.height - height_offset + 47/2) + 45, 24, 40), "", button_direction_right))
+		if (GUI.Button( new Rect(0.08153603f * Screen.width, 0.876923076f * Screen.height, 0.012631578f * Screen.width, 0.043956043f * Screen.height), "", button_direction_right))
+		{			
 			soundManager.PlayHUDClickSound(transform.position);			
 			if(playerController)
 				playerController.MoveRight(true);
 		}
 	}
-	
-
 }

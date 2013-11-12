@@ -63,7 +63,8 @@ public class Button : MonoBehaviour {
 			
 			// Lobby
 			case ButtonType.Lobby_BacktoMain:
-			GameManager.LoadMainScene();
+			GameManager.LoadStartScene();
+			//GameManager.LoadMainScene();
 			break;
 			
 			case ButtonType.Lobby_JoinGame:

@@ -93,10 +93,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 1300
-    m_FixedHeight: 180
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   directionalPadStyle:
     m_Name: 
     m_Normal:
@@ -152,10 +152,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 131
-    m_FixedHeight: 133
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   button_direction_up:
     m_Name: ButtonUp
     m_Normal:
@@ -211,10 +211,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 38
-    m_FixedHeight: 25
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   button_direction_down:
     m_Name: ButtonDown
     m_Normal:
@@ -273,7 +273,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   button_direction_left:
     m_Name: ButtonLeft
     m_Normal:
@@ -329,10 +329,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 26
-    m_FixedHeight: 40
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   button_direction_right:
     m_Name: 
     m_Normal:
@@ -388,10 +388,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 24
-    m_FixedHeight: 40
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   avatarBox:
     m_Name: AvatarBox
     m_Normal:
@@ -447,10 +447,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 101
-    m_FixedHeight: 123
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   avatarZebra:
     m_Name: ZebraAvatar
     m_Normal:
@@ -506,10 +506,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 67
-    m_FixedHeight: 108
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   avatarRhino:
     m_Name: RhinoAvatar
     m_Normal:
@@ -565,10 +565,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 67
-    m_FixedHeight: 108
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   avatarBird:
     m_Name: BirdAvatar
     m_Normal:
@@ -624,8 +624,8 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 67
-    m_FixedHeight: 108
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 1
   avatarTiger:
@@ -683,8 +683,8 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 80
-    m_FixedHeight: 108
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 1
   zebraBomb:
@@ -742,10 +742,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 104
-    m_FixedHeight: 130
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   tigerBomb:
     m_Name: TigerBomb
     m_Normal:
@@ -801,10 +801,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 104
-    m_FixedHeight: 130
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   rhinoBomb:
     m_Name: RhinoBomb
     m_Normal:
@@ -860,10 +860,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 104
-    m_FixedHeight: 130
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   birdBomb:
     m_Name: BirdBomb
     m_Normal:
@@ -919,15 +919,15 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 104
-    m_FixedHeight: 130
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   labelStyle:
     m_Name: labelStyle
     m_Normal:
       m_Background: {fileID: 0}
-      m_TextColor: {r: .345588207, g: .205565408, b: .129595578, a: 1}
+      m_TextColor: {r: .345588207, g: .205565408, b: .129595578, a: .588235319}
     m_Hover:
       m_Background: {fileID: 0}
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -982,6 +982,124 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  killMsgLabelStyle:
+    m_Name: KillMsgLabel
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: .345098048, g: .203921571, b: .129411772, a: .588235319}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 12800000, guid: b092c052a1b48874098f59902a49db10, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+  gameEndLabelStyle:
+    m_Name: Game End Message
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: .951318502, g: 1, b: .647058845, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 12800000, guid: b092c052a1b48874098f59902a49db10, type: 3}
+    m_FontSize: 24
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 1
   invulnerablePowerup:
     m_Name: InvulnerablePowerup
     m_Normal:
@@ -1037,10 +1155,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 40
-    m_FixedHeight: 60
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   rangePowerup:
     m_Name: RangePowerup
     m_Normal:
@@ -1096,10 +1214,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 50
-    m_FixedHeight: 50
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   shakePowerup:
     m_Name: ShakePowerup
     m_Normal:
@@ -1155,10 +1273,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 40
-    m_FixedHeight: 60
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   speedPowerup:
     m_Name: PowerupSpeed
     m_Normal:
@@ -1214,10 +1332,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 40
-    m_FixedHeight: 60
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   trickPowerup:
     m_Name: TrickPowerup
     m_Normal:
@@ -1273,10 +1391,10 @@ MonoBehaviour:
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 50
-    m_FixedHeight: 50
+    m_FixedWidth: 0
+    m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 0
+    m_StretchHeight: 1
   textureInvulnerable: {fileID: 2800000, guid: a833669fb5a22df4dae0619c455d9641, type: 3}
   textureRange: {fileID: 2800000, guid: a6d4daadd65d0c64e9267ebc03097fe4, type: 3}
   textureShake: {fileID: 2800000, guid: 3be2d54235b78e54b89a78a04f1c4fb5, type: 3}
@@ -1288,9 +1406,9 @@ MonoBehaviour:
   alphaSpeed: {fileID: 2800000, guid: 49cc5425b7aea8a4d9dc81fce61559dd, type: 3}
   alphaTrick: {fileID: 2800000, guid: 16d4c4a47fcbac44aaebf7ede758023a, type: 3}
   plantBombStyle:
-    m_Name: 
+    m_Name: PlantBombButton
     m_Normal:
-      m_Background: {fileID: 0}
+      m_Background: {fileID: 2800000, guid: 139581bf6d6f9264abdf86cf561dadf7, type: 3}
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
@@ -1346,10 +1464,10 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
-  plantZebra: {fileID: 0}
-  plantRhino: {fileID: 0}
-  plantBird: {fileID: 0}
-  plantTiger: {fileID: 0}
+  plantZebra: {fileID: 2800000, guid: 139581bf6d6f9264abdf86cf561dadf7, type: 3}
+  plantRhino: {fileID: 2800000, guid: f8bf4d20efdb18d43b2cd09ef77c20ee, type: 3}
+  plantBird: {fileID: 2800000, guid: b35504bb3c59c0a478fda0aefb9f773e, type: 3}
+  plantTiger: {fileID: 2800000, guid: f67e470e0e12e264f9a3cdba202034e0, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

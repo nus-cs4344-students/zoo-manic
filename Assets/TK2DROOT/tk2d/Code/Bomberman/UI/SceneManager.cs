@@ -17,9 +17,8 @@ public class SceneManager : MonoBehaviour {
 	
 	// Start Scene UI Components
 	[SerializeField] tk2dTextMesh m_playerName;	
-	[SerializeField] tk2dTextMesh m_ipText;	
 	[SerializeField] public GameObject m_playerTextBox;	
-	[SerializeField] public GameObject m_ipTextBox;	
+	[SerializeField] public tk2dTextMesh m_startLabel;	
 	
 	[SerializeField] public Button buttonScript;	
 	
@@ -64,6 +63,7 @@ public class SceneManager : MonoBehaviour {
 		switch(m_currentScene)
 		{
 			case SceneType.Start:
+			serverConnection.ForceDisconnect();
 			Debug.Log ("Start scene");
 			break;
 			
@@ -177,7 +177,8 @@ public class SceneManager : MonoBehaviour {
 	
 	public void ConnectToServer()
 	{
-		string ipAddress = m_ipText.text;
+		// Get the IP address from the textfield
+		string ipAddress = m_playerName.text;
 		serverConnection.ConnectToIP(ipAddress);
 	}
 	
