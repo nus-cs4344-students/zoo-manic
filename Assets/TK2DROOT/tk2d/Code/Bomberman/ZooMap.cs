@@ -212,7 +212,8 @@ public class ZooMap : MonoBehaviour {
 			for(int column=0; column < (int) ZooMap.NumberofCols ; column++)
 			{
 				string zooCellID = row+":"+column;
-				zooMapInfoDict.Add (zooCellID, new Cell(row, column));
+				if(zooMapInfoDict.ContainsKey(zooCellID) == false)
+					zooMapInfoDict.Add (zooCellID, new Cell(row, column));
 			}
 		}
 	}

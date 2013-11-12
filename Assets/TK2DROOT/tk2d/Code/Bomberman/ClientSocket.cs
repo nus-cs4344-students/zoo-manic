@@ -55,6 +55,12 @@ public class ClientSocket : MonoBehaviour {
 		InitSockJS();
 	}
 	
+	// When client go backs to the start scene. Disconnect
+	public void ForceDisconnect()
+	{
+		m_sockjs.Disconnect();
+	}
+	
 	void InitSockJS()
 	{
 		//m_sockjs.AutoPingRefreshMs = 2000;
@@ -904,12 +910,11 @@ public class ClientSocket : MonoBehaviour {
 		{
 			if(sceneManager.GetComponent<SceneManager>().CurrentScene == SceneType.Start)
 			{
+				SceneManager managerScript = sceneManager.GetComponent<SceneManager>();
 				Debug.Log ("Connected to SockJS Server");
-				sceneManager.GetComponent<SceneManager>().buttonScript.buttonType = ButtonType.Start_Tap;
-				sceneManager.GetComponent<SceneManager>().buttonScript.buttonText.text = "Tap to Start";
-				sceneManager.GetComponent<SceneManager>().m_playerTextBox.SetActive(true);
-				sceneManager.GetComponent<SceneManager>().m_ipTextBox.SetActive(true);
-				//sceneManager.GetComponent<SceneManager>() = "Enter your name";
+				managerScript.buttonScript.buttonType = ButtonType.Start_Tap;
+				managerScript.buttonScript.buttonText.text = "Tap to Start";
+				managerScript.m_startLabel.text = "Player Name";
 			}
 		}
     }
