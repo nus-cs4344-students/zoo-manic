@@ -65,6 +65,12 @@ public class HUD : MonoBehaviour {
 	[SerializeField] GameObject chatTextboxObject;
 	[SerializeField] GameObject serverChatObject;
 	
+	[SerializeField] GUIStyle heartFilled;
+	[SerializeField] GUIStyle heartEmpty;
+	
+	[SerializeField] GameObject victoryPanel;
+	[SerializeField] GameObject losePanel;	
+	
 	private CharacterAnimController playerController;
 	
 	private GUIStyle bombLeftStyle;
@@ -77,31 +83,44 @@ public class HUD : MonoBehaviour {
 	private long playerID;
 	private long hud_bombLeft = 3;
 	
-	private string currentKillMessage = "";
-	private string gameEndMessage = "";
-	
-	float MessageDuration = 3.0f;
+	float MessageDuration = 5.0f;
 	float invulnerableDuration = 10.0f;
 	float trickDuration = 10.0f;
 	float rangeDuration = 10.0f;
 	float shakeDuration = 10.0f;
 	float hasteDuration = 10.0f;
 	
-	bool isTextFieldVisible = false;
-	int setVisibleOnce = 0;
+	float chatBoxDuration = 5.0f;
+	
+	bool isChatMode = false;
+	
+	public bool IsChatEnabled
+    {
+        get { return isChatMode; }
+    }
+	
+	int setVisibleOnce = 1;
 	string chatText = "";
 	
 	SoundManager soundManager;
+	SceneManager sceneManager;
+	
+	private GameObject characterChatBox;
 	
 	public bool IsRangeActivated()
 	{
 		return rangeDuration > 0.0f;
 	}
 	
+	private int playerLives = 3;
+	
 	void Start()
 	{
 		ClearPowerup();
 		soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+		sceneManager = GameObject.Find ("SceneObject").GetComponent<SceneManager>();
+		
+		InitServerDisplay();
 	}
 	
 		// Update is called once per frame
@@ -111,8 +130,6 @@ public class HUD : MonoBehaviour {
 		
 		if(MessageDuration <= 0)
 		{
-			MessageDuration = 3.0f;
-			currentKillMessage = "";
 		}
 		
 		invulnerableDuration -= Time.deltaTime;
@@ -120,6 +137,8 @@ public class HUD : MonoBehaviour {
 		rangeDuration -= Time.deltaTime;
 		shakeDuration -= Time.deltaTime;
 		hasteDuration -= Time.deltaTime;
+		
+		chatBoxDuration -= Time.deltaTime;
 
 		if(invulnerableDuration <= 0)
 			ToggleInvulnerable(false);
@@ -135,6 +154,31 @@ public class HUD : MonoBehaviour {
 		
 		if(hasteDuration <= 0)
 			ToggleHaste(false);	
+		
+		if(chatBoxDuration <= 0)
+			ToggleChatDisplay(false);
+	}
+	
+	public void HudToogleChatDisplay(GameObject characterInstance, string chatMsg)
+	{
+		characterChatBox = characterInstance.transform.Find("Chat").gameObject;	
+		characterChatBox.SetActive(true);
+		tk2dTextMesh chatScript = characterInstance.transform.Find("Chat/ChatText").GetComponent<tk2dTextMesh>();
+			
+		if(chatScript != null)
+		{
+			Debug.Log ("Server gives chat messageis: "+chatMsg);
+			chatBoxDuration = 5.0f;
+			chatScript.text = chatMsg;
+		}
+	}
+	
+	void ToggleChatDisplay(bool isVisible)
+	{
+		if(characterChatBox)
+		{
+			characterChatBox.SetActive(isVisible);
+		}
 	}
 	
 	void InitServerDisplay()
@@ -146,32 +190,55 @@ public class HUD : MonoBehaviour {
 		}
 	}
 	
-	void InitTextbox()
+	public void UpdateHealthStatus(int playerLives)
 	{
+		this.playerLives = playerLives;
+	}
+	
+	void InitChatText()
+	{
+		// When user presses enter, clear the chat box
      	if (Event.current.type == EventType.KeyUp && Event.current.keyCode == KeyCode.Return) 
 		{
-			isTextFieldVisible = !isTextFieldVisible;
-			// When user presses enter
-			tk2dUITextInput textboxScript = chatTextboxObject.GetComponent<tk2dUITextInput>();
-			string userInput = textboxScript.Text;
-			textboxScript.Text = "";
+			//isChatMode = !isChatMode;
 			
-			chatTextboxObject.SetActive(false);
-			setVisibleOnce = 0;
-		}
-    	else if (isTextFieldVisible == false)  
-		{
-			//chatText = GUI.TextField(new Rect(Screen.width/2 - 150,Screen.height/2 - 30,300,30), chatText, 25);
+			if(isChatMode)
+			{
+				tk2dUITextInput textboxScript = chatTextboxObject.GetComponent<tk2dUITextInput>();
+				string userInput = textboxScript.Text;
+				
+				// Send chat to server
+				sceneManager.SendChatToServer(userInput);
 			
-			if(setVisibleOnce == 0)
+				textboxScript.Text = "";
+			
+				chatTextboxObject.SetActive(false);
+				setVisibleOnce = 0;
+				isChatMode = false;
+			}
+			else
 			{
 				chatTextboxObject.SetActive(true);
 				tk2dUITextInput textboxScript = chatTextboxObject.GetComponent<tk2dUITextInput>();
 				textboxScript.SetFocus();
+				isChatMode = true;
+			}
+		}
+		// Set chat box visible
+    	/*else if (isChatMode == false)  
+		{
+			//chatText = GUI.TextField(new Rect(Screen.width/2 - 150,Screen.height/2 - 30,300,30), chatText, 25);
+			
+			/*if(setVisibleOnce == 0)
+			{
+				chatTextboxObject.SetActive(true);
+				tk2dUITextInput textboxScript = chatTextboxObject.GetComponent<tk2dUITextInput>();
+				textboxScript.SetFocus();
+				isChatMode = true;
 			}
 			
 			setVisibleOnce++;
-		}
+		}*/
 	}
 	
 	public void ClearPowerup()
@@ -193,18 +260,7 @@ public class HUD : MonoBehaviour {
 			playerController = playerObj.GetComponent<CharacterAnimController>();
 		}
 	}
-	
-	public void ShowKillMessage(string message)
-	{
-		currentKillMessage = message;
-	}
-	
-	public void ShowGameEndMessage(string message)
-	{
-		gameEndMessage = message;
-	}
-	
-	
+
 	void OnGUI() {
 		/*if (!btnTexture) {
 			Debug.LogError("Please assign a texture on the inspector");
@@ -232,13 +288,9 @@ public class HUD : MonoBehaviour {
 		
 		InitPlantBombButton();
 		
-		InitHUDMessage();
+		InitChatText();
 		
-		InitGameEndMessage();
-		
-		InitTextbox();
-		
-		InitServerDisplay();
+		InitHealthDisplay();
 	}
 	
 	public void SetPlayerAvatarHUD(AvatarIcon type)
@@ -325,7 +377,6 @@ public class HUD : MonoBehaviour {
 			if(playerGO != null)
 			{
 				var playerController = playerGO.GetComponent<CharacterAnimController>();
-				Debug.Log ("UPDATING BOMB LIMIT TO 6");
 				playerController.BombLimit = 6;
 			}
 			
@@ -334,6 +385,34 @@ public class HUD : MonoBehaviour {
 		}
 		else
 			trickPowerup.normal.background = alphaTrick;
+	}
+	
+	void InitHealthDisplay()
+	{
+		if(playerLives == 3)
+		{
+			GUI.Box(new Rect (0.315789473f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartFilled);
+			GUI.Box(new Rect (0.357894736f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartFilled);
+			GUI.Box(new Rect (0.4f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartFilled);
+		}
+		else if(playerLives == 2)
+		{
+			GUI.Box(new Rect (0.315789473f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartFilled);
+			GUI.Box(new Rect (0.357894736f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartFilled);
+			GUI.Box(new Rect (0.4f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartEmpty);
+		}
+		else if(playerLives == 1)
+		{
+			GUI.Box(new Rect (0.315789473f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartFilled);
+			GUI.Box(new Rect (0.357894736f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartEmpty);
+			GUI.Box(new Rect (0.4f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartEmpty);
+		}
+		else if(playerLives < 1)
+		{
+			GUI.Box(new Rect (0.315789473f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartEmpty);
+			GUI.Box(new Rect (0.357894736f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartEmpty);
+			GUI.Box(new Rect (0.4f * Screen.width, 0.835164835f * Screen.height, 0.029473684f * Screen.width, 0.054945054f * Screen.height), "", heartEmpty);
+		}
 	}
 	
 	void InitPlantBombButton()
@@ -345,14 +424,18 @@ public class HUD : MonoBehaviour {
 		}
 	}
 	
-	void InitGameEndMessage()
-	{
-		GUI.Label(new Rect (Screen.width/2, Screen.height / 2, 200, 60), gameEndMessage, gameEndLabelStyle);
-	}
-	
 	void InitHUDMessage()
 	{
-		GUI.Label(new Rect (25 + space*3 + 131 + 131 + 200, (Screen.height - height_offset + 47/2) + 100, 40, 60), currentKillMessage, killMsgLabelStyle);
+		//GUI.Label(new Rect (25 + space*3 + 131 + 131 + 200, (Screen.height - height_offset + 47/2) + 100, 40, 60), currentKillMessage, killMsgLabelStyle);
+	}
+	
+	public void DisplayKillMessage(string killMessage)
+	{
+		if(serverChatObject)
+		{
+			tk2dUITextInput serverDisplayScript = serverChatObject.GetComponent<tk2dUITextInput>();
+			serverDisplayScript.Text = killMessage;
+		}
 	}
 
 	void InitHUDIcon()
@@ -394,7 +477,35 @@ public class HUD : MonoBehaviour {
 		GUI.Box(new Rect (0.11368421f * Screen.width, 0.827472527f * Screen.height, 0.068947368f * Screen.width, 0.146153846f * Screen.height), "", avatarBox);
 		
 		if(avatarIconStyle != null)
-			GUI.Box(new Rect (0.121052631f * Screen.width, 0.835164835f * Screen.height, 0.035263157f * Screen.width, 0.118681318f * Screen.height), "", avatarIconStyle);
+			GUI.Box(new Rect (0.136842105f * Screen.width, 0.835164835f * Screen.height, 0.035263157f * Screen.width, 0.118681318f * Screen.height), "", avatarIconStyle);
+	}
+	
+	public void DisplayVictoryPanel(string winnerName)
+	{
+		//GUI.Box(new Rect (0.5f * Screen.width, 0.5f * Screen.height, 0.318947368f * Screen.width, 0.219780219f * Screen.height), "", victoryPanelStyle);
+	
+		victoryPanel.SetActive(true);
+		
+		// Instantiate name
+		tk2dTextMesh lobbyScript = victoryPanel.transform.Find("LobbyText").GetComponent<tk2dTextMesh>();
+		tk2dTextMesh winnerTextScript = victoryPanel.transform.Find("NameText").GetComponent<tk2dTextMesh>();
+		
+		winnerTextScript.text = "Congratulations, You WIN!";
+		
+		StartCoroutine( GoBacktoLobby(winnerTextScript) );
+	}
+	
+	public void DisplayDefeatPanel(string winnerName)
+	{
+		//GUI.Box(new Rect (0.5f * Screen.width, 0.5f * Screen.height, 0.318947368f * Screen.width, 0.219780219f * Screen.height), "", losePanelStyle);
+		losePanel.SetActive(true);
+		
+		tk2dTextMesh lobbyScript = victoryPanel.transform.Find("LobbyText").GetComponent<tk2dTextMesh>();
+		tk2dTextMesh winnerTextScript = victoryPanel.transform.Find("NameText").GetComponent<tk2dTextMesh>();
+		
+		winnerTextScript.text = "Winner is: "+winnerName;
+		
+		StartCoroutine( GoBacktoLobby(winnerTextScript) );
 	}
 	
 	void InitDirectionalButtons()
@@ -441,5 +552,28 @@ public class HUD : MonoBehaviour {
 			if(playerController)
 				playerController.MoveRight(true);
 		}
+	}
+	
+	
+		// back to lobby
+	IEnumerator GoBacktoLobby(tk2dTextMesh textScript)
+	{
+		textScript.text = "Returning back to lobby in 5 seconds";
+		yield return new WaitForSeconds(1.0f);
+		
+		
+		textScript.text = "Returning back to lobby in 4 seconds";
+		yield return new WaitForSeconds(1.0f);
+		
+		textScript.text = "Returning back to lobby in 3 seconds";
+		yield return new WaitForSeconds(1.0f);
+		
+		textScript.text = "Returning back to lobby in 2 seconds";
+		yield return new WaitForSeconds(1.0f);
+		
+		textScript.text = "Returning back to lobby in 1 seconds";
+		yield return new WaitForSeconds(1.0f);
+		
+		GameManager.LoadLobbyScene();
 	}
 }

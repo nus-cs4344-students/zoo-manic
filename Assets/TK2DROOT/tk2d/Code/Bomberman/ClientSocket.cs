@@ -145,6 +145,10 @@ public class ClientSocket : MonoBehaviour {
 			HandlePingMessage(serverMsg);
 			break;
 			
+			case "chatMessage":
+			HandleChatMessage(serverMsg);
+			break;
+			
 			case "start":
 			SERVER_START_TIME = (long) dict["startTime"];
 			LOCAL_START_TIME = GetLocalTimeStamp();
@@ -155,6 +159,10 @@ public class ClientSocket : MonoBehaviour {
 			case "update":
 			if(hasGameStarted)
 				HandleUpdate(serverMsg);
+			break;
+			
+			case "respawn":
+				HandleRespawn(serverMsg);
 			break;
 			
 			case "move":
@@ -188,31 +196,37 @@ public class ClientSocket : MonoBehaviour {
 			HandleZooMap(serverMsg);
 	}
 	
-	// back to lobby
-	IEnumerator GoBacktoLobby()
-	{
-		yield return new WaitForSeconds(5.0f);
-		GameManager.LoadLobbyScene();
-	}
-	
 	private void HandleGameEnd(string serverMsg)
 	{
 		var dict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
-		/*long playerId = (long) dict["winnerId"];
+		long playerId = (long) dict["winnerId"];
 		string playerName = (string) dict["winnerName"];
 		
-		if(playerId == GameManager.PlayerID)
-		{
-			gameManager.DisplayGameEndMessage("ROUND ENDED. YOU ARE THE WINNER.\nGoing to lobby in 5 seconds");
-		}
-		else
-		{
-			gameManager.DisplayGameEndMessage("ROUND ENDED. WINNER IS "+playerName+", You lose.\nGoing to lobby in 5 seconds");
-		}*/
+		gameManager.DisplayGameEndMessage(playerId, playerName);
+	}
+	
+	private void HandleRespawn(string serverMsg)
+	{
+		var playerInfoDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		long playerID = (long) playerInfoDict["playerId"];
+		long cellX = (long) playerInfoDict["cellX"];
+		long cellY = (long) playerInfoDict["cellY"];
+		long playerLives = (long) playerInfoDict["lives"];
+		bool isAlive = (bool) playerInfoDict["isAlive"];
 		
-		gameManager.DisplayGameEndMessage("\nGoing to lobby in 5 seconds");
+		gameManager.RespawnPlayer(playerID, cellX, cellY);
 		
-		StartCoroutine(GoBacktoLobby());
+		//gameManager.DisplayChatMessage(
+		//gameManager.DisplayChatMessage(playerID, message);
+	}
+	
+	private void HandleChatMessage(string serverMsg)
+	{
+		var chatDict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		long playerID = (long) chatDict["playerId"];
+		string message = (string) chatDict["message"];
+		
+		gameManager.DisplayChatMessage(playerID, message);
 	}
 	
 	private void HandlePingMessage(string serverMsg)
@@ -455,7 +469,7 @@ public class ClientSocket : MonoBehaviour {
 			long avatarId = (long) gameDict["avatarId"];
 			long spawnX = (long) gameDict["spawnX"];
 			long spawnY = (long) gameDict["spawnY"];
-			gameManager.InitCharacter(serverPlayerId, (int) avatarId, (int) spawnX, (int) spawnY, SERVER_DELAY);
+			gameManager.InitCharacter(serverPlayerId, (int) avatarId, (int) spawnX, (int) spawnY, SERVER_DELAY, playerName);
 		}
 	}
 	
@@ -579,29 +593,17 @@ public class ClientSocket : MonoBehaviour {
 		
 		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
 		Dictionary<string, object> playersDict = (Dictionary<string, object>) dict["players"];
-		
-		/*for(int i=0; i<playersDict.Count; i++)
-		{
-			Dictionary<string, object> playerInfo = (Dictionary<string, object>) playersDict[i+""];
-			long serverPlayerID = (long) playerInfo["playerId"];
-			//long playerCellX = (long) playerInfo["x"];
-			//long playerCellY = (long) playerInfo["y"];
-			//long playerSpeed = (long) playerInfo["speed"];
-			long bombLeft = (long) playerInfo["bombLeft"];
-			bool isAlive = (bool) playerInfo["isAlive"];
-			
-			gameManager.UpdatePlayerStatus(serverPlayerID, bombLeft, isAlive);
-		}*/
-		
+
 		// dictKeys here is all the playerID
 		foreach(string serverPlayerID in playersDict.Keys)
 		{
 			Dictionary<string, object> playerInfo = (Dictionary<string, object>) playersDict[serverPlayerID];
 			long bombLeft = (long) playerInfo["bombLeft"];
+			long playerLives = (long) playerInfo["lives"];
 			bool isAlive = (bool) playerInfo["isAlive"];
 			List<object> powerupList = (List<object>) playerInfo["items"];
 			
-			gameManager.UpdatePlayerStatus(serverPlayerID, bombLeft, isAlive, powerupList);
+			gameManager.UpdatePlayerStatus(serverPlayerID, bombLeft, isAlive, powerupList, playerLives);
 		}
 	}
 	
@@ -655,34 +657,6 @@ public class ClientSocket : MonoBehaviour {
 		if( dict.ContainsKey ("killMessage"))
 			HandleKillMessage(dataFromServer);
 		
-		
-		// Updating the ZOOMap if there is update
-		
-		// Updating the list of player's 
-		/*for(int index=0; index<playerList.Count; index++)
-		{
-			Player player = playerList[index];
-			long serverPlayerID = player.PlayerID;
-			
-			// If does not contains the key, break out of the loop e.g. Connection is lost
-			if( !playersDict.ContainsKey(""+serverPlayerID) )
-				break;
-			
-			Dictionary<string, object> playersInfoDict = (Dictionary<string, object>) playersDict[""+serverPlayerID];
-			
-			// Updating player's position
-			if(playersInfoDict != null)
-			{
-				long cellX = (long) playersInfoDict["x"];
-				long cellY = (long) playersInfoDict["y"];
-
-				gameManager.UpdatePosition(serverPlayerID, cellX, cellY);
-			}
-		}*/
-		
-		
-		//"players":{"1382421891543":{}}
-		// iterate through each cells, and get the cell status
 	}
 	
 	private void ClearList()
@@ -761,6 +735,22 @@ public class ClientSocket : MonoBehaviour {
 		SendMessageToServer(messageTypeList, contentList);
 	}
 	
+	public void SendChatMessage(string message)
+	{
+		ClearList();
+		
+		messageTypeList.Add("type");
+		contentList.Add("chatMessage");
+		
+		messageTypeList.Add("playerId");
+		contentList.Add(GameManager.PlayerID);
+		
+		messageTypeList.Add("message");
+		contentList.Add(message);
+		
+		SendMessageToServer(messageTypeList, contentList);
+	}
+	
 	public void SendReadyMessage(int avatarID)
 	{
 		ClearList();
@@ -790,34 +780,6 @@ public class ClientSocket : MonoBehaviour {
 		SendMessageToServer(messageTypeList, contentList);
 	}
 	
-	public void ConnectToLobby()
-	{
-		//type: newPlayer content {playerName: "ABC"}
-		// after message send playerId
-		
-		// Connect to lobby
-		//ClearList();
-		
-		//
-		//Call before JoinRoom message to see who is inside the room
-		//SendGetSessionMessage();
-		
-		// Player 1 joins a room
-		//SendJoinARoomMessage();
-		// After selecting avatar, send player's your avatar
-		//SendSetPropertyMessage();
-		
-		// Get the current player ID
-		//SendReadyMessage();
-		//SendStartMessage();
-		
-		// get a list of player in that room, must call after join a room message
-		//SendGetSessionMessage();
-		
-		//InitCharacter();
-		
-		//StartCoroutine (WaitOneSecond ());
-	}
 	
 	public List<Lobby> GetLobbyList()
 	{
@@ -911,6 +873,9 @@ public class ClientSocket : MonoBehaviour {
 			if(sceneManager.GetComponent<SceneManager>().CurrentScene == SceneType.Start)
 			{
 				SceneManager managerScript = sceneManager.GetComponent<SceneManager>();
+				//managerScript.m_playerName.text = "";
+				managerScript.m_playerTextBox.GetComponent<tk2dUITextInput>().Text = "";
+				managerScript.m_playerTextBox.GetComponent<tk2dUITextInput>().emptyDisplayLabel.text = "<Enter your name>";
 				Debug.Log ("Connected to SockJS Server");
 				managerScript.buttonScript.buttonType = ButtonType.Start_Tap;
 				managerScript.buttonScript.buttonText.text = "Tap to Start";

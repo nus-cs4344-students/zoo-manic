@@ -26,7 +26,7 @@ bomb_left		-	how many bomb left to plant
 	[SerializeField] int avatarId;			// 0 - Zebra, 1 - Rhino, 2 - Tiger, 3 - Bird
 	[SerializeField] string playerName;		// Playername
 	
-	private GameObject character;
+	private GameObject characterInstance;
 	
 	// Powerup Status
 	private bool isHasteActivated = false;
@@ -140,80 +140,30 @@ bomb_left		-	how many bomb left to plant
 		
 	}
 
-	public void InitZebraCharacter(long playerID, int cellX, int cellY, float localLagDelay)
+	public void InitZebraCharacter(long playerID, string playerName, int cellX, int cellY)
 	{
-		character = Instantiate(m_zebraCharacter, transform.position, transform.rotation) as GameObject;
-		var animationScript = character.GetComponent<CharacterAnimController>();
-		animationScript.EnemyPlayer = !isSelf;
-		
-		float spawnX = ZooMap.GetHorizontalPos(cellX);
-		float spawnY = ZooMap.GetVerticalPos(cellY);
-		animationScript.SpawnCharacter(spawnX, spawnY);
-		
-		// If is player himself
-		if(isSelf)
-		{
-			// Set the Zebra to tagged as Player
-			character.gameObject.tag = "Player";
-			
-			animationScript.LOCAL_LAG_DELAY = localLagDelay;
-		}
-		
-		character.gameObject.name = ""+playerID;
-		
-		Debug.Log ("Zebra is created");
+		InitGeneralCharacter(m_zebraCharacter, playerID, playerName, cellX, cellY);
 	}
 	
-	public void InitRhinoCharacter(long playerID, int cellX, int cellY, float localLagDelay)
+	public void InitRhinoCharacter(long playerID, string playerName, int cellX, int cellY)
 	{
-		character = Instantiate(m_rhinoCharacter, transform.position, transform.rotation) as GameObject;
-		var animationScript = character.GetComponent<CharacterAnimController>();
-		animationScript.EnemyPlayer = !isSelf;
-		
-		float spawnX = ZooMap.GetHorizontalPos(cellX);
-		float spawnY = ZooMap.GetVerticalPos(cellY);
-		
-		animationScript.SpawnCharacter(spawnX, spawnY);
-		
-		// If is player himself
-		if(isSelf)
-		{
-			// Set the rhino to tagged as Player
-			character.gameObject.tag = "Player";
-			animationScript.LOCAL_LAG_DELAY = localLagDelay;			
-		}
-		
-		character.gameObject.name = ""+playerID;
-		
-		Debug.Log ("Rhino is created");
+		InitGeneralCharacter(m_rhinoCharacter, playerID, playerName, cellX, cellY);
 	}
 	
-	public void InitTigerCharacter(long playerID, int cellX, int cellY, float localLagDelay)
+	public void InitTigerCharacter(long playerID, string playerName, int cellX, int cellY)
 	{
-		character = Instantiate(m_tigerCharacter, transform.position, transform.rotation) as GameObject;
-		var animationScript = character.GetComponent<CharacterAnimController>();
-		animationScript.EnemyPlayer = !isSelf;
-		
-		float spawnX = ZooMap.GetHorizontalPos(cellX);
-		float spawnY = ZooMap.GetVerticalPos(cellY);
-		
-		animationScript.SpawnCharacter(spawnX, spawnY);
-		
-		if(isSelf)
-		{
-			character.gameObject.tag = "Player";
-			animationScript.LOCAL_LAG_DELAY = localLagDelay;			
-		}
-		
-		character.gameObject.name = ""+playerID;
-		
-		Debug.Log ("Tiger is created");
+		InitGeneralCharacter(m_tigerCharacter, playerID, playerName, cellX, cellY);
 	}
 	
-	public void InitBirdCharacter(long playerID, int cellX, int cellY, float localLagDelay)
+	public void InitBirdCharacter(long playerID, string playerName, int cellX, int cellY)
 	{
-		character = Instantiate(m_birdCharacter, transform.position, transform.rotation) as GameObject;
-		var animationScript = character.GetComponent<CharacterAnimController>();
+		InitGeneralCharacter(m_birdCharacter, playerID, playerName, cellX, cellY);
+	}
+	
+	public void InitGeneralCharacter(GameObject animalCharacter, long playerID, string playerName, int cellX, int cellY)
+	{
+		characterInstance = Instantiate(animalCharacter, transform.position, transform.rotation) as GameObject;
+		var animationScript = characterInstance.GetComponent<CharacterAnimController>();
 		animationScript.EnemyPlayer = !isSelf;
 		
 		float spawnX = ZooMap.GetHorizontalPos(cellX);
@@ -223,14 +173,20 @@ bomb_left		-	how many bomb left to plant
 		
 		if(isSelf)
 		{
-			character.gameObject.tag = "Player";
-			animationScript.LOCAL_LAG_DELAY = localLagDelay;			
+			characterInstance.gameObject.tag = "Player";		
 		}
 		
-		character.gameObject.name = ""+playerID;
+		characterInstance.gameObject.name = ""+playerID;
 		
-		Debug.Log ("Bird is created");
+		// Instantiate name
+		tk2dTextMesh nameScript = characterInstance.transform.Find("HUD_Name").GetComponent<tk2dTextMesh>();
+		
+		if(nameScript != null)
+		{
+			nameScript.text = playerName;
+		}
 	}
+	
 }
 
 

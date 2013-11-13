@@ -15,6 +15,7 @@ public class Explosion : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		InitExplosion(3);
 	}
 	
 	// Update is called once per frame
@@ -31,8 +32,8 @@ public class Explosion : MonoBehaviour {
 		
 		AudioSource.PlayClipAtPoint(explosionClip, transform.position);
 		
-		float cellWidth = 3.0f;
-		float cellHeight = 3.0f;
+		float cellWidth = 8.0f;
+		float cellHeight = 8.0f;
 		
 		// Center of the explosion
 		GameObject explosionInstance = Instantiate(explosionParticle, transform.position, transform.rotation) as GameObject;
@@ -52,7 +53,7 @@ public class Explosion : MonoBehaviour {
 		for(int index=1; index <= range; index++)
 		{
 			RaycastHit rightRayHit = new RaycastHit();
-			if (Physics.Raycast (transform.position + new Vector3(cellWidth * index-1, 0, 0), Vector3.right, out rightRayHit, 5.0f) || Physics.Raycast (transform.position + new Vector3(cellWidth * index-1, 0, 0), Vector3.right, out rightRayHit, 1.0f)) {
+			if (Physics.Raycast (transform.position + new Vector3(3.0f * index-1, 0, 0), Vector3.right, out rightRayHit, 5.0f) || Physics.Raycast (transform.position + new Vector3(cellWidth * index-1, 0, 0), Vector3.right, out rightRayHit, 1.0f)) {
 				if(rightRayHit.collider.tag == "Obstacle" || rightRayHit.collider.tag == "Untagged")
 					rightHitObstacle = true;
 				else if(rightRayHit.collider.tag == "Crate")
@@ -60,7 +61,7 @@ public class Explosion : MonoBehaviour {
 			}
 			
 			RaycastHit leftRayHit = new RaycastHit();
-			if (Physics.Raycast (transform.position - new Vector3(cellWidth * index-1, 0, 0), Vector3.left, out leftRayHit, 5.0f) || Physics.Raycast (transform.position - new Vector3(cellWidth * index-1, 0, 0), Vector3.left, out leftRayHit, 1.0f)) {
+			if (Physics.Raycast (transform.position - new Vector3(3.0f * index-1, 0, 0), Vector3.left, out leftRayHit, 5.0f) || Physics.Raycast (transform.position - new Vector3(cellWidth * index-1, 0, 0), Vector3.left, out leftRayHit, 1.0f)) {
 				if(leftRayHit.collider.tag == "Obstacle" || leftRayHit.collider.tag == "Untagged")
 					leftHitObstacle = true;
 				else if(leftRayHit.collider.tag == "Crate")					
@@ -68,7 +69,7 @@ public class Explosion : MonoBehaviour {
 			}
 			
 			RaycastHit upRayHit = new RaycastHit();
-			if (Physics.Raycast (transform.position + new Vector3(0, cellHeight * index-1, 0), Vector3.up, out upRayHit, 5.0f) || Physics.Raycast (transform.position + new Vector3(0, cellHeight * index-1, 0), Vector3.up, out upRayHit, 1.0f)) {
+			if (Physics.Raycast (transform.position + new Vector3(0, 3.0f * index-1, 0), Vector3.up, out upRayHit, 5.0f) || Physics.Raycast (transform.position + new Vector3(0, cellHeight * index-1, 0), Vector3.up, out upRayHit, 1.0f)) {
 				if(upRayHit.collider.tag == "Obstacle" || upRayHit.collider.tag == "Untagged")
 					upHitObstacle = true;					
 				else if(upRayHit.collider.tag == "Crate")
@@ -76,29 +77,12 @@ public class Explosion : MonoBehaviour {
 			}
 			
 			RaycastHit downRayHit = new RaycastHit();
-			if (Physics.Raycast (transform.position - new Vector3(0, cellHeight * index-1, 0), Vector3.down, out downRayHit, 5.0f) || Physics.Raycast (transform.position - new Vector3(0, cellHeight * index-1, 0), Vector3.down, out downRayHit, 1.0f)) {
+			if (Physics.Raycast (transform.position - new Vector3(0, 3.0f * index-1, 0), Vector3.down, out downRayHit, 5.0f) || Physics.Raycast (transform.position - new Vector3(0, cellHeight * index-1, 0), Vector3.down, out downRayHit, 1.0f)) {
 				if(downRayHit.collider.tag == "Obstacle" || downRayHit.collider.tag == "Untagged")
 					downHitObstacle = true;					
 				else if (downRayHit.collider.tag == "Crate")
 					downHitCount++;
 			}
-			
-			/*var rightRay = transform.TransformDirection (Vector3.right);
-			if (Physics.Raycast (transform.position + new Vector3(cellWidth * index-1, 0, 0), rightRay, 10.0f))
-				rightHitObstacle = true;
-			
-			var leftRay = transform.TransformDirection (Vector3.left);
-			if (Physics.Raycast ( transform.position - new Vector3(cellWidth * index-1, 0, 0), leftRay, 10.0f)) 
-				leftHitObstacle = true;
-			
-			
-			var forwardRay = transform.TransformDirection (Vector3.up);
-			if (Physics.Raycast (transform.position + new Vector3(0, cellHeight * index-1, 0), forwardRay, 10.0f)) 
-				upHitObstacle = true;
-			
-			var backRay = transform.TransformDirection (Vector3.down);
-			if (Physics.Raycast (transform.position - new Vector3(0, cellHeight * index-1, 0), backRay, 10.0f)) 
-				downHitObstacle = true;*/
 
 			if( !rightHitObstacle && rightHitCount != 1)
 			{

@@ -83,7 +83,6 @@ GameObject:
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400010}
   - 65: {fileID: 6500000}
-  - 114: {fileID: 11400014}
   m_Layer: 0
   m_Name: InGame_Chatbox
   m_TagString: Untagged
@@ -131,7 +130,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.27825546e-07, y: -.989396155, z: -.00999999978}
+  m_LocalPosition: {x: 0, y: .00671993196, z: -.00999999978}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400012}
@@ -142,7 +141,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.21747625, y: -.878716528, z: -.00999999978}
+  m_LocalPosition: {x: 0, y: .00671981275, z: -.00999999978}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400012}
@@ -154,7 +153,7 @@ Transform:
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400008}
 --- !u!4 &400006
@@ -165,7 +164,7 @@ Transform:
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400008}
 --- !u!4 &400008
@@ -175,8 +174,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.4298019, y: .364732742, z: 20}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -14.8319263, y: 2.32942009, z: 20}
+  m_LocalScale: {x: 15, y: 15, z: 1}
   m_Children:
   - {fileID: 400006}
   - {fileID: 400004}
@@ -189,7 +188,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .996116996, y: -.891301215, z: -.00999999978}
+  m_LocalPosition: {x: 0, y: .00671993196, z: -.00999999978}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400012}
@@ -342,8 +341,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 31.2943649, y: 2.03125, z: .0199999996}
-  m_Center: {x: 15.6028175, y: -1.015625, z: .00999999978}
+  m_Size: {x: 2.34375024, y: .203125, z: .0199999996}
+  m_Center: {x: 1.171875, y: -.101562515, z: .00999999978}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -374,15 +373,15 @@ MonoBehaviour:
     version: 1
     font: {fileID: 11400000, guid: fb1b97eccf6db514999d1605baf017e5, type: 2}
     text: 
-    color: {r: 1, g: 1, b: 1, a: 1}
+    color: {r: .737254918, g: 1, b: 1, a: 1}
     color2: {r: 1, g: 1, b: 1, a: 1}
     useGradient: 0
     textureGradient: 0
     anchor: 3
     renderLayer: 0
-    scale: {x: 10, y: 10, z: 1}
+    scale: {x: 1.20000005, y: 1.39999998, z: 1}
     kerning: 0
-    maxChars: 100
+    maxChars: 1
     inlineStyling: 0
     formatting: 0
     wordWrapWidth: 0
@@ -418,13 +417,13 @@ MonoBehaviour:
     version: 1
     font: {fileID: 11400000, guid: fb1b97eccf6db514999d1605baf017e5, type: 2}
     text: 
-    color: {r: 1, g: 1, b: 1, a: 1}
+    color: {r: .963235319, g: .980223119, b: 1, a: 1}
     color2: {r: 1, g: 1, b: 1, a: 1}
     useGradient: 0
     textureGradient: 0
     anchor: 3
     renderLayer: 0
-    scale: {x: 10, y: 10, z: 10}
+    scale: {x: 1, y: 1, z: 1}
     kerning: 0
     maxChars: 40
     inlineStyling: 0
@@ -444,8 +443,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collection: {fileID: 11400000, guid: a7b2ba5d04adf144faffa96ff7497955, type: 2}
-  _color: {r: 0, g: 0, b: 0, a: 1}
-  _scale: {x: 20, y: 10, z: 10}
+  _color: {r: 0, g: 0, b: 0, a: .588235319}
+  _scale: {x: 1, y: 1, z: 1}
   _spriteId: 3
   boxCollider: {fileID: 0}
   meshCollider: {fileID: 0}
@@ -474,7 +473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collection: {fileID: 11400000, guid: a7b2ba5d04adf144faffa96ff7497955, type: 2}
   _color: {r: 0, g: 0, b: 0, a: 1}
-  _scale: {x: 20, y: 10, z: 10}
+  _scale: {x: 1, y: 1, z: 1}
   _spriteId: 4
   boxCollider: {fileID: 0}
   meshCollider: {fileID: 0}
@@ -507,9 +506,9 @@ MonoBehaviour:
   unSelectedStateGO: {fileID: 100004}
   selectedStateGO: {fileID: 100006}
   cursor: {fileID: 100000}
-  fieldLength: 28
-  maxCharacterLength: 40
-  emptyDisplayText: Enter your chat
+  fieldLength: 35
+  maxCharacterLength: 35
+  emptyDisplayText: <Chat here>
   isPasswordField: 0
   passwordChar: '*'
   layoutItem: {fileID: 0}
@@ -564,14 +563,14 @@ MonoBehaviour:
   data:
     version: 1
     font: {fileID: 11400000, guid: fb1b97eccf6db514999d1605baf017e5, type: 2}
-    text: Enter your chat
-    color: {r: 1, g: 1, b: 1, a: .70588237}
+    text: <Chat here>
+    color: {r: .897058845, g: .974442184, b: 1, a: .70588237}
     color2: {r: 1, g: 1, b: 1, a: 1}
     useGradient: 0
     textureGradient: 0
     anchor: 3
     renderLayer: 0
-    scale: {x: 10, y: 10, z: 20}
+    scale: {x: 1, y: 1, z: 1}
     kerning: 0
     maxChars: 20
     inlineStyling: 0
@@ -579,18 +578,6 @@ MonoBehaviour:
     wordWrapWidth: 0
     spacing: 0
     lineSpacing: 0
---- !u!114 &11400014
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76680fbca547b054e9452ead20059542, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chatInput: {fileID: 11400002}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

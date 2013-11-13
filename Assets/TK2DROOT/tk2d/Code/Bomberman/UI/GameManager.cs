@@ -36,14 +36,26 @@ public class GameManager : MonoBehaviour {
 		if(hud)
 		{
 			HUD hudScript = hud.GetComponent<HUD>();
-			hudScript.ShowKillMessage(message);
+			hudScript.DisplayKillMessage(message);
 		}
 	}
 	
-	public void DisplayGameEndMessage(string message)
+	public void DisplayChatMessage(long serverPlayerID, string message)
 	{
 		GameObject hud = GameObject.Find ("UnityHUDPrefab");
-			
+		
+		GameObject characterObject = GameObject.Find(""+serverPlayerID);
+		if(characterObject != null && hud != null)
+		{
+			HUD hudScript = hud.GetComponent<HUD>();
+			hudScript.HudToogleChatDisplay(characterObject, message);
+		}
+	}
+	
+	public void DisplayGameEndMessage(long serverPlayerID, string winnerName)
+	{
+		GameObject hud = GameObject.Find ("UnityHUDPrefab");
+		
 		SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
 		if(soundManager != null)
 			soundManager.PlayGameOverSound();
@@ -51,7 +63,10 @@ public class GameManager : MonoBehaviour {
 		if(hud)
 		{
 			HUD hudScript = hud.GetComponent<HUD>();
-			hudScript.ShowGameEndMessage(message);
+			if(serverPlayerID == GameManager.PlayerID)
+				hudScript.DisplayVictoryPanel(winnerName);
+			else
+				hudScript.DisplayDefeatPanel(winnerName);	
 		}
 	
 	}
@@ -99,7 +114,22 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 	
-	public void UpdatePlayerStatus(string serverPlayerID, long bombLeft, bool isAlive, List<object> powerupList)
+	public void RespawnPlayer(long serverPlayerID, float cellX, float cellY)
+	{
+		GameObject characterObject = GameObject.Find(""+serverPlayerID);
+		if(characterObject)
+		{
+			CharacterAnimController playerController = characterObject.GetComponent<CharacterAnimController>();
+			
+			SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+			soundManager.PlayDeathSound(playerController.CharacterIcon, characterObject.transform.position);
+			
+			playerController.RespawnPlayer(cellX, cellY);
+		}
+	}
+	
+	public void UpdatePlayerStatus(string serverPlayerID, long bombLeft, bool isAlive, 
+								   List<object> powerupList, long playerLives)
 	{
 		GameObject characterObject = GameObject.Find(serverPlayerID);
 		GameObject hud = GameObject.Find ("UnityHUDPrefab");	
@@ -112,12 +142,15 @@ public class GameManager : MonoBehaviour {
 			// If server says player is dead
 			if(isAlive == false)
 			{
+				// Make camera movable
+				GameObject cameraObject = GameObject.Find("tk2dCamera");
+				if(cameraObject)
+				{
+					cameraObject.GetComponent<SmoothCamera2D>().SetTargetAlive = false;
+				}
+				
 				// Play Sound
 				CharacterAnimController characterController = characterObject.GetComponent<CharacterAnimController>();
-				
-				SoundManager soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
-				soundManager.PlayDeathSound(characterController.CharacterIcon, characterObject.transform.position);
-				
 				Destroy(characterObject);
 			}
 			
@@ -127,11 +160,6 @@ public class GameManager : MonoBehaviour {
 				if(hud)
 				{
 					hudScript = hud.GetComponent<HUD>();
-					if(hudScript == null)
-					{
-						Debug.LogWarning("HUD SCRIPT IS NULL");
-						return;
-					}
 				}
 				
 				
@@ -140,6 +168,9 @@ public class GameManager : MonoBehaviour {
 
 				// update bomb left*
 				hudScript.SetBombLeft(bombLeft);*/
+				
+				// Update Lives
+				hudScript.UpdateHealthStatus( (int) playerLives);
 				
 				// no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs, 5 - shakable
 				for(int powerupIndex = 0; powerupIndex<powerupList.Count; powerupIndex++)
@@ -150,7 +181,6 @@ public class GameManager : MonoBehaviour {
 					
 					if(powerupIndex == 1)
 					{
-						Debug.Log ("POWERUP INDEX: "+powerupIndex);
 						hudScript.ToggleRange(powerupID != 0);
 					}
 					else if(powerupIndex == 2)
@@ -254,7 +284,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 	
-	public void InitCharacter(long playerID, int avatarID, int cellX, int cellY, long serverDelay)
+	public void InitCharacter(long playerID, int avatarID, int cellX, int cellY, long serverDelay, string playerName)
 	{
 		AvatarIcon avatarType = Avatar.GetAvatarIcon(avatarID);
 		
@@ -266,20 +296,20 @@ public class GameManager : MonoBehaviour {
 			switch(avatarType)
 			{
 				case AvatarIcon.Rhino:
-				playerScript.InitRhinoCharacter(playerID, cellX, cellY, localLagDelay);
+				playerScript.InitRhinoCharacter(playerID, playerName, cellX, cellY);
 				break;
 				
 
 				case AvatarIcon.Zebra:
-				playerScript.InitZebraCharacter(playerID, cellX, cellY, localLagDelay);
+				playerScript.InitZebraCharacter(playerID, playerName, cellX, cellY);
 				break;
 				
 				case AvatarIcon.Tiger:
-				playerScript.InitTigerCharacter(playerID, cellX, cellY, localLagDelay);
+				playerScript.InitTigerCharacter(playerID, playerName, cellX, cellY);
 				break;
 				
 				case AvatarIcon.Cassowary:
-				playerScript.InitBirdCharacter(playerID, cellX, cellY, localLagDelay);
+				playerScript.InitBirdCharacter(playerID, playerName, cellX, cellY);
 				break;
 			}
 			
@@ -294,22 +324,22 @@ public class GameManager : MonoBehaviour {
 			{
 				// rhino
 				case AvatarIcon.Rhino:
-				enemyScript.InitRhinoCharacter(playerID, cellX, cellY, localLagDelay);
+				enemyScript.InitRhinoCharacter(playerID, playerName, cellX, cellY);
 				break;
 			
 				// zebra
 				case AvatarIcon.Zebra:
-				enemyScript.InitZebraCharacter(playerID, cellX, cellY, localLagDelay);
+				enemyScript.InitZebraCharacter(playerID, playerName, cellX, cellY);
 				break;
 				
 				// tiger
 				case AvatarIcon.Tiger:
-				enemyScript.InitTigerCharacter(playerID, cellX, cellY, localLagDelay);
+				enemyScript.InitTigerCharacter(playerID, playerName, cellX, cellY);
 				break;
 				
 				// bird
 				case AvatarIcon.Cassowary:
-				enemyScript.InitBirdCharacter(playerID, cellX, cellY, localLagDelay);
+				enemyScript.InitBirdCharacter(playerID, playerName, cellX, cellY);
 				break;
 			}
 		}

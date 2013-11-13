@@ -37,7 +37,8 @@ public class CharacterAnimController : MonoBehaviour {
 	// Datastructure that stores a list of bombs object
 	private Dictionary<string, GameObject> bombDict = new Dictionary<string, GameObject>();
 	
-	public float LOCAL_LAG_DELAY = 0.0f;
+	private GameObject hudInstance;
+	private HUD hudScript;
 	
 	public bool EnemyPlayer 
 	{
@@ -64,6 +65,13 @@ public class CharacterAnimController : MonoBehaviour {
 	
     // Use this for initialization
     void Start () {
+		
+		hudInstance = GameObject.Find ("UnityHUDPrefab");
+		if(hudInstance)
+		{
+			hudScript = hudInstance.GetComponent<HUD>();
+		}
+		
         // This script must be attached to the sprite to work.
         anim = GetComponent<tk2dSpriteAnimator>();
 		
@@ -128,10 +136,13 @@ public class CharacterAnimController : MonoBehaviour {
 		}
 		
         if (Input.GetKeyDown(KeyCode.Space)) 
-		{
-			// Can play bomb
-			if(m_bombLimit > 0)
-				SendPlantBombMessage();
+		{	
+			if(hudScript && !hudScript.IsChatEnabled)
+			{
+				// Can play bomb
+				if(m_bombLimit > 0)
+					SendPlantBombMessage();
+			}
         }
 
 		// Input.GetAxis("Vertical") > 0
@@ -151,6 +162,13 @@ public class CharacterAnimController : MonoBehaviour {
 	public void UpdatePosition(float positionX, float positionY)
 	{
 		gameObject.transform.position = new Vector3(positionX, positionY, 0);
+	}
+	
+	public void RespawnPlayer(float cellX, float cellY)
+	{
+		float horizontalPos = ZooMap.GetHorizontalPos(cellX);
+		float verticalPos = ZooMap.GetVerticalPos(cellY);
+		gameObject.transform.position = new Vector3(horizontalPos, verticalPos, gameObject.transform.position.z);
 	}
 	
 	public void PlantBomb(float horizontalCell, float verticalCell)
@@ -176,7 +194,6 @@ public class CharacterAnimController : MonoBehaviour {
 		{
 			bombDict.Add(bombId, bombInstance);
 			m_bombLimit--;
-			//hudScript.setBombLeft(characterScript.BombLimit);
 		}
 	}
 	
@@ -218,10 +235,6 @@ public class CharacterAnimController : MonoBehaviour {
 				bombScript.Explode((int) explodeRange);
 				bombDict.Remove(bombId);
 			}
-		}
-		else
-		{
-			Debug.LogError("ERROR!!: "+bombId + " is not found!");
 		}
 		
 	}

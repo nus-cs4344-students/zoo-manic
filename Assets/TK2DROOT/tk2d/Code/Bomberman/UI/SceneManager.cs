@@ -16,7 +16,7 @@ public class SceneManager : MonoBehaviour {
 	//private int roomID = 100000;
 	
 	// Start Scene UI Components
-	[SerializeField] tk2dTextMesh m_playerName;	
+	[SerializeField] public tk2dTextMesh m_playerName;	
 	[SerializeField] public GameObject m_playerTextBox;	
 	[SerializeField] public tk2dTextMesh m_startLabel;	
 	
@@ -164,10 +164,6 @@ public class SceneManager : MonoBehaviour {
 	{	
 		// Host presses START
 		serverConnection.SendStartMessage();
-		
-		// SERVER WILL SEND A SESSION after it is being called
-		// Get session for a LIST of players
-		//serverConnection.SendGetSessionMessage();
 	}
 	
 	public void CreateNewPlayer()
@@ -199,7 +195,7 @@ public class SceneManager : MonoBehaviour {
 	
 	public void UpdatePlayerName()
 	{
-		string name = m_ipText.text;
+		string name = m_playerName.text;
 		
 		GameManager.UpdatePlayerName(name);
 		Debug.Log ("Updating player name: "+name);
@@ -231,7 +227,7 @@ public class SceneManager : MonoBehaviour {
 		
 		m_roomTitleText.text = "Room " + GameManager.SessionID;
 		
-		string statusText = "Welcome to Room, player " + GameManager.PlayerName;		
+		string statusText = "Welcome to Room, " + GameManager.PlayerName;		
 		m_gameText.text = "";
 		
 		List<Avatar> avatarList = serverConnection.GetRoomAvatarList();
@@ -240,7 +236,7 @@ public class SceneManager : MonoBehaviour {
 			Avatar avatar = avatarList[i];
 			
 			if(avatar.AvatarType != AvatarIcon.NotSelected)
-				statusText += "\n" + "Player: "+ avatar.PlayerName + " selected " + Avatar.ToString(avatar.AvatarID);
+				statusText += "\n" + avatar.PlayerName + " selected " + Avatar.ToString(avatar.AvatarID);
 
 			UpdateAvatar(avatar.AvatarID, avatar.SelectedPlayerID, avatar.AvatarType, avatar.PlayerName);
 		}
@@ -397,6 +393,12 @@ public class SceneManager : MonoBehaviour {
 		m_AvatarItem2.transform.Find ("SelectedBG").gameObject.SetActive(false);
 		m_AvatarItem3.transform.Find ("SelectedBG").gameObject.SetActive(false);
 		m_AvatarItem4.transform.Find ("SelectedBG").gameObject.SetActive(false);
+	}
+	
+	public void SendChatToServer(string message)
+	{
+		if( !string.IsNullOrEmpty(message) )
+			serverConnection.SendChatMessage(message);
 	}
 	
 	public void ClearLobbySelection()
