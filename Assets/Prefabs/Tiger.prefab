@@ -1794,7 +1794,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100126}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.0435962677, y: 6.08299637, z: -.00100000005}
+  m_LocalPosition: {x: -.0435962677, y: 6.08299637, z: -.00999999978}
   m_LocalScale: {x: 1, y: 1, z: .100000001}
   m_Children:
   - {fileID: 400124}
@@ -2054,7 +2054,6 @@ MonoBehaviour:
   characterType: 2
   clientSocketScript: {fileID: 11400002, guid: 29dc06ed51c39024fb87693657ceaa99, type: 2}
   playerScript: {fileID: 11400004, guid: fed03b5af8d28de4da89c444b69e2485, type: 2}
-  LOCAL_LAG_DELAY: 0
 --- !u!114 &11400020
 MonoBehaviour:
   m_ObjectHideFlags: 1

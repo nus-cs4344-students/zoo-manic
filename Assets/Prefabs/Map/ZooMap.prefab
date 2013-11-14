@@ -40,10 +40,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   woodenCratePrefab: {fileID: 100000, guid: efdcb218c92a0f641bfa0fe8a2a7734c, type: 2}
   rockPrefab: {fileID: 100000, guid: fb8b20cd9fd00e34b97ed98860b7983c, type: 2}
-  m_spawnPoint1: {fileID: 400000, guid: 89559fd174c6e264f8ee515cabe20b06, type: 2}
-  m_spawnPoint2: {fileID: 400000, guid: d9f01fd03014d5f4a907e699594b5202, type: 2}
-  m_spawnPoint3: {fileID: 400000, guid: 5f7813013a6c6d747ad5ae8fc136c66a, type: 2}
-  m_spawnPoint4: {fileID: 400000, guid: 7e1a2022269b9e04c8cacfccd1a886e9, type: 2}
   m_InvulnerablePowerup: {fileID: 100000, guid: 7052ede568ad5e549b0cae9fd6beaadb,
     type: 2}
   m_RangePowerup: {fileID: 100000, guid: c7ee064115727c24ca4641e7fe3fafe5, type: 2}

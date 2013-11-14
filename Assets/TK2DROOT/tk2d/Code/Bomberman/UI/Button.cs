@@ -9,8 +9,6 @@ public enum ButtonType
 }
 
 public class Button : MonoBehaviour {
-	
-	
 	[SerializeField] tk2dUIItem uiItem;
 	[SerializeField] public tk2dTextMesh buttonText;
 	[SerializeField] public ButtonType buttonType;

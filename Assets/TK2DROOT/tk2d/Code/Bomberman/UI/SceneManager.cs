@@ -73,6 +73,9 @@ public class SceneManager : MonoBehaviour {
 			
 			case SceneType.Lobby:
 			Debug.Log ("Lobby scene");
+			GameObject zooMap = GameObject.Find("ZooMap");
+			if(zooMap != null)
+				zooMap.GetComponent<ZooMap>().StartZooMap();
 			DisplayLobby();
 			break;
 		
@@ -162,8 +165,10 @@ public class SceneManager : MonoBehaviour {
 	
 	public void StartGame()
 	{	
+		int mapID = 2;
+		
 		// Host presses START
-		serverConnection.SendStartMessage();
+		serverConnection.SendStartMessage(mapID);
 	}
 	
 	public void CreateNewPlayer()

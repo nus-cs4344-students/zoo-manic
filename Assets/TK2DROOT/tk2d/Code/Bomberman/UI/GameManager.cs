@@ -142,13 +142,13 @@ public class GameManager : MonoBehaviour {
 			// If server says player is dead
 			if(isAlive == false)
 			{
-				// Make camera movable
-				GameObject cameraObject = GameObject.Find("tk2dCamera");
-				if(cameraObject)
+				// Make camera movable (Spectator Mode)
+				if(serverPlayerID == PlayerID.ToString())
 				{
-					cameraObject.GetComponent<SmoothCamera2D>().SetTargetAlive = false;
+					GameObject cameraObject = GameObject.Find("tk2dCamera");
+					if(cameraObject)
+						cameraObject.GetComponent<SmoothCamera2D>().SetTargetAlive = false;
 				}
-				
 				// Play Sound
 				CharacterAnimController characterController = characterObject.GetComponent<CharacterAnimController>();
 				Destroy(characterObject);
@@ -161,13 +161,6 @@ public class GameManager : MonoBehaviour {
 				{
 					hudScript = hud.GetComponent<HUD>();
 				}
-				
-				
-				/*CharacterAnimController playerController = characterObject.GetComponent<CharacterAnimController>();
-				playerController.BombLimit = (int) bombLeft;
-
-				// update bomb left*
-				hudScript.SetBombLeft(bombLeft);*/
 				
 				// Update Lives
 				hudScript.UpdateHealthStatus( (int) playerLives);
@@ -211,6 +204,8 @@ public class GameManager : MonoBehaviour {
 		{
 			timeDifference += bufferTime;
 		}*/
+		
+		
 		// If it is a player, add a local lag
 		if(serverPlayerID == PlayerID)
 		{
@@ -254,19 +249,19 @@ public class GameManager : MonoBehaviour {
 			switch(direction)
 			{
 				case "UP":
-				movementController.MoveUp(false);
+				movementController.MoveUp(cellX, cellY, false);
 				break;
 				
 				case "DOWN":
-				movementController.MoveDown(false);
+				movementController.MoveDown(cellX, cellY, false);
 				break;
 				
 				case "LEFT":
-				movementController.MoveLeft(false);
+				movementController.MoveLeft(cellX, cellY, false);
 				break;
 				
 				case "RIGHT":
-				movementController.MoveRight(false);
+				movementController.MoveRight(cellX, cellY, false);
 				break;
 			}
 		}

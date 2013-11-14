@@ -146,16 +146,16 @@ public class CharacterAnimController : MonoBehaviour {
         }
 
 		// Input.GetAxis("Vertical") > 0
-		if (Input.GetKey(KeyCode.UpArrow) && !checkHitObstacle("up") ) { MoveUp(true); return; }
+		if (Input.GetKey(KeyCode.UpArrow) && !checkHitObstacle("up") ) { MoveUp(0.0f, 0.0f, true); return; }
 		
 		//else if ( Input.GetAxis("Horizontal") > 0
-  		if (Input.GetKey(KeyCode.RightArrow) && !checkHitObstacle("right") ) { MoveRight(true); return; }
+  		if (Input.GetKey(KeyCode.RightArrow) && !checkHitObstacle("right") ) { MoveRight(0.0f, 0.0f, true); return; }
 		
 		// else Input.GetAxis("Vertical") < 0 
-  		if (Input.GetKey(KeyCode.DownArrow) && !checkHitObstacle("down") ) { MoveDown(true); return; }
+  		if (Input.GetKey(KeyCode.DownArrow) && !checkHitObstacle("down") ) { MoveDown(0.0f, 0.0f, true); return; }
 		
 		//else if ( Input.GetAxis("Horizontal") < 0
-  		if (Input.GetKey(KeyCode.LeftArrow) && !checkHitObstacle("left") ) { MoveLeft(true); return; }
+  		if (Input.GetKey(KeyCode.LeftArrow) && !checkHitObstacle("left") ) { MoveLeft(0.0f, 0.0f, true); return; }
     }
 	
 		
@@ -293,7 +293,7 @@ public class CharacterAnimController : MonoBehaviour {
 		gameObject.transform.localPosition = new Vector3(spawnX, spawnY, 0);
 	}
 	
-	public void MoveUp(bool sendToServer)
+	public void MoveUp(float originalCellX, float originalCellY, bool sendToServer)
 	{
 		if(previousDirection != DirectionType.Front)
 		{
@@ -303,8 +303,19 @@ public class CharacterAnimController : MonoBehaviour {
 
 		Vector3 startPoint = transform.position;
 		
-		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
-		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		float verticalCell = 0; 
+		float horizontalCell = 0; 
+		
+		if(sendToServer)
+		{
+			verticalCell = ZooMap.GetVerticalCell(transform.position.y);
+			horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		}
+		else
+		{
+			horizontalCell = originalCellX;
+			verticalCell = originalCellY;
+		}
 		
 		// exceed the map
 		if(verticalCell >= ZooMap.NumberofCols || isStillMoving)
@@ -337,7 +348,7 @@ public class CharacterAnimController : MonoBehaviour {
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Front));
 	}
 	
-	public void MoveRight(bool sendToServer)
+	public void MoveRight(float originalCellX, float originalCellY, bool sendToServer)
 	{
 		if(previousDirection != DirectionType.Right)
 		{
@@ -346,8 +357,20 @@ public class CharacterAnimController : MonoBehaviour {
 		}
 		
 		Vector3 startPoint = transform.position;
-		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
-		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		
+		float verticalCell = 0; 
+		float horizontalCell = 0; 
+		
+		if(sendToServer)
+		{
+			verticalCell = ZooMap.GetVerticalCell(transform.position.y);
+			horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		}
+		else
+		{
+			horizontalCell = originalCellX;
+			verticalCell = originalCellY;
+		}
 		
 		// exceed the map
 		if( horizontalCell >= ZooMap.NumberofRows || isStillMoving)
@@ -382,7 +405,7 @@ public class CharacterAnimController : MonoBehaviour {
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Right));
 	}
 	
-	public void MoveDown(bool sendToServer)
+	public void MoveDown(float originalCellX, float originalCellY, bool sendToServer)
 	{
 		if(previousDirection != DirectionType.Down)
 		{
@@ -392,9 +415,20 @@ public class CharacterAnimController : MonoBehaviour {
 
 		Vector3 startPoint = transform.position;
 
-		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
-		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
-
+		float verticalCell = 0; 
+		float horizontalCell = 0; 
+		
+		if(sendToServer)
+		{
+			verticalCell = ZooMap.GetVerticalCell(transform.position.y);
+			horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		}
+		else
+		{
+			horizontalCell = originalCellX;
+			verticalCell = originalCellY;
+		}
+		
 		// exceed the map
 		if(verticalCell <= 0 || isStillMoving)
 			return;
@@ -429,7 +463,7 @@ public class CharacterAnimController : MonoBehaviour {
 		StartCoroutine(MoveObject(transform, startPoint, endPoint, time, DirectionType.Down));
 	}
 	
-	public void MoveLeft(bool sendToServer)
+	public void MoveLeft(float originalCellX, float originalCellY, bool sendToServer)
 	{
 		if(previousDirection != DirectionType.Left)
 		{
@@ -439,9 +473,20 @@ public class CharacterAnimController : MonoBehaviour {
 
 		Vector3 startPoint = transform.position;
 
-		float verticalCell = ZooMap.GetVerticalCell(transform.position.y);
-		float horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		float verticalCell = 0; 
+		float horizontalCell = 0; 
 		
+		if(sendToServer)
+		{
+			verticalCell = ZooMap.GetVerticalCell(transform.position.y);
+			horizontalCell = ZooMap.GetHorizontalCell(transform.position.x);
+		}
+		else
+		{
+			horizontalCell = originalCellX;
+			verticalCell = originalCellY;
+		}
+
 		// exceed the map or if the character still moving
 		if(horizontalCell <= 0 || isStillMoving)
 			return;

@@ -153,6 +153,8 @@ public class ClientSocket : MonoBehaviour {
 			SERVER_START_TIME = (long) dict["startTime"];
 			LOCAL_START_TIME = GetLocalTimeStamp();
 			
+			long mapID = (long) dict["mapId"];
+			Debug.Log ("SERVER MAP ID IS : "+mapID);
 			StartCoroutine(LoadGameWorld(serverMsg));
 			break;
 			
@@ -194,6 +196,15 @@ public class ClientSocket : MonoBehaviour {
 		// Handle Update Message from server
 		if(hasGameStarted)
 			HandleZooMap(serverMsg);
+	}
+	
+	private void HandleSetMap(string serverMsg)
+	{
+		var dict = Json.Deserialize(serverMsg) as Dictionary<string,object>;
+		long playerId = (long) dict["winnerId"];
+		string playerName = (string) dict["winnerName"];
+		
+		gameManager.DisplayGameEndMessage(playerId, playerName);
 	}
 	
 	private void HandleGameEnd(string serverMsg)
@@ -573,9 +584,7 @@ public class ClientSocket : MonoBehaviour {
 				long horizontalCellNum = (long) zooMapInfoDict["x"];
 				long verticalCellNum = (long) zooMapInfoDict["y"];
 				string cellID = row+":"+column;
-				//Debug.Log ("SERVER IS : " + horizontalCellNum+":"+verticalCellNum);
-				//Debug.Log ("CLIENT IS : " + cellID);
-				
+
 				keyIndex++;
 				gameManager.UpdateMap(cellType, cellItem, horizontalCellNum, verticalCellNum, cellID);
 			}
@@ -767,7 +776,7 @@ public class ClientSocket : MonoBehaviour {
 		SendMessageToServer(messageTypeList, contentList);
 	}
 	
-	public void SendStartMessage()
+	public void SendStartMessage(int mapID)
 	{
 		ClearList();
 		
@@ -776,6 +785,9 @@ public class ClientSocket : MonoBehaviour {
 		
 		messageTypeList.Add("playerId");
 		contentList.Add(GameManager.PlayerID);
+		
+		messageTypeList.Add("mapId");
+		contentList.Add(mapID);
 		
 		SendMessageToServer(messageTypeList, contentList);
 	}

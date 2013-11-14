@@ -84,7 +84,7 @@ public class HUD : MonoBehaviour {
 	private long hud_bombLeft = 3;
 	
 	float MessageDuration = 5.0f;
-	float invulnerableDuration = 10.0f;
+	float invulnerableDuration = 5.0f;
 	float trickDuration = 10.0f;
 	float rangeDuration = 10.0f;
 	float shakeDuration = 10.0f;
@@ -175,7 +175,7 @@ public class HUD : MonoBehaviour {
 	
 	void ToggleChatDisplay(bool isVisible)
 	{
-		if(characterChatBox)
+		if(characterChatBox != null)
 		{
 			characterChatBox.SetActive(isVisible);
 		}
@@ -477,7 +477,7 @@ public class HUD : MonoBehaviour {
 		GUI.Box(new Rect (0.11368421f * Screen.width, 0.827472527f * Screen.height, 0.068947368f * Screen.width, 0.146153846f * Screen.height), "", avatarBox);
 		
 		if(avatarIconStyle != null)
-			GUI.Box(new Rect (0.136842105f * Screen.width, 0.835164835f * Screen.height, 0.035263157f * Screen.width, 0.118681318f * Screen.height), "", avatarIconStyle);
+			GUI.Box(new Rect (0.126315789f * Screen.width, 0.835164835f * Screen.height, 0.035263157f * Screen.width, 0.118681318f * Screen.height), "", avatarIconStyle);
 	}
 	
 	public void DisplayVictoryPanel(string winnerName)
@@ -492,7 +492,7 @@ public class HUD : MonoBehaviour {
 		
 		winnerTextScript.text = "Congratulations, You WIN!";
 		
-		StartCoroutine( GoBacktoLobby(winnerTextScript) );
+		StartCoroutine( GoBacktoLobby(lobbyScript) );
 	}
 	
 	public void DisplayDefeatPanel(string winnerName)
@@ -500,12 +500,12 @@ public class HUD : MonoBehaviour {
 		//GUI.Box(new Rect (0.5f * Screen.width, 0.5f * Screen.height, 0.318947368f * Screen.width, 0.219780219f * Screen.height), "", losePanelStyle);
 		losePanel.SetActive(true);
 		
-		tk2dTextMesh lobbyScript = victoryPanel.transform.Find("LobbyText").GetComponent<tk2dTextMesh>();
-		tk2dTextMesh winnerTextScript = victoryPanel.transform.Find("NameText").GetComponent<tk2dTextMesh>();
+		tk2dTextMesh lobbyScript = losePanel.transform.Find("LobbyText").GetComponent<tk2dTextMesh>();
+		tk2dTextMesh winnerTextScript = losePanel.transform.Find("NameText").GetComponent<tk2dTextMesh>();
 		
 		winnerTextScript.text = "Winner is: "+winnerName;
 		
-		StartCoroutine( GoBacktoLobby(winnerTextScript) );
+		StartCoroutine( GoBacktoLobby(lobbyScript) );
 	}
 	
 	void InitDirectionalButtons()
@@ -523,7 +523,7 @@ public class HUD : MonoBehaviour {
 			
 			soundManager.PlayHUDClickSound(transform.position);			
 			if(playerController)
-				playerController.MoveUp(true);
+				playerController.MoveUp(0.0f, 0.0f, true);
 		}
 		
 		//Button Left
@@ -532,7 +532,7 @@ public class HUD : MonoBehaviour {
 		{
 			soundManager.PlayHUDClickSound(transform.position);
 			if(playerController)
-				playerController.MoveLeft(true);
+				playerController.MoveLeft(0.0f, 0.0f, true);
 		}
 		
 		//Button Down
@@ -541,7 +541,7 @@ public class HUD : MonoBehaviour {
 		{			
 			soundManager.PlayHUDClickSound(transform.position);			
 			if(playerController)
-				playerController.MoveDown(true);
+				playerController.MoveDown(0.0f, 0.0f, true);
 		}
 		
 		//Button Right
@@ -550,7 +550,7 @@ public class HUD : MonoBehaviour {
 		{			
 			soundManager.PlayHUDClickSound(transform.position);			
 			if(playerController)
-				playerController.MoveRight(true);
+				playerController.MoveRight(0.0f, 0.0f, true);
 		}
 	}
 	
