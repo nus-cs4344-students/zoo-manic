@@ -1339,7 +1339,7 @@ MonoBehaviour:
   trickPowerup:
     m_Name: TrickPowerup
     m_Normal:
-      m_Background: {fileID: 2800000, guid: 0785717283a42b04bb482c6c95c83388, type: 3}
+      m_Background: {fileID: 2800000, guid: 019289221f5a53e44b4736c2be32e690, type: 3}
       m_TextColor: {r: 0, g: 0, b: 0, a: .588235319}
     m_Hover:
       m_Background: {fileID: 0}
@@ -1399,12 +1399,12 @@ MonoBehaviour:
   textureRange: {fileID: 2800000, guid: a6d4daadd65d0c64e9267ebc03097fe4, type: 3}
   textureShake: {fileID: 2800000, guid: 3be2d54235b78e54b89a78a04f1c4fb5, type: 3}
   textureSpeed: {fileID: 2800000, guid: f60f182e1c8cdab4ea06ca9b148ba177, type: 3}
-  textureTrick: {fileID: 2800000, guid: 0785717283a42b04bb482c6c95c83388, type: 3}
+  textureTrick: {fileID: 2800000, guid: 019289221f5a53e44b4736c2be32e690, type: 3}
   alphaInvulnerable: {fileID: 2800000, guid: e231542eca72ceb47869acce8d6a5bbc, type: 3}
   alphaRange: {fileID: 2800000, guid: 0a71606b584dbe44cadd4172d16d7571, type: 3}
   alphaShake: {fileID: 2800000, guid: ffb9401407deb1e4fb2b7d9a9bf03b82, type: 3}
   alphaSpeed: {fileID: 2800000, guid: 49cc5425b7aea8a4d9dc81fce61559dd, type: 3}
-  alphaTrick: {fileID: 2800000, guid: 16d4c4a47fcbac44aaebf7ede758023a, type: 3}
+  alphaTrick: {fileID: 2800000, guid: 5e9413ef03bbe144a8d776b7d3904885, type: 3}
   plantBombStyle:
     m_Name: PlantBombButton
     m_Normal:

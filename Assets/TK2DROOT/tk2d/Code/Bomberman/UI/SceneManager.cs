@@ -51,6 +51,8 @@ public class SceneManager : MonoBehaviour {
 	[SerializeField] tk2dTextMesh m_playerStatusText;
 	[SerializeField] tk2dTextMesh m_gameText;
 	
+	[SerializeField] tk2dUIDropDownMenu m_mapDropDown;
+	
 	public SceneType CurrentScene
     {
         get { return m_currentScene; }
@@ -165,7 +167,25 @@ public class SceneManager : MonoBehaviour {
 	
 	public void StartGame()
 	{	
-		int mapID = 2;
+		int mapID = 1;
+		
+		if(m_mapDropDown)
+		{
+			//Sahara Desert of Cassowary
+			//Fremont Glaciers of White Tiger
+			//Averill Lake of Supreme Rhino
+			//Goll Woods Zebra Highland
+			string selectedItem = m_mapDropDown.SelectedItem;
+				
+			if(selectedItem == "Goll Woods Zebra Highland")
+				mapID = 1;
+			else if(selectedItem == "Averill Lake of Supreme Rhino")
+				mapID = 2;
+			else if(selectedItem == "Fremont Glaciers of White Tiger")
+				mapID = 3;
+			else if(selectedItem == "Sahara Desert of Cassowary")
+				mapID = 4;
+		}
 		
 		// Host presses START
 		serverConnection.SendStartMessage(mapID);

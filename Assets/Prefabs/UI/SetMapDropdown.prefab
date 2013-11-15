@@ -218,7 +218,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.23090267, y: .828841448, z: -.519999981}
+  m_LocalPosition: {x: -1.38856232, y: .737564802, z: -.519999981}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400018}
@@ -233,7 +233,7 @@ Transform:
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -.350433886, y: .0783002973, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400016}
 --- !u!4 &400004
@@ -290,7 +290,7 @@ Transform:
   m_GameObject: {fileID: 100012}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -.350433886, y: .0783002973, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400010}
 --- !u!4 &400014
@@ -300,7 +300,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100014}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.36914992, y: 0, z: -1.11758709e-08}
   m_LocalScale: {x: 1, y: .970000029, z: 1}
   m_Children:
   - {fileID: 400004}
@@ -340,7 +340,7 @@ Transform:
   m_GameObject: {fileID: 100020}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -.350433886, y: .0783002973, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400016}
 --- !u!4 &400022
@@ -539,8 +539,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: .703125, y: .15625, z: .200000003}
-  m_Center: {x: .00112861395, y: .00017529726, z: .00999999978}
+  m_Size: {x: 2.109375, y: .15625, z: .200000003}
+  m_Center: {x: .704253674, y: .00017529726, z: .00999999978}
 --- !u!65 &6500002
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -551,8 +551,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: .703125, y: .15625, z: .0199999996}
-  m_Center: {x: .00112861395, y: .00017529726, z: .00999999978}
+  m_Size: {x: 2.109375, y: .15625, z: .0199999996}
+  m_Center: {x: .704253674, y: .00017529726, z: .00999999978}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -569,8 +569,9 @@ MonoBehaviour:
   height: .137999997
   dropDownItemTemplate: {fileID: 11400016}
   startingItemList:
-  - Item 1
-  - Item 2
+  - Goll Woods Zebra Highland
+  - Averill Lake of Supreme Rhino
+  - Fremont Glaciers of White Tiger
   - Item 3
   startingIndex: 0
   SendMessageOnSelectedItemChangeMethodName: 
@@ -663,7 +664,7 @@ MonoBehaviour:
     renderLayer: 0
     scale: {x: 1, y: 1, z: 1}
     kerning: 0
-    maxChars: 16
+    maxChars: 35
     inlineStyling: 0
     formatting: 0
     wordWrapWidth: 0
@@ -696,18 +697,18 @@ MonoBehaviour:
   spacing: 0
   lineSpacing: 0
   data:
-    version: 0
-    font: {fileID: 0}
-    text: 
-    color: {r: 1, g: 1, b: 1, a: 1}
+    version: 1
+    font: {fileID: 11400000, guid: fb1b97eccf6db514999d1605baf017e5, type: 2}
+    text: Label
+    color: {r: .737254918, g: 1, b: 1, a: 1}
     color2: {r: 1, g: 1, b: 1, a: 1}
     useGradient: 0
     textureGradient: 0
-    anchor: 6
+    anchor: 3
     renderLayer: 0
     scale: {x: 1, y: 1, z: 1}
     kerning: 0
-    maxChars: 16
+    maxChars: 35
     inlineStyling: 0
     formatting: 0
     wordWrapWidth: 0

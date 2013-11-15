@@ -18,6 +18,14 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] Player playerScript;	
 	[SerializeField] GameObject enemyGameObject;	
 	[SerializeField] ZooMap zooMapScript;
+	
+	private int m_mapType = 1;
+	
+	public int MAP_TYPE
+    {
+		set { m_mapType = value; }
+        get { return m_mapType; }
+    }
 
 	// Use this for initialization
 	void Start () 
@@ -349,7 +357,7 @@ public class GameManager : MonoBehaviour {
 	
 	public void UpdateMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, string cellID)
 	{
-		zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, cellID);
+		zooMapScript.UpdateZooMap(cellType, cellItem, horizontalCellNum, verticalCellNum, cellID, m_mapType);
 	}
 	
 	public static void UpdatePlayerID(long id)

@@ -153,9 +153,7 @@ public class ClientSocket : MonoBehaviour {
 			SERVER_START_TIME = (long) dict["startTime"];
 			LOCAL_START_TIME = GetLocalTimeStamp();
 			
-			long mapID = (long) dict["mapId"];
-			Debug.Log ("SERVER MAP ID IS : "+mapID);
-			StartCoroutine(LoadGameWorld(serverMsg));
+			HandleStartGame(serverMsg, (long) dict["mapId"]);
 			break;
 			
 			case "update":
@@ -180,13 +178,77 @@ public class ClientSocket : MonoBehaviour {
 		}
     }
 	
-	IEnumerator LoadGameWorld(string serverMsg)
+	private void HandleStartGame(string serverMsg, long mapID)
+	{
+		Debug.Log ("SERVER MAP ID IS : "+mapID);
+		gameManager.MAP_TYPE = (int) mapID;
+		
+		switch(mapID)
+		{
+			case 1:
+			StartCoroutine(LoadBombermanWorld(serverMsg));
+			break;
+		
+			case 2:
+			StartCoroutine(LoadWaterWorld(serverMsg));
+			break;
+		
+			case 3:
+			StartCoroutine(LoadIcyWorld(serverMsg));
+			break;
+			
+			case 4:
+			StartCoroutine(LoadDesertWorld(serverMsg));
+			break;
+			
+			default:
+			StartCoroutine(LoadBombermanWorld(serverMsg));
+			break;
+		}
+	}
+	
+	IEnumerator LoadBombermanWorld(string serverMsg)
 	{
 		//yield return new WaitForSeconds(0.5f);
 		BombermanGame = Application.LoadLevelAsync("BombermanScene");
 	    while (!BombermanGame.isDone)
 	    { yield return 0; }
 		
+		InitializeGame(serverMsg);
+	}
+	
+	IEnumerator LoadIcyWorld(string serverMsg)
+	{
+		//yield return new WaitForSeconds(0.5f);
+		BombermanGame = Application.LoadLevelAsync("IcyField");
+	    while (!BombermanGame.isDone)
+	    { yield return 0; }
+		
+		InitializeGame(serverMsg);
+	}
+	
+	IEnumerator LoadWaterWorld(string serverMsg)
+	{
+		//yield return new WaitForSeconds(0.5f);
+		BombermanGame = Application.LoadLevelAsync("LakeWater");
+	    while (!BombermanGame.isDone)
+	    { yield return 0; }
+		
+		InitializeGame(serverMsg);
+	}
+	
+	IEnumerator LoadDesertWorld(string serverMsg)
+	{
+		//yield return new WaitForSeconds(0.5f);
+		BombermanGame = Application.LoadLevelAsync("DesertField");
+	    while (!BombermanGame.isDone)
+	    { yield return 0; }
+		
+		InitializeGame(serverMsg);
+	}
+	
+	private void InitializeGame(string serverMsg)
+	{
 		GameManager.CurrentScene = SceneType.Game;
 		
 		HandleGameStart(serverMsg);

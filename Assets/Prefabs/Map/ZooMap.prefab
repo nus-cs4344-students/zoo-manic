@@ -40,6 +40,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   woodenCratePrefab: {fileID: 100000, guid: efdcb218c92a0f641bfa0fe8a2a7734c, type: 2}
   rockPrefab: {fileID: 100000, guid: fb8b20cd9fd00e34b97ed98860b7983c, type: 2}
+  icyCratePrefab: {fileID: 100000, guid: f3d99f3a20f94e74490f3a35e47dba5d, type: 2}
+  lakeCratePrefab: {fileID: 100000, guid: 7a3a672e89b3787429d31a4245728d43, type: 2}
+  desertCratePrefab: {fileID: 100000, guid: dc698c88f2f6b9942a1ef8d447d9251a, type: 2}
   m_InvulnerablePowerup: {fileID: 100000, guid: 7052ede568ad5e549b0cae9fd6beaadb,
     type: 2}
   m_RangePowerup: {fileID: 100000, guid: c7ee064115727c24ca4641e7fe3fafe5, type: 2}

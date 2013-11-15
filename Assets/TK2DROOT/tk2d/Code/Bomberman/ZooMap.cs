@@ -20,6 +20,10 @@ public class ZooMap : MonoBehaviour {
 	
 	[SerializeField] GameObject woodenCratePrefab;	
 	[SerializeField] GameObject rockPrefab;	
+	
+	[SerializeField] GameObject icyCratePrefab;	
+	[SerializeField] GameObject lakeCratePrefab;	
+	[SerializeField] GameObject desertCratePrefab;	
 
 	[SerializeField] GameObject m_InvulnerablePowerup;
 	[SerializeField] GameObject m_RangePowerup;
@@ -210,7 +214,7 @@ public class ZooMap : MonoBehaviour {
 	// Cell number is from 0 to 27*37
 	// type  empty - 0, box - 1, rock - 2
 	// item  no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs, 5 - shakable
-	public void UpdateZooMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, string cellID)
+	public void UpdateZooMap(long cellType, long cellItem, long horizontalCellNum, long verticalCellNum, string cellID, int mapType)
 	{	
 		if(zooMapInfoDict == null || zooMapInfoDict.Count == 0)
 		{
@@ -224,11 +228,31 @@ public class ZooMap : MonoBehaviour {
 		if(cellType == 1 && currCell.CellType == 0)
 		{
 			// Add the wooden crate into the scene
-			GameObject woodenObj = Instantiate(woodenCratePrefab, 
-			new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
+			GameObject crateObj = null;
+			
+			if(mapType == 1)
+			{
+				crateObj = Instantiate(woodenCratePrefab, 
+				new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
+			}
+			else if(mapType == 2)
+			{
+				crateObj = Instantiate(lakeCratePrefab, 
+				new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
+			}
+			else if(mapType == 3)
+			{
+				crateObj = Instantiate(icyCratePrefab, 
+				new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
+			}
+			else if(mapType == 4)
+			{
+				crateObj = Instantiate(desertCratePrefab, 
+				new Vector3( GetHorizontalPos( (float)horizontalCellNum) , GetVerticalPos( (float)verticalCellNum),0), transform.rotation) as GameObject;
+			}
 			
 			currCell.CellType = 1;
-			currCell.CellGameObject = woodenObj;
+			currCell.CellGameObject = crateObj;
 		}
 		else if(cellType == 2 && currCell.CellType == 0)
 		{
@@ -263,24 +287,6 @@ public class ZooMap : MonoBehaviour {
 				SpawnPowerUp(PowerupType.Trick, currCell, horizontalCellNum, verticalCellNum);
 			else if(cellItem == 5)
 				SpawnPowerUp(PowerupType.Shake, currCell, horizontalCellNum, verticalCellNum);
-		}
-	}
-
-	void DrawOwnGrid()
-	{
-		for (int i = 0; i < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; i++) {
-			/*Cell cell = (Cell) zooMapInfoDict[i];
-			
-			// Off set to the first position of the grid
-			float fromX = GetHorizontalPos( (float) cell.RowNum) - cellWidth / 2;
-			float fromY = GetVerticalPos( (float) cell.ColNum ) - cellHeight / 2;
-			//Vector3 fromPosition = new Vector3(fromX,fromY, 0);
-			
-			float toX = GetHorizontalPos( (float) cell.RowNum) + cellWidth / 2;
-			float toY = GetVerticalPos( (float) cell.ColNum ) + cellHeight / 2;
-
-			Gizmos.DrawWireSphere(new Vector3(fromX, 0, 0), cellWidth);
-			Gizmos.DrawWireSphere(new Vector3(0, fromY, 0), cellHeight);*/
 		}
 	}
 	
