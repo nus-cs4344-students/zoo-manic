@@ -39,6 +39,7 @@ public class CharacterAnimController : MonoBehaviour {
 	
 	private GameObject hudInstance;
 	private HUD hudScript;
+	private ZooMap zooMapScript;
 	
 	public bool EnemyPlayer 
 	{
@@ -78,6 +79,7 @@ public class CharacterAnimController : MonoBehaviour {
 		InitAnimation();
 		
 		clientSocketScript = GameObject.Find("PlayerConnection").GetComponent<ClientSocket>();
+		zooMapScript = GameObject.Find ("ZooMap").GetComponent<ZooMap>();
     }
 	
 	void InitAnimation()
@@ -190,9 +192,15 @@ public class CharacterAnimController : MonoBehaviour {
 		GameObject bombInstance = Instantiate(bombGO, bombPos, transform.rotation) as GameObject;
 		string bombId = (int) horizontalCell + "" + (int) verticalCell;
 		
+		string cellID = (int) horizontalCell + ":" + (int) verticalCell;
+		
 		if(bombDict.ContainsKey(bombId) == false)
 		{
 			bombDict.Add(bombId, bombInstance);
+
+			// bomb is planted in the cell
+			zooMapScript.UpdateCellWithBomb(cellID, true);
+			
 			m_bombLimit--;
 		}
 	}
@@ -224,14 +232,16 @@ public class CharacterAnimController : MonoBehaviour {
 	public void ExplodeBomb(float horizontalCell, float verticalCell, long explodeRange)
 	{
 		string bombId = (int) horizontalCell + "" + (int) verticalCell;
+		string cellID = (int) horizontalCell + ":" + (int) verticalCell;
 		
 		if(bombDict.ContainsKey(bombId))
 		{
 			GameObject bombObject = (GameObject) bombDict[bombId];
 			Bomb bombScript = bombObject.GetComponent<Bomb>();
 			
-			if(bombScript)
+			if(bombScript != null)
 			{
+				zooMapScript.UpdateCellWithBomb(cellID, false);
 				bombScript.Explode((int) explodeRange);
 				bombDict.Remove(bombId);
 			}
@@ -318,7 +328,7 @@ public class CharacterAnimController : MonoBehaviour {
 		}
 		
 		// exceed the map
-		if(verticalCell >= ZooMap.NumberofCols || isStillMoving)
+		if(verticalCell >= ZooMap.NumberofCols - 1 || isStillMoving)
 			return;
 		
 		bool isObstacleAhead = ZooMap.IsObstacle((int) horizontalCell, (int) verticalCell + 1);
@@ -373,7 +383,7 @@ public class CharacterAnimController : MonoBehaviour {
 		}
 		
 		// exceed the map
-		if( horizontalCell >= ZooMap.NumberofRows || isStillMoving)
+		if( horizontalCell >= ZooMap.NumberofRows - 1 || isStillMoving)
 			return;
 		
 		bool isObstacleAhead = ZooMap.IsObstacle((int) horizontalCell + 1, (int) verticalCell);

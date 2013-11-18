@@ -8,9 +8,9 @@ public class SmoothCamera2D : MonoBehaviour {
     public Transform target;
 	
 	private float left_clip_x = 39.0f;
-	private float bottom_clip_y = -180.0f;
+	private float bottom_clip_y = 10f;
 	private float top_clip_y = 78.0f;
-	private float right_clip_x = 111.0f;
+	private float right_clip_x = 100.0f;
 	
 	
 	private bool isTargetAlive = true;
@@ -58,13 +58,13 @@ public class SmoothCamera2D : MonoBehaviour {
 	
 	void MoveCamera()
 	{
-		if (Input.GetKey(KeyCode.UpArrow) ) { moveUP(); return; }
-	  	if (Input.GetKey(KeyCode.RightArrow)  ) { moveRight(); return; }
-	  	if (Input.GetKey(KeyCode.DownArrow) ) { moveDown(); return; }
-	  	if (Input.GetKey(KeyCode.LeftArrow) ) { moveLeft(); return; }
+		if (Input.GetKey(KeyCode.UpArrow) ) { MoveUp(); return; }
+	  	if (Input.GetKey(KeyCode.RightArrow)  ) { MoveRight(); return; }
+	  	if (Input.GetKey(KeyCode.DownArrow) ) { MoveDown(); return; }
+	  	if (Input.GetKey(KeyCode.LeftArrow) ) { MoveLeft(); return; }
 	}
 	
-	void moveUP()
+	public void MoveUp()
 	{
 		if(transform.position.y > top_clip_y)
 			return;
@@ -72,7 +72,7 @@ public class SmoothCamera2D : MonoBehaviour {
 		transform.Translate( 0, cameraSpeed * Time.deltaTime, 0);
 	}
 	
-	void moveRight()
+	public void MoveRight()
 	{
 		if(transform.position.x > right_clip_x)
 			return;
@@ -80,7 +80,7 @@ public class SmoothCamera2D : MonoBehaviour {
 		transform.Translate( cameraSpeed * Time.deltaTime, 0, 0);
 	}
 	
-	void moveDown()
+	public void MoveDown()
 	{
 		if(transform.position.y < bottom_clip_y)
 			return;
@@ -88,7 +88,7 @@ public class SmoothCamera2D : MonoBehaviour {
 		transform.Translate( 0, -cameraSpeed * Time.deltaTime, 0);
 	}
 	
-	void moveLeft()
+	public void MoveLeft()
 	{
 		if(transform.position.x < left_clip_x)
 			return;

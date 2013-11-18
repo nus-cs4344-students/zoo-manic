@@ -53,6 +53,8 @@ public class SceneManager : MonoBehaviour {
 	
 	[SerializeField] tk2dUIDropDownMenu m_mapDropDown;
 	
+	public bool isPlayerReady = false;
+	
 	public SceneType CurrentScene
     {
         get { return m_currentScene; }
@@ -120,7 +122,7 @@ public class SceneManager : MonoBehaviour {
 	{
 	}
 	
-	void InitPlayer1()
+	/*void InitPlayer1()
 	{
 		// Player chooses avatar
 		string playerName = GameManager.PlayerName;
@@ -144,7 +146,7 @@ public class SceneManager : MonoBehaviour {
 		GameManager.UpdateAvatarID(avatarID);
 		
 		serverConnection.SendSetPropertyMessage(playerName, avatarID);
-	}
+	}*/
 	
 	// Ready
 	public bool Ready()
@@ -162,6 +164,7 @@ public class SceneManager : MonoBehaviour {
 		serverConnection.SendReadyMessage( (int) GameManager.AvatarID);
 		m_readyButton.text = "Start Game";
 		
+		isPlayerReady = true;
 		return true;
 	}
 	

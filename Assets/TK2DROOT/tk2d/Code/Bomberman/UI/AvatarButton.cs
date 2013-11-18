@@ -70,12 +70,14 @@ public class AvatarButton : MonoBehaviour {
 			case AvatarIcon.Cassowary:
 			selectedAvatar = 3;
 			break;
-
 		}
 		
-		sceneManager.ClearAvatarSelection();
-		gameObject.transform.Find ("SelectedBG").gameObject.SetActive(true);
-		sceneManager.UpdateSelectedAvatar(selectedAvatar);
+		if(sceneManager.isPlayerReady == false)
+		{
+			sceneManager.ClearAvatarSelection();
+			gameObject.transform.Find ("SelectedBG").gameObject.SetActive(true);
+			sceneManager.UpdateSelectedAvatar(selectedAvatar);
+		}
 	}
 
 	

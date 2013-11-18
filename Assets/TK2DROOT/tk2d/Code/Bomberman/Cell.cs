@@ -16,6 +16,7 @@ public class Cell
 	// index of the cell, e.g. first cell has the row index of 0, col index 0
 	private int rowIndex;
 	private int columnIndex;
+	private bool isBomb;
 	
 	private GameObject cellObject;
 	
@@ -29,6 +30,12 @@ public class Cell
 	{
         get { return cellObject; }
         set { cellObject = value; }
+    }
+	
+	public bool IsABomb 
+	{
+        get { return isBomb; }
+        set { isBomb = value; }
     }
 	
 	public int RowNum

@@ -86,30 +86,23 @@ public class ZooMap : MonoBehaviour {
 			return false;
 		}
 		
-		/*int cellIndex = 0;
-		
-		// the client start from horizontal cell 0,0 by right should be 1
-		//horizontalCell += 1;
-		//verticalCell += 1;
-		
-		if(horizontalCell == 0f)
-			cellIndex = verticalCell;
-		else if(verticalCell == 0f)
-			cellIndex = horizontalCell;
-		else
-			cellIndex = (horizontalCell * (int) NumberofCols) + verticalCell;*/
-			
-		//cellIndex = (horizontalCell * (int) NumberofRows) + verticalCell;
-			
-			
-		//cellIndex = (verticalCell * (int) NumberofRows) + horizontalCell;
-		
-		
 		string cellID = horizontalCell+":"+verticalCell;
-		Cell currCell = (Cell) zooMapInfoDict[cellID];
-		Debug.Log("Checking Cell Index: "+cellID + "  Obstacle? : "+ (currCell.CellType != 0) );
 		
-		return currCell.CellType != 0;
+		bool hasObstacle = false;
+		
+		if(zooMapInfoDict.ContainsKey(cellID))
+		{
+			Cell currCell = (Cell) zooMapInfoDict[cellID];
+			
+			if(currCell.CellType != 0)
+				hasObstacle = true;
+			else if(currCell.IsABomb)
+				hasObstacle = true;
+			
+			Debug.Log("Checking Cell Index: "+cellID + "  Obstacle? : "+ hasObstacle );
+		}
+
+		return hasObstacle;
 	}
 	
 	// Use this for initialization
@@ -188,11 +181,6 @@ public class ZooMap : MonoBehaviour {
 	{
 		// type  empty - 0, box - 1, rock - 2
 		// item  no item - 0, 1 - bomb range, 2 - haste, 3 - invunerable, 4 - more bombs, 5 - shakable
-		/*for(int index=0; index < (int) ZooMap.NumberofRows * ZooMap.NumberofCols; index++)
-		{
-			zooMapInfoDict.Add (index, new Cell(index));
-		}*/
-		
 		// column is the x, row is the y
 		
 		for(int row=0; row < (int) ZooMap.NumberofRows ; row++)
@@ -203,6 +191,15 @@ public class ZooMap : MonoBehaviour {
 				if(zooMapInfoDict.ContainsKey(zooCellID) == false)
 					zooMapInfoDict.Add (zooCellID, new Cell(row, column));
 			}
+		}
+	}
+	
+	public void UpdateCellWithBomb(string cellID, bool bombExist)
+	{
+		if(zooMapInfoDict.ContainsKey(cellID))
+		{
+			Cell currCell = (Cell) zooMapInfoDict[cellID];
+			currCell.IsABomb = bombExist;
 		}
 	}
 	

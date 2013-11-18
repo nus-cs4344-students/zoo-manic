@@ -4865,6 +4865,7 @@ MonoBehaviour:
   m_roomTitleText: {fileID: 0}
   m_playerStatusText: {fileID: 0}
   m_gameText: {fileID: 0}
+  m_mapDropDown: {fileID: 0}
 --- !u!4 &286094131
 Transform:
   m_ObjectHideFlags: 0
@@ -17901,6 +17902,62 @@ MonoBehaviour:
   size: .5
   color: {r: 1, g: 1, b: 1, a: 1}
   show: 1
+--- !u!1001 &581959770
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 17.5476322
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 6.80456734
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: chatTextboxObject
+      value: 
+      objectReference: {fileID: 143754123}
+    - target: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: serverChatObject
+      value: 
+      objectReference: {fileID: 1030367718}
+    - target: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: victoryPanel
+      value: 
+      objectReference: {fileID: 1679070146}
+    - target: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+      propertyPath: losePanel
+      value: 
+      objectReference: {fileID: 702319435}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
+  m_RootGameObject: {fileID: 1311733728}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &582836949
 GameObject:
   m_ObjectHideFlags: 0
@@ -24397,62 +24454,6 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
---- !u!1001 &973614779
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 17.5476322
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 6.80456734
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: chatTextboxObject
-      value: 
-      objectReference: {fileID: 143754123}
-    - target: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: serverChatObject
-      value: 
-      objectReference: {fileID: 1030367718}
-    - target: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: victoryPanel
-      value: 
-      objectReference: {fileID: 1679070146}
-    - target: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-      propertyPath: losePanel
-      value: 
-      objectReference: {fileID: 702319435}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-  m_RootGameObject: {fileID: 1311733728}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &973726353
 GameObject:
   m_ObjectHideFlags: 0
@@ -30292,7 +30293,7 @@ MonoBehaviour:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-  m_PrefabInternal: {fileID: 973614779}
+  m_PrefabInternal: {fileID: 581959770}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1311733729}
@@ -30308,7 +30309,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400000, guid: 7567a6b7a06dae742af117fd03d667cb, type: 2}
-  m_PrefabInternal: {fileID: 973614779}
+  m_PrefabInternal: {fileID: 581959770}
   m_GameObject: {fileID: 1311733728}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.5476322, y: 6.80456734, z: -1}
@@ -30320,7 +30321,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: 7567a6b7a06dae742af117fd03d667cb,
     type: 2}
-  m_PrefabInternal: {fileID: 973614779}
+  m_PrefabInternal: {fileID: 581959770}
   m_GameObject: {fileID: 1311733728}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -30739,7 +30740,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 1
+    m_StretchHeight: 0
   avatarZebra:
     m_Name: ZebraAvatar
     m_Normal:
@@ -30798,7 +30799,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 1
+    m_StretchHeight: 0
   avatarRhino:
     m_Name: RhinoAvatar
     m_Normal:
@@ -30857,7 +30858,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 1
+    m_StretchHeight: 0
   avatarBird:
     m_Name: BirdAvatar
     m_Normal:
@@ -30975,7 +30976,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 1
+    m_StretchHeight: 0
   zebraBomb:
     m_Name: ZebraBomb
     m_Normal:
@@ -31034,7 +31035,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 1
+    m_StretchHeight: 0
   tigerBomb:
     m_Name: TigerBomb
     m_Normal:
@@ -31093,7 +31094,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 1
+    m_StretchHeight: 0
   rhinoBomb:
     m_Name: RhinoBomb
     m_Normal:
@@ -31152,7 +31153,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 1
+    m_StretchHeight: 0
   birdBomb:
     m_Name: BirdBomb
     m_Normal:
@@ -31211,7 +31212,7 @@ MonoBehaviour:
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
-    m_StretchHeight: 1
+    m_StretchHeight: 0
   labelStyle:
     m_Name: labelStyle
     m_Normal:
@@ -31879,6 +31880,65 @@ MonoBehaviour:
     m_StretchHeight: 0
   victoryPanel: {fileID: 1679070146}
   losePanel: {fileID: 702319435}
+  chatButtonStyle:
+    m_Name: Chat Button Style
+    m_Normal:
+      m_Background: {fileID: 2800000, guid: cf727a129c6d1ab4d864b27b41a64214, type: 3}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
 --- !u!1001 &1312375165
 Prefab:
   m_ObjectHideFlags: 0

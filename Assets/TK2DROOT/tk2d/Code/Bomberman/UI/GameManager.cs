@@ -116,7 +116,6 @@ public class GameManager : MonoBehaviour {
 			// Update HUD
 			if(serverPlayerID == PlayerID)
 			{
-				Debug.Log ("EXPLODE RANGE IS: "+explodeRange);
 				playerController.UpdateBombLeft();
 			}
 		}

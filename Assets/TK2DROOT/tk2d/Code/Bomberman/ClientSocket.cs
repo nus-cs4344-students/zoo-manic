@@ -169,7 +169,8 @@ public class ClientSocket : MonoBehaviour {
 			HandleMovement(serverMsg);
 			break;
 			
-			case "pingRefresh":
+			case "killMessage":
+			HandleKillMessage(serverMsg);
 			break;
 			
 			case "gameEnd":
@@ -180,7 +181,6 @@ public class ClientSocket : MonoBehaviour {
 	
 	private void HandleStartGame(string serverMsg, long mapID)
 	{
-		Debug.Log ("SERVER MAP ID IS : "+mapID);
 		gameManager.MAP_TYPE = (int) mapID;
 		
 		switch(mapID)
@@ -678,6 +678,14 @@ public class ClientSocket : MonoBehaviour {
 		}
 	}
 	
+	private void HandleKillMessageUpdate(string dataFromServer)
+	{
+		Debug.Log ("MESSAGE IS: "+dataFromServer);
+		var dict = Json.Deserialize(dataFromServer) as Dictionary<string,object>;
+		if( dict.ContainsKey ("killMessage"))
+			HandleKillMessage(dataFromServer);
+	}
+	
 	private void HandleUpdate(string dataFromServer)
 	{
 		Debug.Log ("Update: "+dataFromServer);
@@ -724,10 +732,6 @@ public class ClientSocket : MonoBehaviour {
 		
 		if( dict.ContainsKey ("players") )
 			HandlePlayerUpdate(dataFromServer);
-		
-		if( dict.ContainsKey ("killMessage"))
-			HandleKillMessage(dataFromServer);
-		
 	}
 	
 	private void ClearList()
